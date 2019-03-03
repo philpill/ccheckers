@@ -1,0 +1,58 @@
+... Separate engine/core code
+
+✓ Shift Position struct to core
+
+VS Code GDB
+    https://code.visualstudio.com/docs/cpp/cpp-debug
+
+Check for memory leaks with valgrind
+    https://valgrind.org/docs/manual/quick-start.html#quick-start.prepare
+
+Restructure project
+    https://stackoverflow.com/q/8523078
+    https://stackoverflow.com/a/2512086
+
+AI Player
+
+Network support
+    https://www.codeproject.com/Articles/586000/Networking-and-Socket-programming-tutorial-in-C
+    https://en.wikibooks.org/wiki/C_Programming/Networking_in_UNIX
+
+Intro screen
+
+Finish/restart screen - use menu/panel
+    https://invisible-island.net/ncurses/ncurses-intro.html#menu
+    http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/panels.html
+
+Doxygen to generate docs
+    http://www.doxygen.nl/manual/faq.html
+
+Multiple, successive captures in a single jump
+    mandatory option
+
+Upgrade Makefile
+    http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
+    https://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html
+    http://nuclear.mutantstargoat.com/articles/make/#enter-make
+    https://stackoverflow.com/questions/1484817/how-do-i-make-a-simple-makefile-for-gcc-on-linux
+
+Fix tests with reorg'ed makefile - include all *.c except main
+
+Separate ncurses window width const from display string array length
+
+Interchangeable board x/y input order
+
+Adaptive resolution
+
+Mouse interface
+    https://invisible-island.net/ncurses/ncurses-intro.html#mouse
+
+PD Curses for Windows?
+    https://pdcurses.org/
+
+commnd line arguments for initial map load and settings
+    https://stackoverflow.com/questions/3898021/regarding-mainint-argc-char-argv
+    https://www.thegeekstuff.com/2013/01/c-argc-argv/
+    https://www.tutorialspoint.com/cprogramming/c_command_line_arguments.htm
+
+Terminology - Rename piece to pawn

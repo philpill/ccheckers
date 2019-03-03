@@ -1,0 +1,13 @@
+C Checkers
+https://en.wikipedia.org/wiki/Draughts
+
+make install
+
+make build
+make run
+
+debug
+make debug
+
+cmocka
+make run_test
