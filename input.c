@@ -8,9 +8,12 @@ void init_input() {
     noecho();
 }
 
-int handle_input(WINDOW *input_win, Game game, Piece pieces[]) {
+int  handle_input(WINDOW **windows, Game game, Piece pieces[]) {
     int exit = 0;
-    if (wgetch(input_win) == 27) {
+
+    wprintw(windows[2], "test"); 
+
+    if (wgetch(windows[0]) == 27) {
         exit = 1;
     }
     return exit;

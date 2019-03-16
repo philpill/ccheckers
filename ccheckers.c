@@ -12,11 +12,13 @@ int main() {
 
     Game game = { 0, 0, 0 };    
 
+    int exit = 0;
+
     Piece pieces[24];
 
     init_pieces(pieces);
 
-    WINDOW *windows[2];
+    WINDOW *windows[3];
 
     init_render();
     
@@ -24,11 +26,13 @@ int main() {
 
     init_input();
 
-    render(windows[0], game, pieces);
+    render(windows[1], game, pieces);
 
-    while (handle_input(windows[1], game, pieces) != 1) {
+    while (exit == 0) {
 
-       render(windows[0], game, pieces);
+        exit = handle_input(windows, game, pieces);
+
+        render(windows[1], game, pieces);
     }
 
     quit_render();

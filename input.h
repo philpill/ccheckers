@@ -5,6 +5,6 @@
 #include "piece.h"
 
 void init_input();
-int handle_input(WINDOW *input_win, Game game, Piece pieces[]);
+int handle_input(WINDOW **windows, Game game, Piece pieces[]);
 
 #endif
