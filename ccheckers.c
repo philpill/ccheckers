@@ -28,11 +28,15 @@ int main() {
 
     render(windows[1], game, pieces);
 
+    renderText(windows[2]);
+
     while (exit == 0) {
 
         exit = handle_input(windows, game, pieces);
 
         render(windows[1], game, pieces);
+
+        renderText(windows[2]);
     }
 
     quit_render();
