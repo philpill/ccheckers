@@ -3,12 +3,13 @@
 #include "piece.h"
 #include "game.h"
 #include "windowmanager.h"
+#include "global.h"
 
 void init_render() {
     initscr();
 }
 
-void get_blank_grid(char grid[18][35]) {
+void get_blank_grid(char grid[GRID_H][GRID_W]) {
     char end_line[]    = " . . . . . . . . . . . . . . . . .\n\0";
     char data_line[]   = " :   :   :   :   :   :   :   :   :\n\0";
     char spacer_line[] = " : . : . : . : . : . : . : . : . :\n\0";
@@ -26,13 +27,13 @@ void get_blank_grid(char grid[18][35]) {
     strcpy(grid[11], spacer_line);
     strcpy(grid[12], data_line);
     strcpy(grid[13], spacer_line);
-    strcpy(grid[13], data_line);
-    strcpy(grid[14], spacer_line);
-    strcpy(grid[15], data_line);
-    strcpy(grid[16], spacer_line);
+    strcpy(grid[14], data_line);
+    strcpy(grid[15], spacer_line);
+    strcpy(grid[16], data_line);
+    strcpy(grid[17], spacer_line);
 }
 
-void populate_grid(Piece *pieces, char grid[][35]) {
+void populate_grid(Piece *pieces, char grid[][GRID_W]) {
     const int num_pieces = 24;
     for (int i = 0; i < num_pieces; i++) {
         int x_pos = pieces[i].x_pos;
@@ -60,7 +61,8 @@ void render(WINDOW *board_win, Game game, Piece *pieces) {
 
 void renderText(WINDOW *text_win) {
     werase(text_win);
-    wprintw(text_win, "test");
+    wprintw(text_win, "\n\0");
+    wprintw(text_win, " test");
     box(text_win, '*', '*');
     wrefresh(text_win);
 }
