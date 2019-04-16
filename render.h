@@ -4,10 +4,10 @@
 
 #include <ncurses.h>
 
-WINDOW *init_render();
+void init_render(WINDOW **render_windows);
 
-void render(WINDOW *board_win, Game game, Piece *pieces);
-void renderText(WINDOW *text_win);
+void render(Game game, Piece *pieces);
+void render_text();
 void quit_render();
 
 #endif

@@ -5,7 +5,10 @@
 #include "windowmanager.h"
 #include "global.h"
 
-void init_render() {
+WINDOW **windows;
+
+void init_render(WINDOW **render_windows) {
+    windows = render_windows;
     initscr();
 }
 
@@ -52,19 +55,21 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
     wprintw(board_win, board[0]);
 }
 
-void render(WINDOW *board_win, Game game, Piece *pieces) {
-    werase(board_win);
-    draw_grid(board_win, pieces);
-    box(board_win, '*', '*');
-    wrefresh(board_win);
+void render(Game game, Piece *pieces) {
+    WINDOW *window = windows[1];
+    werase(window);
+    draw_grid(window, pieces);
+    box(window, '*', '*');
+    wrefresh(window);
 }
 
-void renderText(WINDOW *text_win) {
-    werase(text_win);
-    wprintw(text_win, "\n\0");
-    wprintw(text_win, " test");
-    box(text_win, '*', '*');
-    wrefresh(text_win);
+void render_text() {
+    WINDOW *window = windows[2];
+    werase(window);
+    wprintw(window, "\n\0");
+    wprintw(window, " test");
+    box(window, '*', '*');
+    wrefresh(window);
 }
 
 void quit_render() {

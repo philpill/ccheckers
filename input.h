@@ -4,7 +4,10 @@
 #include "game.h"
 #include "piece.h"
 
-void init_input();
-int handle_input(WINDOW **windows, Game game, Piece pieces[]);
+extern char *msg_log[255];
+
+void init_input(WINDOW *window);
+int handle_input(WINDOW **windows);
+int get_input();
 
 #endif
