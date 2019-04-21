@@ -4,6 +4,7 @@
 #include "game.h"
 #include "windowmanager.h"
 #include "global.h"
+#include "input.h"
 
 WINDOW **windows;
 
@@ -67,7 +68,7 @@ void render_text() {
     WINDOW *window = windows[2];
     werase(window);
     wprintw(window, "\n\0");
-    wprintw(window, " test");
+    wprintw(window, get_last_msg());
     box(window, '*', '*');
     wrefresh(window);
 }
