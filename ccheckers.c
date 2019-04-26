@@ -17,6 +17,7 @@ int run_loop() {
     int return_code = 0;
 
     // get input
+    handle_input();
     int user_input = get_input();
 
     if (user_input == 27) {
@@ -50,7 +51,7 @@ int main() {
     
     get_windows(windows);
 
-    init_input(windows[0]);
+    init_input(windows);
 
     while (exit == 0) {
 

@@ -11,6 +11,9 @@ WINDOW **windows;
 void init_render(WINDOW **render_windows) {
     windows = render_windows;
     initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
 }
 
 void get_blank_grid(char grid[GRID_H][GRID_W]) {
@@ -66,9 +69,9 @@ void render(Game game, Piece *pieces) {
 
 void render_text() {
     WINDOW *window = windows[2];
-    werase(window);
+    //werase(window);
     wprintw(window, "\n\0");
-    wprintw(window, get_last_msg());
+    output_msg();
     box(window, '*', '*');
     wrefresh(window);
 }
