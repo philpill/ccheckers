@@ -15,7 +15,11 @@ int char_ctr = 0;
 char input_buffer;
 
 void output_msg() {
+    int x = 0;
+    int y = 0;
     mvwprintw(output_window, msg_ctr, 0, get_last_msg());
+    getmaxyx(output_window, y, x);
+    mvwprintw(output_window, y-2, 0, msg_log[msg_ctr]);
 }
 
 void insert_char(char ch) {
