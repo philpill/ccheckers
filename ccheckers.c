@@ -12,17 +12,14 @@ Piece pieces[24];
 
 Game game;
 
+long current_ntime;
+
 int run_loop() {
 
     int return_code = 0;
 
     // get input
-    handle_input();
-    int user_input = get_input();
-
-    if (user_input == 27) {
-        return_code = 1;
-    }
+    return_code = handle_input();
 
     // resolve state
 
@@ -30,7 +27,11 @@ int run_loop() {
     render(game, pieces);
     render_text();
 
-    usleep(200000);
+    // 1000000 = 1fps
+    // 33333.3 = 30fps
+    // 50000 = 20fps
+    // 100000 = 10fps
+    usleep(100000);
 
     return return_code;
 }

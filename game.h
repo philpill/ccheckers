@@ -7,4 +7,6 @@ typedef struct {
     int playerWin;    
 } Game;
 
+int select_square(int x, int y);
+
 #endif

@@ -17,9 +17,9 @@ void init_render(WINDOW **render_windows) {
 }
 
 void get_blank_grid(char grid[GRID_H][GRID_W]) {
-    char end_line[]    = " . . . . . . . . . . . . . . . . .\n\0";
-    char data_line[]   = " :   :   :   :   :   :   :   :   :\n\0";
-    char spacer_line[] = " : . : . : . : . : . : . : . : . :\n\0";
+    char end_line[]    = "    . . . . . . . . . . . . . . . . .";
+    char data_line[]   = "    :   :   :   :   :   :   :   :   :";
+    char spacer_line[] = "    : . : . : . : . : . : . : . : . :";
     strcpy(grid[0], end_line);
     strcpy(grid[1], end_line);
     strcpy(grid[2], data_line);
@@ -38,6 +38,21 @@ void get_blank_grid(char grid[GRID_H][GRID_W]) {
     strcpy(grid[15], spacer_line);
     strcpy(grid[16], data_line);
     strcpy(grid[17], spacer_line);
+
+    for (int i = 18; i < GRID_H; i++) {
+        char blank_line[GRID_W];
+        memset(blank_line, ' ', (GRID_W - 1)*sizeof(char)); 
+        strcpy(grid[i], blank_line);
+    }
+}
+
+void label_grid(char grid[GRID_H][GRID_W]) {
+    for (int i = 0; i < 8; i++) {
+        grid[(i * 2) + 2][2] = '0' + i + 1;
+    }
+    for (int i = 0; i < 8; i++) {
+        grid[18][(i * 4) + 6] = '0' + i + 1;
+    }
 }
 
 void populate_grid(Piece *pieces, char grid[][GRID_W]) {
@@ -46,33 +61,37 @@ void populate_grid(Piece *pieces, char grid[][GRID_W]) {
         int x_pos = pieces[i].x_pos;
         int y_pos = pieces[i].y_pos;
         char piece = pieces[i].colour == '0' ? 'x' : 'o';
-        grid[(x_pos*2)+2][(y_pos*4)+3] = piece;
+        if (is_piece_selected_by_id(pieces[i].id) == 1) {
+            piece = pieces[i].colour == '0' ? 'X' : 'O';
+        }
+        grid[(x_pos*2)+2][(y_pos*4)+6] = piece;
     }
 }
 
 void draw_grid(WINDOW *board_win, Piece *pieces) {
-    int columns = 8;
-    int rows = 8;
-    char board[2*rows+2][4*columns+3];
+    char board[GRID_H][GRID_W];
     get_blank_grid(board);
+    label_grid(board);
     populate_grid(pieces, board);
-    wprintw(board_win, board[0]);
+    for (int i = 0; i < GRID_H; i++) {
+        mvwprintw(board_win, i, 1, board[i]);
+        // wprintw(board_win, board[0]);
+    }
 }
 
 void render(Game game, Piece *pieces) {
     WINDOW *window = windows[1];
-    werase(window);
+    wclear(window);
     draw_grid(window, pieces);
-    box(window, '*', '*');
+    box(window, 0, 0);
     wrefresh(window);
 }
 
 void render_text() {
     WINDOW *window = windows[2];
-    //werase(window);
-    wprintw(window, "\n\0");
+    wclear(window);
     output_msg();
-    box(window, '*', '*');
+    box(window, 0, 0);
     wrefresh(window);
 }
 
