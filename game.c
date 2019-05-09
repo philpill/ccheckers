@@ -8,7 +8,7 @@ int select_square(int x, int y) {
 
     char msg[50];
 
-    sprintf(msg, "::select square: %d, %d", x, y);
+    sprintf(msg, "::select square: %d, %d", x+1, y+1);
 
     insert_msg(msg);
     
@@ -29,8 +29,6 @@ int select_square(int x, int y) {
         
         if ((*selected_piece).x_pos == x && (*selected_piece).y_pos == y) {
     
-            insert_msg("deselect match");          
-
             deselect_piece();
         }
 

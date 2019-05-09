@@ -64,7 +64,7 @@ void populate_grid(Piece *pieces, char grid[][GRID_W]) {
         if (is_piece_selected_by_id(pieces[i].id) == 1) {
             piece = pieces[i].colour == '0' ? 'X' : 'O';
         }
-        grid[(x_pos*2)+2][(y_pos*4)+6] = piece;
+        grid[(y_pos*2)+2][(x_pos*4)+6] = piece;
     }
 }
 

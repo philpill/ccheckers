@@ -68,48 +68,48 @@ void init_pieces(Piece *pieces) {
         j = 1;
     for (i = 0; i < 4; i++) {
         pieces[i].colour = '1';
-        pieces[i].x_pos = 0;
-        pieces[i].y_pos = j;
+        pieces[i].x_pos = j;
+        pieces[i].y_pos = 0;
         j += 2;
     }
 
         j = 0;
     for (i = 4; i < 8; i++) {
         pieces[i].colour = '1';
-        pieces[i].x_pos = 1;
-        pieces[i].y_pos = j;
+        pieces[i].x_pos = j;
+        pieces[i].y_pos = 1;
         j += 2;
     }
 
         j = 1;
     for (i = 8; i < 12; i++) {
         pieces[i].colour = '1';
-        pieces[i].x_pos = 2;
-        pieces[i].y_pos = j;
+        pieces[i].x_pos = j;
+        pieces[i].y_pos = 2;
         j += 2;
     }
 
         j = 0;
     for (i = 12; i < 16; i++) {
         pieces[i].colour = '0';
-        pieces[i].x_pos = 5;
-        pieces[i].y_pos = j;
+        pieces[i].x_pos = j;
+        pieces[i].y_pos = 5;
         j += 2;
     }
 
         j = 1;
     for (i = 16; i < 20; i++) {
         pieces[i].colour = '0';
-        pieces[i].x_pos = 6;
-        pieces[i].y_pos = j;
+        pieces[i].x_pos = j;
+        pieces[i].y_pos = 6;
         j += 2;
     }
 
         j = 0;
     for (i = 20; i < 24; i++) {
         pieces[i].colour = '0';
-        pieces[i].x_pos = 7;
-        pieces[i].y_pos = j;
+        pieces[i].x_pos = j;
+        pieces[i].y_pos = 7;
         j += 2;
     }
 }
