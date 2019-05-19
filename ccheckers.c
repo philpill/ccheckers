@@ -44,6 +44,8 @@ int main() {
 
     int exit = 0;
 
+    init_game(&game);
+
     init_pieces(pieces);
 
     WINDOW *windows[3];

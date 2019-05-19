@@ -3,9 +3,11 @@
 
 typedef struct {
     int turnCounter;
-    int playerTurn;
+    int playerColour;
     int playerWin;    
 } Game;
+
+void init_game(Game *game);
 
 int select_square(int x, int y);
 
