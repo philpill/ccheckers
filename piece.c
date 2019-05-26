@@ -1,9 +1,11 @@
 #include "piece.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include "input.h"
 
 Piece *all_pieces;
 Piece *selected_piece;
+
 int is_selected = 0;
 
 int is_piece_selected() {
@@ -30,9 +32,11 @@ int is_piece_at_position(int x, int y) {
     return is_at_position;
 }
 
-
-
 void move_piece(Piece *piece, int x, int y) {
+
+    char msg[50];
+    sprintf(msg, "::move piece: %d, %d", x+1, y+1);
+    insert_msg(msg);
     (*piece).x_pos = x;
     (*piece).y_pos = y;
 }
@@ -49,6 +53,9 @@ void select_piece_by_position(Piece *piece, int x, int y) {
 
 void select_piece(Piece *piece) {
     selected_piece = piece;
+    char msg[50];
+    sprintf(msg, "pointers: %d, %d", (*piece).x_pos, (*selected_piece).x_pos);
+    insert_msg(msg);
     is_selected = 1;
 }
 
@@ -76,11 +83,13 @@ int get_piece_by_position(Piece *piece, int x, int y) {
     return is_at_position;
 }
 
-void get_selected_piece(Piece *piece) {
-    copy_piece(selected_piece, piece);
+Piece *get_selected_piece() {
+    return selected_piece;
 }
 
 void init_pieces(Piece *pieces) {
+
+    selected_piece = malloc(sizeof(Piece));
 
     int i = 0;
     int j = 0;

@@ -40,7 +40,13 @@ int select_square(int x, int y) {
                 insert_msg("piece owned - selecting");
                 
                 select_piece_by_position(selected_piece, x, y);
+            
+            } else {
+
+                // piece is not owned - do nothing
+                insert_msg("piece not owned");
             }
+
         } else {
             
             insert_msg("empty square");
@@ -50,43 +56,44 @@ int select_square(int x, int y) {
 
         insert_msg("piece currently selected");
 
-        get_selected_piece(selected_piece);
+        selected_piece = get_selected_piece();
         
+        sprintf(msg, "::position: %d, %d", (*selected_piece).x_pos, (*selected_piece).y_pos);
+
+        insert_msg(msg);
+ 
         //deselect
         if ((*selected_piece).x_pos == x && (*selected_piece).y_pos == y) {
-    
+   
+            insert_msg("piece at position - deselect piece");
+ 
             deselect_piece();
-        }
-
-        if (is_piece_at_position(x, y) == 1) {
+        
+        } else if (is_piece_at_position(x, y) == 1) {
 
             select_piece_by_position(check_piece, x, y);
 
             if ((*check_piece).colour == game.playerColour) {
 
+                // select alternative piece
+                insert_msg("select different piece");
+
                 selected_piece = check_piece;
 
             } else {
 
-
+                // not owned - do nothing
+                insert_msg("piece not owned");
             }
-
-            // if owned
-                // select alternative piece
-                // select_piece_by_position(selected_piece, x, y);
-            // else
-                // capture opponent piece
-                // deactivate captured piece
-                // move piece to vacated square
-                // move_piece(selected_piece, x, y);            
 
         } else {
 
+            insert_msg("move piece");
             // move selected piece to empty square
             move_piece(selected_piece, x, y);            
         }
     }
 
-    free(selected_piece);
+    //free(selected_piece);
     free(check_piece);
 }
