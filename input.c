@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <string.h>
 #include <ncurses.h>
 #include <ctype.h>
@@ -36,6 +37,15 @@ void insert_msg(char *message) {
     strcpy(msg_log[msg_ctr], message);
     msg_ctr++;
     char_ctr = 0;
+}
+
+void log_msg(char *msg, int num, ...) {
+    va_list valist;
+    char buffer[256];
+    va_start(valist, num);
+    vsprintf(buffer, msg, valist);
+    insert_msg(buffer);
+    va_end(valist);
 }
 
 void delete_char() {
