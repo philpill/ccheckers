@@ -15,12 +15,6 @@ static void piece_init(void** state) {
     assert_int_equal(pieces[0].id, 1);
 }
 
-static void test(void** state)
-{
-    assert_int_equal(3, 3);
-    assert_int_not_equal(4, 4);
-}
-
 int main(void)
 {
     const struct CMUnitTest tests[] =

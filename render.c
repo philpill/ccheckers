@@ -56,6 +56,9 @@ void label_grid(char grid[GRID_H][GRID_W]) {
 }
 
 void populate_grid(Piece *pieces, char grid[][GRID_W]) {
+    
+    // seg fault here
+    // piece 23/24 not init?
     const int num_pieces = 24;
     for (int i = 0; i < num_pieces; i++) {
         int x_pos = pieces[i].x_pos;
@@ -90,8 +93,8 @@ void render(Game game, Piece *pieces) {
 void render_text() {
     WINDOW *window = windows[2];
     wclear(window);
-    output_msg();
-    box(window, 0, 0);
+    //output_msg();
+    //box(window, 0, 0);
     wrefresh(window);
 }
 

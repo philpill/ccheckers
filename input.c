@@ -17,6 +17,8 @@ int char_ctr = 0;
 char input_buffer;
 
 void output_msg() {
+    // this bit errors
+    /*
     int x = 0;
     int y = 0;
     getmaxyx(output_window, y, x);
@@ -26,6 +28,7 @@ void output_msg() {
         mvwprintw(output_window, i, 1, msg_log[start_msg_ctr+i]);
     }
     mvwprintw(output_window, y-2, 1, msg_log[msg_ctr]);
+*/
 }
 
 void insert_char(char ch) {

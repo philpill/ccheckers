@@ -1,2 +1,9 @@
+vim *.c *.h test/*.c
 gcc *.c -lncurses
-gcc test1.c -lcmocka && ./a.out
+
+debug
+gcc *.c -lncurses -g
+
+
+cmocka
+gcc ./test/*.c -lcmocka -lncurses && ./test/a.out
