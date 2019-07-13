@@ -56,18 +56,16 @@ void label_grid(char grid[GRID_H][GRID_W]) {
 }
 
 void populate_grid(Piece *pieces, char grid[][GRID_W]) {
-    
-    // seg fault here
-    // piece 23/24 not init?
-    const int num_pieces = 24;
-    for (int i = 0; i < num_pieces; i++) {
+    for (int i = 0; i < NUM_PIECES; i++) {
         int x_pos = pieces[i].x_pos;
         int y_pos = pieces[i].y_pos;
         char piece = pieces[i].colour == '0' ? 'x' : 'o';
         if (is_piece_selected_by_id(pieces[i].id) == 1) {
             piece = pieces[i].colour == '0' ? 'X' : 'O';
         }
-        grid[(y_pos*2)+2][(x_pos*4)+6] = piece;
+        int x = (x_pos*4)+6;
+        int y = (y_pos*2)+2;
+        grid[y][x] = piece;
     }
 }
 
@@ -93,8 +91,8 @@ void render(Game game, Piece *pieces) {
 void render_text() {
     WINDOW *window = windows[2];
     wclear(window);
-    //output_msg();
-    //box(window, 0, 0);
+    output_msg();
+    box(window, 0, 0);
     wrefresh(window);
 }
 
