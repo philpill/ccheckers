@@ -1,13 +1,16 @@
 SHELL = /bin/sh
 CC = gcc
 
-all: compile run
+all: build run
 
 run:
 	./a.out
 
-compile:
-	${CC} *.c -lncurses -g
+build:
+	${CC} *.c -lncurses
+
+debug:
+	${CC} *.c -lncurses -g && gdb a.out
 
 install:
 

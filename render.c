@@ -55,7 +55,7 @@ void label_grid(char grid[GRID_H][GRID_W]) {
     }
 }
 
-void populate_grid(Piece *pieces, char grid[][GRID_W]) {
+void populate_grid(Piece *pieces, char grid[GRID_H][GRID_W]) {
     for (int i = 0; i < NUM_PIECES; i++) {
         int x_pos = pieces[i].x_pos;
         int y_pos = pieces[i].y_pos;
@@ -76,7 +76,6 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
     populate_grid(pieces, board);
     for (int i = 0; i < GRID_H; i++) {
         mvwprintw(board_win, i, 1, board[i]);
-        // wprintw(board_win, board[0]);
     }
 }
 
