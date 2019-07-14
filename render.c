@@ -59,12 +59,12 @@ void populate_grid(Piece *pieces, char grid[][GRID_W]) {
     for (int i = 0; i < NUM_PIECES; i++) {
         int x_pos = pieces[i].x_pos;
         int y_pos = pieces[i].y_pos;
+        int x = (x_pos*4)+6;
+        int y = (y_pos*2)+2;
         char piece = pieces[i].colour == '0' ? 'x' : 'o';
         if (is_piece_selected_by_id(pieces[i].id) == 1) {
             piece = pieces[i].colour == '0' ? 'X' : 'O';
         }
-        int x = (x_pos*4)+6;
-        int y = (y_pos*2)+2;
         grid[y][x] = piece;
     }
 }

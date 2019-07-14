@@ -95,5 +95,5 @@ int select_square(int x, int y) {
     }
 
     //free(selected_piece);
-    //free(check_piece);
+    free(check_piece);
 }
