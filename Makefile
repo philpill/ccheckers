@@ -7,10 +7,10 @@ run:
 	./a.out
 
 build:
-	${CC} *.c -lncurses
+	${CC} *.c -lncursesw
 
 debug:
-	${CC} *.c -lncurses -g && gdb a.out
+	${CC} *.c -lncursesw -g && gdb a.out
 
 install:
 
