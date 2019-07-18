@@ -12,6 +12,12 @@ int is_piece_selected() {
     return is_selected;
 }
 
+int is_valid_move(int x, int y, int new_x, int new_y) {
+    int is_valid_move = 0;
+
+    return is_valid_move;
+}
+
 int is_piece_selected_by_id(int id) {
     int is_piece_selected = 0;
     if (is_selected == 1) {

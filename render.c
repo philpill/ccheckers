@@ -61,11 +61,8 @@ void populate_grid(Piece *pieces, char grid[GRID_H][GRID_W]) {
         int y_pos = pieces[i].y_pos;
         int x = (x_pos*4)+6;
         int y = (y_pos*2)+2;
-        char msg[50];
-        sprintf(msg, "::xy: %d, %d", x, y);
-        // insert_msg(msg);
-        sprintf(msg, "::pos: %d, %d", x_pos, y_pos);
-        // insert_msg(msg);
+        //log_msg("::xy: %d, %d", 2, x, y);
+        //log_msg("::pos: %d, %d", 2, x_pos, y_pos);
         char piece = pieces[i].colour == 0 ? 'x' : 'o';
         if (is_piece_selected_by_id(pieces[i].id) == 1) {
             piece = pieces[i].colour == 0 ? 'X' : 'O';

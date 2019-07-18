@@ -7,7 +7,6 @@
 Game game;
 
 void init_game(Game *game) {
-
     
 }
 
@@ -88,9 +87,15 @@ int select_square(int x, int y) {
 
         } else {
 
-            insert_msg("move piece");
+            insert_msg("moving piece...");
             // move selected piece to empty square
-            move_piece(selected_piece, x, y);            
+            // is move valid?
+            if (is_valid_move(selected_piece->x_pos, selected_piece->y_pos, x, y) != 0) { 
+                insert_msg("valid move");
+                move_piece(selected_piece, x, y);            
+            } else {
+                insert_msg("invalid move");
+            }
         }
     }
 
