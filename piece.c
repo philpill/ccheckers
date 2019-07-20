@@ -13,8 +13,17 @@ int is_piece_selected() {
 }
 
 int is_valid_move(int x, int y, int new_x, int new_y) {
-    int is_valid_move = 0;
-
+    int is_valid_move = 1;
+    for (int i = 0; i < 24; i++) {
+        if ((all_pieces[i].x_pos == new_x) && (all_pieces[i].y_pos == new_y)) {
+            insert_msg("space occupied");
+            is_valid_move = 0;
+        }
+    }
+    if (x == new_x || y == new_y) {
+        insert_msg("non-diagonal");
+        is_valid_move = 0;
+    }
     return is_valid_move;
 }
 
@@ -45,6 +54,9 @@ void move_piece(Piece *piece, int x, int y) {
     insert_msg(msg);
     (*piece).x_pos = x;
     (*piece).y_pos = y;
+    // deactivate for rest of turn, but need to
+    // check for further possible hops
+    // (*piece).is_active = false;
 }
 
 void select_piece_by_position(Piece *piece, int x, int y) {
