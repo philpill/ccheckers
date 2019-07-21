@@ -13,18 +13,40 @@ int is_piece_selected() {
 }
 
 int is_valid_move(int x, int y, int new_x, int new_y) {
-    int is_valid_move = 1;
+    // check valid move
+    if ((x + 1 != new_x) && (y + 1 != new_y) || 
+        (x + 2 != new_x) && (y + 2 != new_y)) {
+        insert_msg("invalid move");
+        return 0;
+    }
+    // check boundaries
+    if ((new_x < 0) || (new_x > 7) || (new_y < 0) || (new_y > 7)) {
+        insert_msg("out of bounds");
+        return 0;
+    }
+    // check square is unoccupied
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == new_x) && (all_pieces[i].y_pos == new_y)) {
             insert_msg("space occupied");
-            is_valid_move = 0;
+            return 0;
         }
     }
-    if (x == new_x || y == new_y) {
-        insert_msg("non-diagonal");
-        is_valid_move = 0;
-    }
-    return is_valid_move;
+    // check jump squares are not only accessible via own piece 
+
+    // check x+1, y+1 for x+2, y+2
+    // check x-1 y+1 for x-2 y+2
+    // check x+1 y-1 for x+2 y-2
+    // check x-1 y-1 for x-2 y-2
+
+    return 1;
+}
+
+int get_all_valid_moves(Position *current_pos, Position *valid_pos[64]) {
+    int num_valid_moves = 0;
+
+    
+
+    return num_valid_moves;
 }
 
 int is_piece_selected_by_id(int id) {
@@ -34,7 +56,7 @@ int is_piece_selected_by_id(int id) {
             is_piece_selected = 1;
         }
     }
-    return is_piece_selected;;
+    return is_piece_selected;
 }
 
 int is_piece_at_position(int x, int y) {
