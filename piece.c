@@ -14,8 +14,15 @@ int is_piece_selected() {
 
 int is_valid_move(int x, int y, int new_x, int new_y) {
     // check valid move
-    if ((x + 1 != new_x) && (y + 1 != new_y) || 
-        (x + 2 != new_x) && (y + 2 != new_y)) {
+
+    if (!((x + 1 == new_x) && (y + 1 == new_y) || 
+        ((x + 2 == new_x) && (y + 2 == new_y)) ||
+        ((x + 1 == new_x) && (y - 1 == new_y)) ||
+        ((x + 2 == new_x) && (y - 2 == new_y)) ||
+        ((x - 1 == new_x) && (y + 1 == new_y)) ||
+        ((x - 2 == new_x) && (y + 2 == new_y)) ||
+        ((x - 1 == new_x) && (y - 1 == new_y)) ||
+        (x - 2 == new_x) && (y - 2 == new_y))) {
         insert_msg("invalid move");
         return 0;
     }
