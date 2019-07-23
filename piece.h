@@ -24,7 +24,7 @@ void deselect_piece();
 
 Piece *get_selected_piece();
 
-void select_piece_by_position(Piece *piece, int x, int y);
+int select_piece_by_position(Piece *piece, int x, int y);
 
 int get_piece_by_position(Piece *piece, int x, int y);
 

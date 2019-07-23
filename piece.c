@@ -14,7 +14,6 @@ int is_piece_selected() {
 
 int is_valid_move(int x, int y, int new_x, int new_y) {
     // check valid move
-
     if (!((x + 1 == new_x) && (y + 1 == new_y) || 
         ((x + 2 == new_x) && (y + 2 == new_y)) ||
         ((x + 1 == new_x) && (y - 1 == new_y)) ||
@@ -39,19 +38,52 @@ int is_valid_move(int x, int y, int new_x, int new_y) {
         }
     }
     // check jump squares are not only accessible via own piece 
-
     // check x+1, y+1 for x+2, y+2
     // check x-1 y+1 for x-2 y+2
     // check x+1 y-1 for x+2 y-2
     // check x-1 y-1 for x-2 y-2
 
+    Piece *piece;
+
+    if ((x + 2 == new_x) && (y + 2 == new_y)) {
+        if (select_piece_by_position(piece, x + 1, y + 1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
+    if ((x + 2 == new_x) && (y - 2 == new_y)) {
+        if (select_piece_by_position(piece, x + 1, y - 1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
+    if ((x - 2 == new_x) && (y + 2 == new_y)) {
+        if (select_piece_by_position(piece, x - 1, y + 1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
+    if ((x - 2 == new_x) && (y - 2 == new_y)) {
+        if (select_piece_by_position(piece, x - 1, y - 1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
     return 1;
 }
 
-int get_all_valid_moves(Position *current_pos, Position *valid_pos[64]) {
+int get_all_valid_moves(Position *current_pos, Position *valid_pos[8]) {
     int num_valid_moves = 0;
 
-    
+    Position pos1 = { .x = (current_pos->x) + 1, .y = (current_pos->y + 1) };
 
     return num_valid_moves;
 }
@@ -88,14 +120,16 @@ void move_piece(Piece *piece, int x, int y) {
     // (*piece).is_active = false;
 }
 
-void select_piece_by_position(Piece *piece, int x, int y) {
+int select_piece_by_position(Piece *piece, int x, int y) {
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
             insert_msg("match");
             piece = &all_pieces[i];
             select_piece(piece);
+            return 1;
         }
     }
+    return 0;
 }
 
 void select_piece(Piece *piece) {
