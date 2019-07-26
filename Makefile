@@ -1,3 +1,4 @@
+CFLAGS=-std=gnu99
 SHELL = /bin/sh
 CC = gcc
 
@@ -7,10 +8,10 @@ run:
 	./a.out
 
 build:
-	${CC} *.c -lncursesw
+	${CC} $(CFLAGS) *.c -lncursesw
 
 debug:
-	${CC} *.c -lncursesw -g && gdb a.out
+	${CC} $(CFLAGS) *.c -lncursesw -g && gdb a.out
 
 install:
 

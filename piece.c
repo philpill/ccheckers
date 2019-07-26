@@ -83,7 +83,22 @@ int is_valid_move(int x, int y, int new_x, int new_y) {
 int get_all_valid_moves(Position *current_pos, Position *valid_pos[8]) {
     int num_valid_moves = 0;
 
-    Position pos1 = { .x = (current_pos->x) + 1, .y = (current_pos->y + 1) };
+    Position all_pos[] = {
+        { .x = (current_pos->x) + 1, .y = (current_pos->y + 1) },
+        { .x = (current_pos->x) + 1, .y = (current_pos->y - 1) },
+        { .x = (current_pos->x) - 1, .y = (current_pos->y + 1) },
+        { .x = (current_pos->x) - 1, .y = (current_pos->y - 1) },
+        { .x = (current_pos->x) + 2, .y = (current_pos->y + 2) },
+        { .x = (current_pos->x) + 2, .y = (current_pos->y - 2) },
+        { .x = (current_pos->x) - 2, .y = (current_pos->y + 2) },
+        { .x = (current_pos->x) - 2, .y = (current_pos->y - 2) }
+    };
+
+    for (int i = 0; i < 8; i++) {
+        if (is_valid_move(current_pos->x, current_pos->y, all_pos[i].x, all_pos[i].y)) {
+            valid_pos[num_valid_moves++] = &all_pos[i];
+        }
+    }
 
     return num_valid_moves;
 }
