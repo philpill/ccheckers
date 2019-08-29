@@ -12,6 +12,74 @@ int is_piece_selected() {
     return is_selected;
 }
 
+int is_valid_move_new(Position *curr_pos, Position *new_pos) {
+    // check valid move
+    if (!((curr_pos->x + 1 == new_pos->x) && (curr_pos->y + 1 == new_pos->y) || 
+        ((curr_pos->x + 2 == new_pos->x) && (curr_pos->y + 2 == new_pos->y)) ||
+        ((curr_pos->x + 1 == new_pos->x) && (curr_pos->y - 1 == new_pos->y)) ||
+        ((curr_pos->x + 2 == new_pos->x) && (curr_pos->y - 2 == new_pos->y)) ||
+        ((curr_pos->x - 1 == new_pos->x) && (curr_pos->y + 1 == new_pos->y)) ||
+        ((curr_pos->x - 2 == new_pos->x) && (curr_pos->y + 2 == new_pos->y)) ||
+        ((curr_pos->x - 1 == new_pos->x) && (curr_pos->y - 1 == new_pos->y)) ||
+        (curr_pos->x - 2 == new_pos->x) && (curr_pos->y - 2 == new_pos->y))) {
+        insert_msg("invalid move");
+        return 0;
+    }
+    // check boundaries
+    if ((new_pos->x < 0) || (new_pos->x > 7) || (new_pos->y < 0) || (new_pos->y > 7)) {
+        insert_msg("out of bounds");
+        return 0;
+    }
+    // check square is unoccupied
+    for (int i = 0; i < 24; i++) {
+        if ((all_pieces[i].x_pos == new_pos->x) && (all_pieces[i].y_pos == new_pos->y)) {
+            insert_msg("space occupied");
+            return 0;
+        }
+    }
+    // check jump squares are not only accessible via own piece 
+    // check x+1, y+1 for x+2, y+2
+    // check x-1 y+1 for x-2 y+2
+    // check x+1 y-1 for x+2 y-2
+    // check x-1 y-1 for x-2 y-2
+
+    Piece *piece;
+
+    if (((curr_pos->x)+2 == new_pos->x) && (((curr_pos->y)+2 == new_pos->y))) {
+        if (select_piece_by_position(piece, (curr_pos->x)+1, (curr_pos->y)+1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
+    if (((curr_pos->x)+2 == new_pos->x) && ((curr_pos->y)-2 == new_pos->y)) {
+        if (select_piece_by_position(piece, (curr_pos->x)+1, (curr_pos->y)-1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
+    if (((curr_pos->x)-2 == new_pos->x) && ((curr_pos->y)+2 == new_pos->y)) {
+        if (select_piece_by_position(piece, (curr_pos->x)-1, (curr_pos->y)+1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
+    if (((curr_pos->x)-2 == new_pos->x) && ((curr_pos->y)-2 == new_pos->y)) {
+        if (select_piece_by_position(piece, (curr_pos->x)-1, (curr_pos->y)-1) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+
 int is_valid_move(int x, int y, int new_x, int new_y) {
     // check valid move
     if (!((x + 1 == new_x) && (y + 1 == new_y) || 

@@ -1,3 +1,5 @@
+sudo apt-get install libc6-dev libncurses5-dev
+
 vim *.c *.h test/*.c
 gcc *.c -lncurses
 
