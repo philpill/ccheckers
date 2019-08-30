@@ -90,7 +90,10 @@ int select_square(int x, int y) {
             insert_msg("moving piece...");
             // move selected piece to empty square
             // is move valid?
-            if (is_valid_move(selected_piece->x_pos, selected_piece->y_pos, x, y) != 0) { 
+	    	
+			Position curr_pos = { selected_piece->x_pos, selected_piece->y_pos };
+			Position new_pos = { x, y };
+            if (is_valid_move(curr_pos, new_pos) != 0) { 
                 insert_msg("valid move");
                 move_piece(selected_piece, x, y);            
             } else {

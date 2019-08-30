@@ -34,8 +34,10 @@ int is_piece_at_position(int x, int y);
 
 int is_piece_selected_by_id(int id);
 
-int is_valid_move(int x, int y, int new_x, int new_y);
+int is_valid_move(Position curr_pos, Position new_pos);
 
 void move_piece(Piece *piece, int x, int y);
+
+int is_valid_move_xx(int x, int y, int new_x, int new_y);
 
 #endif
