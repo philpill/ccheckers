@@ -12,70 +12,121 @@ int is_piece_selected() {
     return is_selected;
 }
 
-int is_valid_move(Position curr_pos, Position new_pos) {
+/*
+ * Function: is_valid_jump_move
+ * ----------------------------
+ *
+ * If move is one of four valid jump moves,
+ * check intervening square is occupied
+ * by not-owned piece. 
+ * (check to be implemented)
+ *
+ * curr_pos: current piece position
+ * new_pos: new piece position 
+ * dx: x delta
+ * dy: y delta
+ * jx: intervening x delta
+ * jy: intervening y delta
+ *
+ * returns: 0 - not valid, 1 - is valid
+ *
+ */
+int is_valid_jump_move_a(Position *curr_pos, Position *new_pos, int dx, int dy, int jx, int jy) {
+    Piece *piece;
+    if (((curr_pos->x)+dx == new_pos->x) && (((curr_pos->y)+dy == new_pos->y))) {
+        if (select_piece_by_position(piece, (curr_pos->x)+jx, (curr_pos->y)+jy) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+	return 1;
+}
+
+/*
+ * Function: is_valid_jump_move_a
+ * ------------------------------
+ *
+ * Alternative implementation
+ * If move is one of four valid jump moves,
+ * check intervening square is occupied
+ * by not-owned piece. 
+ * (check to be implemented)
+ *
+ * curr_pos: current piece position
+ * new_pos: new piece position 
+ * dx: x direction - 1 or -1
+ * dy: y direction - 1 or -1
+ *
+ * returns: 0 - not valid, 1 - is valid
+ *
+ */
+int is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
+    Piece *piece;
+    if (((curr_pos->x)+(dx*2) == new_pos->x) && (((curr_pos->y)+(dy*2) == new_pos->y))) {
+        if (select_piece_by_position(piece, (curr_pos->x)+dx, (curr_pos->y)+dy) != 0) {
+            if (piece->colour == 0) {
+                return 0;
+            }
+        }
+    }
+	return 1;
+}
+
+// check x+1, y+1 for x+2, y+2
+// check x-1 y+1 for x-2 y+2
+// check x+1 y-1 for x+2 y-2
+// check x-1 y-1 for x-2 y-2
+int is_valid_jump(Position *curr_pos, Position *new_pos) {
+	
+	if (!is_valid_jump_move(curr_pos, new_pos, 1, 1)) {
+		return 0;
+	}
+
+	if (!is_valid_jump_move(curr_pos, new_pos, 1, -1)) {
+		return 0;
+	}
+
+	if (!is_valid_jump_move(curr_pos, new_pos, -1, 1)) {
+		return 0;
+	}
+
+	if (!is_valid_jump_move(curr_pos, new_pos, -1, -1)) {
+		return 0;
+	}
+
+	return 1;
+}
+
+int is_valid_move(Position *curr_pos, Position *new_pos) {
     // check valid move
-    if (!((curr_pos.x + 1 == new_pos.x) && (curr_pos.y + 1 == new_pos.y) || 
-        ((curr_pos.x + 2 == new_pos.x) && (curr_pos.y + 2 == new_pos.y)) ||
-        ((curr_pos.x + 1 == new_pos.x) && (curr_pos.y - 1 == new_pos.y)) ||
-        ((curr_pos.x + 2 == new_pos.x) && (curr_pos.y - 2 == new_pos.y)) ||
-        ((curr_pos.x - 1 == new_pos.x) && (curr_pos.y + 1 == new_pos.y)) ||
-        ((curr_pos.x - 2 == new_pos.x) && (curr_pos.y + 2 == new_pos.y)) ||
-        ((curr_pos.x - 1 == new_pos.x) && (curr_pos.y - 1 == new_pos.y)) ||
-        (curr_pos.x - 2 == new_pos.x) && (curr_pos.y - 2 == new_pos.y))) {
+    if (!((curr_pos->x + 1 == new_pos->x) && (curr_pos->y + 1 == new_pos->y) || 
+        ((curr_pos->x + 2 == new_pos->x) && (curr_pos->y + 2 == new_pos->y)) ||
+        ((curr_pos->x + 1 == new_pos->x) && (curr_pos->y - 1 == new_pos->y)) ||
+        ((curr_pos->x + 2 == new_pos->x) && (curr_pos->y - 2 == new_pos->y)) ||
+        ((curr_pos->x - 1 == new_pos->x) && (curr_pos->y + 1 == new_pos->y)) ||
+        ((curr_pos->x - 2 == new_pos->x) && (curr_pos->y + 2 == new_pos->y)) ||
+        ((curr_pos->x - 1 == new_pos->x) && (curr_pos->y - 1 == new_pos->y)) ||
+        (curr_pos->x - 2 == new_pos->x) && (curr_pos->y - 2 == new_pos->y))) {
         insert_msg("invalid move");
         return 0;
     }
     // check boundaries
-    if ((new_pos.x < 0) || (new_pos.x > 7) || (new_pos.y < 0) || (new_pos.y > 7)) {
+    if ((new_pos->x < 0) || (new_pos->x > 7) || (new_pos->y < 0) || (new_pos->y > 7)) {
         insert_msg("out of bounds");
         return 0;
     }
     // check square is unoccupied
     for (int i = 0; i < 24; i++) {
-        if ((all_pieces[i].x_pos == new_pos.x) && (all_pieces[i].y_pos == new_pos.y)) {
+        if ((all_pieces[i].x_pos == new_pos->x) && (all_pieces[i].y_pos == new_pos->y)) {
             insert_msg("space occupied");
             return 0;
         }
     }
     // check jump squares are not only accessible via own piece 
-    // check x+1, y+1 for x+2, y+2
-    // check x-1 y+1 for x-2 y+2
-    // check x+1 y-1 for x+2 y-2
-    // check x-1 y-1 for x-2 y-2
-
-    Piece *piece;
-
-    if (((curr_pos.x)+2 == new_pos.x) && (((curr_pos.y)+2 == new_pos.y))) {
-        if (select_piece_by_position(piece, (curr_pos.x)+1, (curr_pos.y)+1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-
-    if (((curr_pos.x)+2 == new_pos.x) && ((curr_pos.y)-2 == new_pos.y)) {
-        if (select_piece_by_position(piece, (curr_pos.x)+1, (curr_pos.y)-1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-
-    if (((curr_pos.x)-2 == new_pos.x) && ((curr_pos.y)+2 == new_pos.y)) {
-        if (select_piece_by_position(piece, (curr_pos.x)-1, (curr_pos.y)+1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-
-    if (((curr_pos.x)-2 == new_pos.x) && ((curr_pos.y)-2 == new_pos.y)) {
-        if (select_piece_by_position(piece, (curr_pos.x)-1, (curr_pos.y)-1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
+	if (!is_valid_jump(curr_pos, new_pos)) {
+		return 0;
+	}
 
     return 1;
 }
@@ -96,7 +147,7 @@ int get_all_valid_moves(Position *current_pos, Position *valid_pos[8]) {
 
     for (int i = 0; i < 8; i++) {
 		Position new_pos = { all_pos[i].x, all_pos[i].y };
-        if (is_valid_move(*current_pos, new_pos)) {
+        if (is_valid_move(current_pos, &new_pos)) {
             valid_pos[num_valid_moves++] = &all_pos[i];
         }
     }
