@@ -13,8 +13,10 @@ int is_piece_selected() {
 }
 
 /*
- * Function: is_valid_jump_move
- * ----------------------------
+ * Function: is_valid_jump_move_a
+ * ------------------------------
+ *
+ * Alternative (old) implemntation
  *
  * If move is one of four valid jump moves,
  * check intervening square is occupied
@@ -44,10 +46,31 @@ int is_valid_jump_move_a(Position *curr_pos, Position *new_pos, int dx, int dy, 
 }
 
 /*
- * Function: is_valid_jump_move_a
- * ------------------------------
+ * Function: is_jump_move
+ * ----------------------
  *
- * Alternative implementation
+ * Check if new, proposed position is
+ * a jump move.
+ * Jump moves are two squares up/down
+ * and two squares left/right
+ *
+ * curr_pos: current piece position
+ * new_pos: new piece position 
+ *
+ * returns: 0 - not jump move, 1 - is jump move
+ */
+int is_jump_move(Position *curr_pos, Position *new_pos) {
+    int pos_x = curr_pos->x;
+	int pos_y = curr_pos->y;
+	int new_x = new_pos->x;
+	int new_y = new_pos->y;
+	return ((abs(new_x-pos_x) == 2) && (abs(new_y-pos_y) == 2));
+}
+
+/*
+ * Function: is_valid_jump_move
+ * -----------------------------
+ *
  * If move is one of four valid jump moves,
  * check intervening square is occupied
  * by not-owned piece. 
@@ -62,14 +85,24 @@ int is_valid_jump_move_a(Position *curr_pos, Position *new_pos, int dx, int dy, 
  *
  */
 int is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
+	int player_colour = 0;
+	int adj_x = (curr_pos->x)+dx;
+	int adj_y = (curr_pos->y)+dy;
     Piece *piece;
-    if (((curr_pos->x)+(dx*2) == new_pos->x) && (((curr_pos->y)+(dy*2) == new_pos->y))) {
-        if (select_piece_by_position(piece, (curr_pos->x)+dx, (curr_pos->y)+dy) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
+	
+	// 2 squares up/down and 2 squares left/right
+	if (!is_jump_move(curr_pos, new_pos)) {
+		return 0;
+	}
+	// there must be a piece to jump over
+	if (!select_piece_by_position(piece, adj_x, adj_y)) {
+		return 0;
+	}
+	// checked piece is opposing
+	// cannot jump over own piece 
+	if (piece->colour == player_colour) {
+		return 0;
+	}
 	return 1;
 }
 
@@ -98,16 +131,36 @@ int is_valid_jump(Position *curr_pos, Position *new_pos) {
 	return 1;
 }
 
+/*
+ * Function: is_move
+ *
+ * Check if proposed move is legal.
+ * Pieces can only move:
+ * a) diagonally.
+ * a) forward left/right one square,
+ * b) backwards left/right if king (to be implemented)
+ * c) two squares forward, if jumping opposing piece
+ * d) two square backwards, to jump opposing piece, if king
+ *
+ * curr_pos: current piece position
+ * new_pos: new piece position 
+ *
+ * returns: 1 - legal move, 0 - illegal move
+ */
+int is_move(Position *curr_pos, Position *new_pos) {
+	int x_delta = abs(curr_pos->x - new_pos->x);
+	int y_delta = abs(curr_pos->y - new_pos->y);
+	if ((x_delta == y_delta) 
+				&& (x_delta <= 2) 
+				&& (y_delta <= 2)) {
+		return 1;
+	}
+	return 0;
+}
+
 int is_valid_move(Position *curr_pos, Position *new_pos) {
     // check valid move
-    if (!((curr_pos->x + 1 == new_pos->x) && (curr_pos->y + 1 == new_pos->y) || 
-        ((curr_pos->x + 2 == new_pos->x) && (curr_pos->y + 2 == new_pos->y)) ||
-        ((curr_pos->x + 1 == new_pos->x) && (curr_pos->y - 1 == new_pos->y)) ||
-        ((curr_pos->x + 2 == new_pos->x) && (curr_pos->y - 2 == new_pos->y)) ||
-        ((curr_pos->x - 1 == new_pos->x) && (curr_pos->y + 1 == new_pos->y)) ||
-        ((curr_pos->x - 2 == new_pos->x) && (curr_pos->y + 2 == new_pos->y)) ||
-        ((curr_pos->x - 1 == new_pos->x) && (curr_pos->y - 1 == new_pos->y)) ||
-        (curr_pos->x - 2 == new_pos->x) && (curr_pos->y - 2 == new_pos->y))) {
+	if (!is_move(curr_pos, new_pos)) {
         insert_msg("invalid move");
         return 0;
     }
@@ -124,7 +177,8 @@ int is_valid_move(Position *curr_pos, Position *new_pos) {
         }
     }
     // check jump squares are not only accessible via own piece 
-	if (!is_valid_jump(curr_pos, new_pos)) {
+	if (is_jump_move(curr_pos, new_pos) && !is_valid_jump(curr_pos, new_pos)) {
+        insert_msg("invalid jump");
 		return 0;
 	}
 
