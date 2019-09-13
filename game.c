@@ -3,11 +3,12 @@
 #include "game.h"
 #include "piece.h"
 #include "input.h"
+#include "utilities.h"
 
 Game game;
 
 void init_game(Game *game) {
-    
+
 }
 
 int select_square(int x, int y) {
@@ -17,7 +18,7 @@ int select_square(int x, int y) {
     sprintf(msg, "::select square: %d, %d", x+1, y+1);
 
     insert_msg(msg);
-    
+
     Piece *selected_piece = malloc(sizeof(Piece));
     Piece *check_piece = malloc(sizeof(Piece));
 
@@ -29,17 +30,17 @@ int select_square(int x, int y) {
         if (get_piece_by_position(check_piece, x, y) == 1) {
 
             insert_msg("piece detected");
-           
+
             sprintf(msg, "::colour: %d, %d", (*check_piece).colour, game.playerColour);
 
             insert_msg(msg);
-    
+
             if ((*check_piece).colour == game.playerColour) {
 
                 insert_msg("piece owned - selecting");
-                
+
                 select_piece_by_position(selected_piece, x, y);
-            
+
             } else {
 
                 // piece is not owned - do nothing
@@ -47,7 +48,7 @@ int select_square(int x, int y) {
             }
 
         } else {
-            
+
             insert_msg("empty square");
         }
 
@@ -56,18 +57,18 @@ int select_square(int x, int y) {
         insert_msg("piece currently selected");
 
         selected_piece = get_selected_piece();
-        
+
         sprintf(msg, "::position: %d, %d", (*selected_piece).x_pos, (*selected_piece).y_pos);
 
         insert_msg(msg);
- 
+
         //deselect
         if ((*selected_piece).x_pos == x && (*selected_piece).y_pos == y) {
-   
+
             insert_msg("piece at position - deselect piece");
- 
+
             deselect_piece();
-        
+
         } else if (is_piece_at_position(x, y) == 1) {
 
             select_piece_by_position(check_piece, x, y);
@@ -90,12 +91,18 @@ int select_square(int x, int y) {
             insert_msg("moving piece...");
             // move selected piece to empty square
             // is move valid?
-	    	
+
 			Position curr_pos = { selected_piece->x_pos, selected_piece->y_pos };
 			Position new_pos = { x, y };
-            if (is_valid_move(&curr_pos, &new_pos) != 0) { 
+            if (is_valid_move(&curr_pos, &new_pos, selected_piece) != 0) {
                 insert_msg("valid move");
-                move_piece(selected_piece, x, y);            
+                move_piece(selected_piece, x, y);
+                if (is_jump_move(&curr_pos, &new_pos)) {
+                    Position pos;
+                    if (get_intervening_position(&pos, &curr_pos, &new_pos)) {
+                        capture_piece_at_position(&pos);
+                    }
+                }
             } else {
                 insert_msg("invalid move");
             }

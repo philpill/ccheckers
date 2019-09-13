@@ -14,6 +14,6 @@ debug:
 	${CC} $(CFLAGS) *.c -lncursesw -g && gdb a.out
 
 install:
-
+	sudo apt-get install libncursesw5-dev
 clean:
 	rm ./*gch ./*swp ./*swo ./a.out

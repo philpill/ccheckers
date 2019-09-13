@@ -41,7 +41,7 @@ void get_blank_grid(char grid[GRID_H][GRID_W]) {
 
     for (int i = 18; i < GRID_H; i++) {
         char blank_line[GRID_W];
-        memset(blank_line, ' ', (GRID_W - 1)*sizeof(char)); 
+        memset(blank_line, ' ', (GRID_W - 1)*sizeof(char));
         strcpy(grid[i], blank_line);
     }
 }
@@ -57,17 +57,19 @@ void label_grid(char grid[GRID_H][GRID_W]) {
 
 void populate_grid(Piece *pieces, char grid[GRID_H][GRID_W]) {
     for (int i = 0; i < NUM_PIECES; i++) {
-        int x_pos = pieces[i].x_pos;
-        int y_pos = pieces[i].y_pos;
-        int x = (x_pos*4)+6;
-        int y = (y_pos*2)+2;
-        //log_msg("::xy: %d, %d", 2, x, y);
-        //log_msg("::pos: %d, %d", 2, x_pos, y_pos);
-        char piece = pieces[i].colour == 0 ? 'x' : 'o';
-        if (is_piece_selected_by_id(pieces[i].id) == 1) {
-            piece = pieces[i].colour == 0 ? 'X' : 'O';
+        if (!pieces[i].is_captured) {
+            int x_pos = pieces[i].x_pos;
+            int y_pos = pieces[i].y_pos;
+            int x = (x_pos*4)+6;
+            int y = (y_pos*2)+2;
+            //log_msg("::xy: %d, %d", 2, x, y);
+            //log_msg("::pos: %d, %d", 2, x_pos, y_pos);
+            char piece = pieces[i].colour == 0 ? 'x' : 'o';
+            if (is_piece_selected_by_id(pieces[i].id) == 1) {
+                piece = pieces[i].colour == 0 ? 'X' : 'O';
+            }
+            grid[y][x] = piece;
         }
-        grid[y][x] = piece;
     }
 }
 
