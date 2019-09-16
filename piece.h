@@ -1,6 +1,8 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#include <stdbool.h>
+
 typedef struct {
     int x;
     int y;
@@ -44,5 +46,9 @@ int is_jump_move(Position *curr_pos, Position *new_pos);
 void move_piece(Piece *piece, int x, int y);
 
 int is_valid_move_xx(int x, int y, int new_x, int new_y);
+
+bool is_player_turn_over(int colour);
+
+void set_all_pieces_active(int colour);
 
 #endif

@@ -1,6 +1,7 @@
-#include "piece.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include "piece.h"
 #include "input.h"
 
 Piece *all_pieces;
@@ -180,6 +181,30 @@ int is_piece_at_position(int x, int y) {
     return is_at_position;
 }
 
+/*
+ * Function: is_player_turn_over
+ *
+ * Check all piece to see if all pieces have moved
+ *
+ * colour: player to check pieces for
+ *
+ * return: true - player has no more pieces to move,
+ *          false - pieces have moves left
+ */
+bool is_player_turn_over(int colour) {
+    bool is_over = true;
+    int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    for (int i = 0; i < all_pieces_len; i++) {
+        if ((all_pieces[i].colour == colour)
+            && (!all_pieces[i].is_captured)
+            && (all_pieces[i].is_active)) {
+                is_over = false;
+            }
+    }
+
+    return is_over;
+}
+
 int is_within_boundary(Position *pos) {
     if ((pos->x < 0) || (pos->x > 7) || (pos->y < 0) || (pos->y > 7)) {
         return 0;
@@ -310,8 +335,13 @@ Piece *get_selected_piece() {
 /*
  * Function: capture_piece_at_position
  *
+ * Capture piece at given position.
+ * Possible segfault if there is no piece
+ * at position.
  *
+ * pos: position of the piece to capture
  *
+ * returns: captured piece
  */
 Piece *capture_piece_at_position(Position *pos) {
     int x = 0;
@@ -323,6 +353,18 @@ Piece *capture_piece_at_position(Position *pos) {
         piece->y_pos = 0;
     }
     return piece;
+}
+
+void set_all_pieces_active(int colour) {
+    int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    for (int i = 0; i < all_pieces_len; i++) {
+        Piece piece = all_pieces[i];
+        if (piece.colour == colour && !piece.is_captured) {
+            all_pieces[i].is_active = true;
+        } else {
+            all_pieces[i].is_active = false;
+        }
+    }
 }
 
 void init_pieces(Piece *pieces) {

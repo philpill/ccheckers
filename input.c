@@ -71,7 +71,7 @@ void parse_command(char *command) {
         int y = command[1];
         if ((isdigit(x) != 0) && (isdigit(y) != 0)) {
             select_square((x - '0') - 1, (y - '0') - 1);
-        }   
+        }
     }
 }
 
@@ -79,8 +79,17 @@ int is_exit(char *command) {
     int is_exit = 0;
     if ((strcmp(msg_log[msg_ctr], "quit") == 0) || strcmp(msg_log[msg_ctr], "exit") == 0) {
         is_exit = 1;
-    } 
+    }
     return is_exit;
+}
+
+
+int is_end_turn(char *command) {
+    int is_end_turn = 0;
+    if (strcmp(msg_log[msg_ctr], "end") == 0) {
+        is_end_turn = 1;
+    }
+    return is_end_turn;
 }
 
 int handle_input() {
@@ -97,10 +106,13 @@ int handle_input() {
     } else if (input_buffer == 127) {
         delete_char();
     } else if (input_buffer == 10) {
-        if (is_exit(msg_log[msg_ctr]) == 1) {
+        if (is_end_turn(msg_log[msg_ctr])) {
+            // end turn
+            exit = 1;
+        } else if (is_exit(msg_log[msg_ctr])) {
             exit = 1;
         } else if (char_ctr == 0) {
-            // nothing in beffer
+            // nothing in buffer
             // do nothing
         } else {
             int ctr = msg_ctr;
@@ -115,5 +127,5 @@ int handle_input() {
 
 int get_input() {
     return input_buffer;
-} 
+}
 
