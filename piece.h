@@ -49,6 +49,8 @@ int is_valid_move_xx(int x, int y, int new_x, int new_y);
 
 bool is_player_turn_over(int colour);
 
+bool is_player_dead(int colour);
+
 void set_all_pieces_active(int colour);
 
 #endif

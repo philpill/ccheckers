@@ -205,6 +205,18 @@ bool is_player_turn_over(int colour) {
     return is_over;
 }
 
+bool is_player_dead(int colour) {
+    bool is_dead = true;
+    int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    for (int i = 0; i < all_pieces_len; i++) {
+        if ((all_pieces[i].colour == colour)
+            && (!all_pieces[i].is_captured)) {
+                is_dead = false;
+            }
+    }
+    return is_dead;
+}
+
 int is_within_boundary(Position *pos) {
     if ((pos->x < 0) || (pos->x > 7) || (pos->y < 0) || (pos->y > 7)) {
         return 0;

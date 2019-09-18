@@ -15,5 +15,9 @@ debug:
 
 install:
 	sudo apt-get install libncursesw5-dev
+
 clean:
 	rm ./*gch ./*swp ./*swo ./a.out
+
+run_test:
+	gcc ./test/*.c -lcmocka -lncurses && ./a.out

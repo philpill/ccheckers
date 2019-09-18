@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "game.h"
+#include "utilities.h"
 #include "piece.h"
 #include "input.h"
-#include "utilities.h"
 
 Game *game;
 
@@ -81,6 +81,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                     if (get_intervening_position(&pos, &curr_pos, &new_pos)) {
                         capture_piece_at_position(&pos);
                         // need to check if all pieces are captured i.e. win
+                        if (is_player_dead(1 - game->playerColour)) {
+                            // player win!
+                        }
                     }
                 }
 

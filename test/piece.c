@@ -3,6 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include "../piece.c"
+#include "../utilities.c"
 #include "../input.c"
 #include "../game.c"
 
@@ -11,7 +12,7 @@ static void piece_init(void** state) {
     Piece pieces[24];
 
     init_pieces(pieces);
- 
+
     assert_int_equal(pieces[0].id, 1);
 }
 
