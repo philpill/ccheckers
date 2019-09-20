@@ -4,63 +4,32 @@
 #include "piece.h"
 #include "input.h"
 
-Piece *all_pieces;
-Piece *selected_piece;
+Piece *all_pieces = NULL;
+Piece *selected_piece = NULL;
 
-int is_selected = 0;
+bool is_selected = false;
 
-int is_piece_selected() {
+/*
+ * Check if a piece is currently selected.
+ * Needs refactoring to use bool type
+ *
+ * @return true: piece currently selected, false: nothing selected
+ */
+bool is_piece_selected() {
     return is_selected;
 }
 
 /*
- * Function: is_valid_jump_move_a
- * ------------------------------
- *
- * Alternative (old) implemntation
- *
- * If move is one of four valid jump moves,
- * check intervening square is occupied
- * by not-owned piece.
- * (check to be implemented)
- *
- * curr_pos: current piece position
- * new_pos: new piece position
- * dx: x delta
- * dy: y delta
- * jx: intervening x delta
- * jy: intervening y delta
- *
- * returns: 0 - not valid, 1 - is valid
- *
- */
-int is_valid_jump_move_a(Position *curr_pos, Position *new_pos, int dx, int dy, int jx, int jy) {
-    Piece *piece;
-    if (((curr_pos->x)+dx == new_pos->x) && (((curr_pos->y)+dy == new_pos->y))) {
-        if (select_piece_by_position(piece, (curr_pos->x)+jx, (curr_pos->y)+jy) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-	return 1;
-}
-
-/*
- * Function: is_jump_move
- * ----------------------
- *
  * Check if new, proposed position is
  * a jump move.
  * Jump moves are two squares up/down
  * and two squares left/right
  *
- * curr_pos: current piece position
- * new_pos: new piece position
- *
- * returns: 0 - not jump move, 1 - is jump move
+ * @param  curr_pos current piece position
+ * @param  new_pos  new piece position
+ * @return false - not jump move, true - is jump move
  */
-int is_jump_move(Position *curr_pos, Position *new_pos) {
+bool is_jump_move(Position *curr_pos, Position *new_pos) {
     int pos_x = curr_pos->x;
 	int pos_y = curr_pos->y;
 	int new_x = new_pos->x;
@@ -69,74 +38,68 @@ int is_jump_move(Position *curr_pos, Position *new_pos) {
 }
 
 /*
- * Function: is_valid_jump_move
- * -----------------------------
- *
  * If move is one of four valid jump moves,
  * check intervening square is occupied
  * by not-owned piece.
  * (check to be implemented)
  *
- * curr_pos: current piece position
- * new_pos: new piece position
- * dx: x direction - 1 or -1
- * dy: y direction - 1 or -1
- *
- * returns: 0 - not valid, 1 - is valid
+ * @param  curr_pos current piece position
+ * @param  new_pos  new piece position
+ * @param  dx       x direction - 1 or -1
+ * @param  dy       y direction - 1 or -1
+ * @return 0 - not valid, 1 - is valid
  *
  */
-int is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
+bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 	int player_colour = 0;
 	int adj_x = (curr_pos->x)+dx;
 	int adj_y = (curr_pos->y)+dy;
-    Piece *piece;
+    Piece *piece = NULL;
 
 	// 2 squares up/down and 2 squares left/right
 	if (!is_jump_move(curr_pos, new_pos)) {
-		return 0;
+		return false;
 	}
 	// there must be a piece to jump over
 	if (!select_piece_by_position(piece, adj_x, adj_y)) {
-		return 0;
+		return false;
 	}
 	// checked piece is opposing
 	// cannot jump over own piece
 	if (piece->colour == player_colour) {
-		return 0;
+		return false;
 	}
-	return 1;
+	return true;
 }
 
 // check x+1, y+1 for x+2, y+2
 // check x-1 y+1 for x-2 y+2
 // check x+1 y-1 for x+2 y-2
 // check x-1 y-1 for x-2 y-2
-int is_valid_jump(Position *curr_pos, Position *new_pos) {
+bool is_valid_jump(Position *curr_pos, Position *new_pos) {
 
 	if (!is_valid_jump_move(curr_pos, new_pos, 1, 1)) {
-		return 0;
+		return false;
 	}
 
 	if (!is_valid_jump_move(curr_pos, new_pos, 1, -1)) {
-		return 0;
+		return false;
 	}
 
 	// king only
 	if (!is_valid_jump_move(curr_pos, new_pos, -1, 1)) {
-		return 0;
+		return false;
 	}
 
 	// king only
 	if (!is_valid_jump_move(curr_pos, new_pos, -1, -1)) {
-		return 0;
+		return false;
 	}
 
-	return 1;
+	return true;
 }
 
 /*
- * Function: is_move
- *
  * Check if proposed move is legal.
  * Pieces can only move:
  * a) diagonally.
@@ -145,51 +108,44 @@ int is_valid_jump(Position *curr_pos, Position *new_pos) {
  * c) two squares forward, if jumping opposing piece
  * d) two square backwards, to jump opposing piece, if king
  *
- * curr_pos: current piece position
- * new_pos: new piece position
- *
- * returns: 1 - legal move, 0 - illegal move
+ * @param  curr_pos current piece position
+ * @param  new_pos  new piece position
+ * @return true - legal move, false - illegal move
  */
-int is_move(Position *curr_pos, Position *new_pos) {
+bool is_move(Position *curr_pos, Position *new_pos) {
 	int x_delta = abs(curr_pos->x - new_pos->x);
 	int y_delta = abs(curr_pos->y - new_pos->y);
 	if ((x_delta == y_delta)
 				&& (x_delta <= 2)
 				&& (y_delta <= 2)) {
-		return 1;
+		return true;
 	}
-	return 0;
+	return false;
 }
 
 /*
- * Function is_piece_at_position
- *
  * Check if there is a piece at the given position
  *
- * x: x position
- * y: y position
- *
- * returns: 1 - piece found, 0 - no piece
+ * @param  x x position
+ * @param  y y position
+ * @return true - piece found, false - no piece
  */
-int is_piece_at_position(int x, int y) {
-    int is_at_position = 0;
+bool is_piece_at_position(int x, int y) {
+    bool is_at_position = false;
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            is_at_position = 1;
+            is_at_position = true;
         }
     }
     return is_at_position;
 }
 
 /*
- * Function: is_player_turn_over
- *
  * Check all piece to see if all pieces have moved
  *
- * colour: player to check pieces for
- *
- * return: true - player has no more pieces to move,
- *          false - pieces have moves left
+ * @param  colour player to check pieces for
+ * @return true - player has no more pieces to move,
+ *         false - pieces have moves left
  */
 bool is_player_turn_over(int colour) {
     bool is_over = true;
@@ -205,6 +161,14 @@ bool is_player_turn_over(int colour) {
     return is_over;
 }
 
+/*
+ * For want of a better name ...
+ * Check if all of a player's pieces
+ * have been captured
+ *
+ * @param  colour player to check pieces for
+ * @return true: all pieces captured, else false
+ */
 bool is_player_dead(int colour) {
     bool is_dead = true;
     int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
@@ -217,37 +181,53 @@ bool is_player_dead(int colour) {
     return is_dead;
 }
 
-int is_within_boundary(Position *pos) {
+/*
+ * Check position is within game x and y boundaries.
+ *
+ * @param  pos Position to check
+ * @return true if position is within game boundaries
+ */
+bool is_within_boundary(Position *pos) {
     if ((pos->x < 0) || (pos->x > 7) || (pos->y < 0) || (pos->y > 7)) {
-        return 0;
+        return false;
     }
-	return 1;
+	return true;
 }
 
-int is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
+/*
+ * Check if proposed move is valid, within bounds,
+ * not to an occupied square and if is a jump
+ * move, that it is valid for a jump
+ *
+ * @param  curr_pos
+ * @param  new_pos
+ * @param  piece
+ * @return true if new position is a valid move from current position
+ */
+bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
     // check valid move
 	if (!is_move(curr_pos, new_pos)) {
         insert_msg("invalid move");
-        return 0;
+        return false;
     }
     // check boundaries
     if (is_within_boundary(new_pos)) {
         insert_msg("out of bounds");
-        return 0;
+        return false;
     }
     // check square is unoccupied
 	if (is_piece_at_position(new_pos->x, new_pos->y)) {
 		insert_msg("space occupied");
-		return 0;
+		return false;
 	}
     // check jump squares are not only accessible via own piece
 	if (is_jump_move(curr_pos, new_pos)
 			&& !is_valid_jump(curr_pos, new_pos)) {
         insert_msg("invalid jump");
-		return 0;
+		return false;
 	}
 
-    return 1;
+    return true;
 }
 
 int get_all_valid_moves(Position *current_pos, Position *valid_pos[8], Piece *piece) {
@@ -274,38 +254,44 @@ int get_all_valid_moves(Position *current_pos, Position *valid_pos[8], Piece *pi
     return num_valid_moves;
 }
 
-int is_piece_selected_by_id(int id) {
-    int is_piece_selected = 0;
-    if (is_selected == 1) {
-        if (id == selected_piece -> id) {
-            is_piece_selected = 1;
+/*
+ * Check if piece is currently selected
+ *
+ * @param  id piece id
+ * @return
+ *
+ */
+bool is_piece_selected_by_id(int id) {
+    bool is_piece_selected = false;
+    if (is_selected) {
+        if (id == selected_piece->id) {
+            is_piece_selected = true;
         }
     }
     return is_piece_selected;
 }
 
 void move_piece(Piece *piece, int x, int y) {
-
     char msg[50];
     sprintf(msg, "::move piece: %d, %d", x+1, y+1);
     insert_msg(msg);
-    (*piece).x_pos = x;
-    (*piece).y_pos = y;
+    piece->x_pos = x;
+    piece->y_pos = y;
     // deactivate for rest of turn, but need to
     // check for further possible hops
-    // (*piece).is_active = false;
+    piece->is_active = false;
 }
 
-int select_piece_by_position(Piece *piece, int x, int y) {
+bool select_piece_by_position(Piece *piece, int x, int y) {
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
             insert_msg("match");
             piece = &all_pieces[i];
             select_piece(piece);
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
 void select_piece(Piece *piece) {
@@ -313,11 +299,11 @@ void select_piece(Piece *piece) {
     char msg[50];
     sprintf(msg, "pointers: %d, %d", (*piece).x_pos, (*selected_piece).x_pos);
     insert_msg(msg);
-    is_selected = 1;
+    is_selected = true;
 }
 
 void deselect_piece() {
-    is_selected = 0;
+    is_selected = false;
 }
 
 void copy_piece(Piece *source, Piece *dest) {
@@ -329,11 +315,11 @@ void copy_piece(Piece *source, Piece *dest) {
     dest->y_pos = source->y_pos;
 }
 
-int get_piece_by_position(Piece *piece, int x, int y) {
-    int is_at_position = 0;
+bool get_piece_by_position(Piece *piece, int x, int y) {
+    int is_at_position = false;
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            is_at_position = 1;
+            is_at_position = true;
             piece = &all_pieces[i];
         }
     }
@@ -345,20 +331,17 @@ Piece *get_selected_piece() {
 }
 
 /*
- * Function: capture_piece_at_position
- *
  * Capture piece at given position.
  * Possible segfault if there is no piece
  * at position.
  *
- * pos: position of the piece to capture
- *
- * returns: captured piece
+ * @param  pos position of the piece to capture
+ * @return captured piece
  */
 Piece *capture_piece_at_position(Position *pos) {
     int x = 0;
     int y = 0;
-    Piece *piece;
+    Piece *piece = NULL;
     if (get_piece_by_position(piece, x, y)) {
         piece->is_captured = 1;
         piece->x_pos = 0;
@@ -442,73 +425,5 @@ void init_pieces(Piece *pieces) {
         pieces[i].y_pos = 7;
         j += 2;
     }
-}
-
-int is_valid_move_xx(int x, int y, int new_x, int new_y) {
-    // check valid move
-    if (!((x + 1 == new_x) && (y + 1 == new_y) ||
-        ((x + 2 == new_x) && (y + 2 == new_y)) ||
-        ((x + 1 == new_x) && (y - 1 == new_y)) ||
-        ((x + 2 == new_x) && (y - 2 == new_y)) ||
-        ((x - 1 == new_x) && (y + 1 == new_y)) ||
-        ((x - 2 == new_x) && (y + 2 == new_y)) ||
-        ((x - 1 == new_x) && (y - 1 == new_y)) ||
-        (x - 2 == new_x) && (y - 2 == new_y))) {
-        insert_msg("invalid move");
-        return 0;
-    }
-    // check boundaries
-    if ((new_x < 0) || (new_x > 7) || (new_y < 0) || (new_y > 7)) {
-        insert_msg("out of bounds");
-        return 0;
-    }
-    // check square is unoccupied
-    for (int i = 0; i < 24; i++) {
-        if ((all_pieces[i].x_pos == new_x) && (all_pieces[i].y_pos == new_y)) {
-            insert_msg("space occupied");
-            return 0;
-        }
-    }
-    // check jump squares are not only accessible via own piece
-    // check x+1, y+1 for x+2, y+2
-    // check x-1 y+1 for x-2 y+2
-    // check x+1 y-1 for x+2 y-2
-    // check x-1 y-1 for x-2 y-2
-
-    Piece *piece;
-
-    if ((x + 2 == new_x) && (y + 2 == new_y)) {
-        if (select_piece_by_position(piece, x + 1, y + 1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-
-    if ((x + 2 == new_x) && (y - 2 == new_y)) {
-        if (select_piece_by_position(piece, x + 1, y - 1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-
-    if ((x - 2 == new_x) && (y + 2 == new_y)) {
-        if (select_piece_by_position(piece, x - 1, y + 1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-
-    if ((x - 2 == new_x) && (y - 2 == new_y)) {
-        if (select_piece_by_position(piece, x - 1, y - 1) != 0) {
-            if (piece->colour == 0) {
-                return 0;
-            }
-        }
-    }
-
-    return 1;
 }
 

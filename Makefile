@@ -14,7 +14,8 @@ debug:
 	${CC} $(CFLAGS) *.c -lncursesw -g && gdb a.out
 
 install:
-	sudo apt-get install libncursesw5-dev
+	sudo apt-get install libncursesw5-dev libcmocka-dev
+
 
 clean:
 	rm ./*gch ./*swp ./*swo ./a.out

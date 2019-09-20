@@ -73,7 +73,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
             Position curr_pos = { piece->x_pos, piece->y_pos };
             Position new_pos = { x, y };
-            if (is_valid_move(&curr_pos, &new_pos, piece) != 0) {
+            if (is_valid_move(&curr_pos, &new_pos, piece)) {
                 insert_msg("valid move");
                 move_piece(piece, x, y);
                 if (is_jump_move(&curr_pos, &new_pos)) {
@@ -121,12 +121,12 @@ int select_square(int x, int y) {
     Piece *selected_piece = malloc(sizeof(Piece));
     Piece *check_piece = malloc(sizeof(Piece));
 
-    if (is_piece_selected() == 0) {
+    if (is_piece_selected()) {
 
         insert_msg("no piece currently selected");
 
         //select piece if owned
-        if (get_piece_by_position(check_piece, x, y) == 1) {
+        if (get_piece_by_position(check_piece, x, y)) {
 
             insert_msg("piece detected");
 
