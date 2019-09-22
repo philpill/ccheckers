@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "piece.h"
 #include "input.h"
+#include "log.h"
 
 Piece *all_pieces = NULL;
 Piece *selected_piece = NULL;
@@ -207,23 +208,23 @@ bool is_within_boundary(Position *pos) {
 bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
     // check valid move
 	if (!is_move(curr_pos, new_pos)) {
-        insert_msg("invalid move");
+        log_msg("invalid move");
         return false;
     }
     // check boundaries
     if (is_within_boundary(new_pos)) {
-        insert_msg("out of bounds");
+        log_msg("out of bounds");
         return false;
     }
     // check square is unoccupied
 	if (is_piece_at_position(new_pos->x, new_pos->y)) {
-		insert_msg("space occupied");
+		log_msg("space occupied");
 		return false;
 	}
     // check jump squares are not only accessible via own piece
 	if (is_jump_move(curr_pos, new_pos)
 			&& !is_valid_jump(curr_pos, new_pos)) {
-        insert_msg("invalid jump");
+        log_msg("invalid jump");
 		return false;
 	}
 
@@ -272,9 +273,7 @@ bool is_piece_selected_by_id(int id) {
 }
 
 void move_piece(Piece *piece, int x, int y) {
-    char msg[50];
-    sprintf(msg, "::move piece: %d, %d", x+1, y+1);
-    insert_msg(msg);
+    log_fmsg("::move piece: %d, %d", 2, x+1, y+1);
     piece->x_pos = x;
     piece->y_pos = y;
     // deactivate for rest of turn, but need to
@@ -285,7 +284,7 @@ void move_piece(Piece *piece, int x, int y) {
 bool select_piece_by_position(Piece *piece, int x, int y) {
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            insert_msg("match");
+            log_msg("match");
             piece = &all_pieces[i];
             select_piece(piece);
             return true;
@@ -296,9 +295,7 @@ bool select_piece_by_position(Piece *piece, int x, int y) {
 
 void select_piece(Piece *piece) {
     selected_piece = piece;
-    char msg[50];
-    sprintf(msg, "pointers: %d, %d", (*piece).x_pos, (*selected_piece).x_pos);
-    insert_msg(msg);
+    log_fmsg("pointers: %d, %d", 2, piece->x_pos, selected_piece->x_pos);
     is_selected = true;
 }
 

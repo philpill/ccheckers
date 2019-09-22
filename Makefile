@@ -8,10 +8,10 @@ run:
 	./a.out
 
 build:
-	${CC} $(CFLAGS) *.c -lncursesw
+	${CC} $(CFLAGS) *.c -lncursesw -lcmocka
 
 debug:
-	${CC} $(CFLAGS) *.c -lncursesw -g && gdb a.out
+	${CC} $(CFLAGS) *.c -lncursesw -lcmocka -g && gdb a.out
 
 install:
 	sudo apt-get install libncursesw5-dev libcmocka-dev
