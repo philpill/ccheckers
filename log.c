@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include "log.h"
 
-static char msg_log[5000][255];
+static char msg_log[5000][255]; // const this value
 
 static int msg_ctr = 0;
 
@@ -37,7 +37,7 @@ void log_fmsg(char *msg, int num, ...) {
     // do something with all these logs
 }
 
-char *get_log(int index) {
+static char *get_log_entry(int index) {
     char *msg = NULL;
     if (index <= msg_ctr) {
         msg = msg_log[index];
@@ -46,5 +46,15 @@ char *get_log(int index) {
 }
 
 int get_log_count() {
-    return msg_ctr;
+    return msg_ctr + 1;
+}
+
+char *get_last_log_entry() {
+    return get_log_entry(msg_ctr-1);
+}
+
+char **get_logs(char *logs[], size_t size) {
+    for (int i = 0; i < size; i++) {
+        logs[i] = msg_log[i];
+    }
 }

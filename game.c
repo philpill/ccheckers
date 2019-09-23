@@ -125,11 +125,11 @@ int select_square(int x, int y) {
 
             log_msg("piece detected");
 
-            sprintf(msg, "::colour: %d, %d", (*check_piece).colour, game->playerColour);
+            sprintf(msg, "::colour: %d, %d", check_piece->colour, game->playerColour);
 
             log_msg(msg);
 
-            if ((*check_piece).colour == game->playerColour) {
+            if (check_piece->colour == game->playerColour) {
 
                 log_msg("piece owned - selecting");
 

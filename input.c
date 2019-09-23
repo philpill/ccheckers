@@ -20,10 +20,15 @@ void output_msg() {
     int x = 0;
     int y = 0;
     getmaxyx(output_window, y, x);
-    int start_msg_ctr = msg_ctr - y + 2;
+
+    int log_count = get_log_count();
+    char *logs[log_count];
+    get_logs(logs, log_count);
+
+    int start_msg_ctr = log_count - 1 - y + 2;
     if (start_msg_ctr < 0) { start_msg_ctr = 0; }
-    for (int i = 0; i < msg_ctr && i < y + 2; i++) {
-        mvwprintw(output_window, i, 1, msg_log[start_msg_ctr+i]);
+    for (int i = 0; i < log_count - 1 && i < y + 2; i++) {
+        mvwprintw(output_window, i, 1, logs[start_msg_ctr+i]);
     }
     mvwprintw(output_window, y-2, 1, msg_log[msg_ctr]);
 }
