@@ -116,7 +116,7 @@ int select_square(int x, int y) {
     Piece *selected_piece = malloc(sizeof(Piece));
     Piece *check_piece = malloc(sizeof(Piece));
 
-    if (is_piece_selected()) {
+    if (!is_piece_selected()) {
 
         log_msg("no piece currently selected");
 
@@ -125,9 +125,9 @@ int select_square(int x, int y) {
 
             log_msg("piece detected");
 
-            sprintf(msg, "::colour: %d, %d", check_piece->colour, game->playerColour);
+            log_fmsg("::piece->id: %d", 1, check_piece->id);
 
-            log_msg(msg);
+            log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->playerColour);
 
             if (check_piece->colour == game->playerColour) {
 
@@ -155,6 +155,6 @@ int select_square(int x, int y) {
         act_on_selected_piece(selected_piece, x, y);
     }
 
-    //free(selected_piece);
+    // free(selected_piece);
     free(check_piece);
 }
