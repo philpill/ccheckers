@@ -150,7 +150,9 @@ bool is_piece_at_position(int x, int y) {
  */
 bool is_player_turn_over(int colour) {
     bool is_over = true;
-    int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    //int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    // log_fmsg("all_pieces_len: %d", 1, all_pieces_len);
+    int all_pieces_len = 24;
     for (int i = 0; i < all_pieces_len; i++) {
         if ((all_pieces[i].colour == colour)
             && (!all_pieces[i].is_captured)
@@ -172,7 +174,8 @@ bool is_player_turn_over(int colour) {
  */
 bool is_player_dead(int colour) {
     bool is_dead = true;
-    int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    // int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    int all_pieces_len = 24;
     for (int i = 0; i < all_pieces_len; i++) {
         if ((all_pieces[i].colour == colour)
             && (!all_pieces[i].is_captured)) {
@@ -212,7 +215,7 @@ bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
         return false;
     }
     // check boundaries
-    if (is_within_boundary(new_pos)) {
+    if (!is_within_boundary(new_pos)) {
         log_msg("out of bounds");
         return false;
     }
@@ -313,11 +316,13 @@ void copy_piece(Piece *source, Piece *dest) {
 }
 
 bool get_piece_by_position(Piece *piece, int x, int y) {
+    log_msg("get_piece_by_position");
     int is_at_position = false;
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
             is_at_position = true;
-            piece = &all_pieces[i];
+            log_fmsg("::piece->id: %d", 1, all_pieces[i].id);
+            *piece = all_pieces[i];
         }
     }
     return is_at_position;
@@ -348,7 +353,8 @@ Piece *capture_piece_at_position(Position *pos) {
 }
 
 void set_all_pieces_active(int colour) {
-    int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    // int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
+    int all_pieces_len = 24;
     for (int i = 0; i < all_pieces_len; i++) {
         Piece piece = all_pieces[i];
         if (piece.colour == colour && !piece.is_captured) {

@@ -13,6 +13,16 @@ void init_game(Game *new_game) {
     game = new_game;
 }
 
+void end_turn() {
+    log_msg("end turn");
+    deselect_piece();
+    // switch player
+    // https://stackoverflow.com/a/4084058
+    game->playerColour = 1 - game->playerColour;
+    // set all pieces active
+    set_all_pieces_active(game->playerColour);
+    game->turnCounter = game->turnCounter+1;
+}
 
 /*
  * Function: act_on_selected_piece
@@ -87,11 +97,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
                 // check if all pieces have moved
                 if (is_player_turn_over(game->playerColour)) {
-                    // switch player
-                    // https://stackoverflow.com/a/4084058
-                    game->playerColour = 1 - game->playerColour;
-                    // set all pieces active
-                    set_all_pieces_active(game->playerColour);
+                    end_turn();
                 }
 
             } else {

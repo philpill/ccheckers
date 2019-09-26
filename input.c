@@ -46,6 +46,7 @@ static void delete_char() {
 
 static void insert_char(char ch) {
     msg_log[msg_ctr][char_ctr] = ch;
+    msg_log[msg_ctr][char_ctr+1] = '\0';
     char_ctr++;
 }
 
@@ -103,8 +104,9 @@ int handle_input() {
         delete_char();
     } else if (input_buffer == 10) {
         if (is_end_turn(msg_log[msg_ctr])) {
-            // end turn
-            exit = 1;
+            end_turn();
+            char_ctr = 0;
+            msg_log[msg_ctr][char_ctr] = '\0';
         } else if (is_exit(msg_log[msg_ctr])) {
             exit = 1;
         } else if (char_ctr == 0) {

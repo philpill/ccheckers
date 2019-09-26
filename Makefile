@@ -14,8 +14,10 @@ debug:
 	${CC} $(CFLAGS) *.c -lncursesw -lcmocka -g && gdb a.out
 
 install:
-	sudo apt-get install libncursesw5-dev libcmocka-dev
+	sudo apt-get install libncursesw5-dev libcmocka-dev valgrind
 
+memcheck:
+	valgrind --leak-check=yes ./a.out
 
 clean:
 	rm ./*gch ./*swp ./*swo ./a.out
