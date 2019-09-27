@@ -262,7 +262,7 @@ int get_all_valid_moves(Position *current_pos, Position *valid_pos[8], Piece *pi
  * Check if piece is currently selected
  *
  * @param  id piece id
- * @return
+ * @return true if piece with given id is currently selected
  *
  */
 bool is_piece_selected_by_id(int id) {
@@ -275,6 +275,13 @@ bool is_piece_selected_by_id(int id) {
     return is_piece_selected;
 }
 
+/*
+ * Update piece position with given values
+ *
+ * @param piece pointer to piece
+ * @param x new x position to assign
+ * @param y new y position to assign
+ */
 void move_piece(Piece *piece, int x, int y) {
     log_fmsg("::move piece: %d, %d", 2, x+1, y+1);
     piece->x_pos = x;
@@ -288,7 +295,7 @@ bool select_piece_by_position(Piece *piece, int x, int y) {
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
             log_msg("match");
-            piece = &all_pieces[i];
+            *piece = all_pieces[i];
             select_piece(piece);
             return true;
         }
@@ -303,6 +310,7 @@ void select_piece(Piece *piece) {
 }
 
 void deselect_piece() {
+    log_msg("deselect_piece");
     is_selected = false;
 }
 

@@ -3,7 +3,7 @@
 
 #include "piece.h"
 
-int get_intervening_position(Position *intervening_pos,
+bool get_intervening_position(Position *intervening_pos,
                                 Position *a_pos, Position *b_pos);
 
 

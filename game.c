@@ -53,9 +53,13 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
         deselect_piece();
 
-    } else if (select_piece_by_position(check_piece, x, y)) {
+    } else if (get_piece_by_position(check_piece, x, y)) {
 
         if (check_piece->colour == game->playerColour) {
+
+            log_fmsg("::piece->id: %d", 1, check_piece->id);
+
+            log_fmsg("get_piece_by_position: %d, %d", 2, check_piece->colour, game->playerColour);
 
             // select alternative piece
             log_msg("select different piece");
@@ -108,7 +112,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
         }
     }
 
-    free(check_piece);
+    //free(check_piece);
 }
 
 int select_square(int x, int y) {
