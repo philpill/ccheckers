@@ -62,7 +62,7 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 		return false;
 	}
 	// there must be a piece to jump over
-	if (!select_piece_by_position(piece, adj_x, adj_y)) {
+	if (!get_piece_by_position(piece, adj_x, adj_y)) {
 		return false;
 	}
 	// checked piece is opposing
@@ -211,23 +211,23 @@ bool is_within_boundary(Position *pos) {
 bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
     // check valid move
 	if (!is_move(curr_pos, new_pos)) {
-        log_msg("invalid move");
+        log_msg("::invalid move");
         return false;
     }
     // check boundaries
     if (!is_within_boundary(new_pos)) {
-        log_msg("out of bounds");
+        log_msg("::out of bounds");
         return false;
     }
     // check square is unoccupied
 	if (is_piece_at_position(new_pos->x, new_pos->y)) {
-		log_msg("space occupied");
+		log_msg("::space occupied");
 		return false;
 	}
     // check jump squares are not only accessible via own piece
 	if (is_jump_move(curr_pos, new_pos)
 			&& !is_valid_jump(curr_pos, new_pos)) {
-        log_msg("invalid jump");
+        log_msg("::invalid jump");
 		return false;
 	}
 
@@ -294,8 +294,7 @@ void move_piece(Piece *piece, int x, int y) {
 bool select_piece_by_position(Piece *piece, int x, int y) {
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            log_msg("match");
-            *piece = all_pieces[i];
+            piece = &all_pieces[i];
             select_piece(piece);
             return true;
         }
@@ -305,12 +304,12 @@ bool select_piece_by_position(Piece *piece, int x, int y) {
 
 void select_piece(Piece *piece) {
     selected_piece = piece;
-    log_fmsg("pointers: %d, %d", 2, piece->x_pos, selected_piece->x_pos);
+    log_fmsg("::pointers: %d, %d", 2, piece->x_pos, selected_piece->x_pos);
     is_selected = true;
 }
 
 void deselect_piece() {
-    log_msg("deselect_piece");
+    log_msg("deselect_piece()");
     is_selected = false;
 }
 
@@ -324,16 +323,15 @@ void copy_piece(Piece *source, Piece *dest) {
 }
 
 bool get_piece_by_position(Piece *piece, int x, int y) {
-    log_msg("get_piece_by_position");
-    int is_at_position = false;
+    log_msg("get_piece_by_position()");
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            is_at_position = true;
             log_fmsg("::piece->id: %d", 1, all_pieces[i].id);
             *piece = all_pieces[i];
+            return true;
         }
     }
-    return is_at_position;
+    return false;
 }
 
 Piece *get_selected_piece() {

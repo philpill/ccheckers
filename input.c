@@ -72,14 +72,21 @@ static void parse_command(char *command) {
     }
 }
 
-static int is_exit(char *command) {
-    int is_exit = 0;
+static bool is_exit(char *command) {
+    bool is_exit = false;
     if ((strcmp(msg_log[msg_ctr], "quit") == 0) || strcmp(msg_log[msg_ctr], "exit") == 0) {
-        is_exit = 1;
+        is_exit = true;
     }
     return is_exit;
 }
 
+static bool is_debug1(char *command) {
+    bool is_debug1 = false;
+    if (strcmp(msg_log[msg_ctr], "debug1") == 0) {
+        is_debug1 = true;
+    }
+    return is_debug1;
+}
 
 static int is_end_turn(char *command) {
     int is_end_turn = 0;
@@ -109,6 +116,16 @@ int handle_input() {
             msg_log[msg_ctr][char_ctr] = '\0';
         } else if (is_exit(msg_log[msg_ctr])) {
             exit = 1;
+        } else if (is_debug1(msg_log[msg_ctr])) {
+            if (is_piece_selected()) {
+                Piece *piece = get_selected_piece();
+                log_fmsg("id: %d", 1, piece->id);
+                log_fmsg("colour: %d", 1, piece->colour);
+            } else {
+                log_msg("::no piece selected");
+            }
+            char_ctr = 0;
+            msg_log[msg_ctr][char_ctr] = '\0';
         } else if (char_ctr == 0) {
             // nothing in buffer
             // do nothing
