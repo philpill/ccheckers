@@ -322,7 +322,12 @@ void copy_piece(Piece *source, Piece *dest) {
 }
 
 /*
+ * Get pointer to piece at specified position
  *
+ * @param  piece pointer to piece if found
+ * @param  x x position
+ * @param  y y position
+ * @return true if piece is at position
  */
 bool get_piece_by_position(Piece **piece, int x, int y) {
     *piece = malloc (sizeof (Piece));
