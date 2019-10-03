@@ -88,12 +88,17 @@ static bool is_debug1(char *command) {
     return is_debug1;
 }
 
-static int is_end_turn(char *command) {
-    int is_end_turn = 0;
+static bool is_end_turn(char *command) {
+    bool is_end_turn = false;
     if (strcmp(msg_log[msg_ctr], "end") == 0) {
-        is_end_turn = 1;
+        is_end_turn = true;
     }
     return is_end_turn;
+}
+
+void clear_buffer() {
+    char_ctr = 0;
+    msg_log[msg_ctr][char_ctr] = '\0';
 }
 
 int handle_input() {
@@ -112,8 +117,7 @@ int handle_input() {
     } else if (input_buffer == 10) {
         if (is_end_turn(msg_log[msg_ctr])) {
             end_turn();
-            char_ctr = 0;
-            msg_log[msg_ctr][char_ctr] = '\0';
+            clear_buffer();
         } else if (is_exit(msg_log[msg_ctr])) {
             exit = 1;
         } else if (is_debug1(msg_log[msg_ctr])) {
@@ -124,8 +128,7 @@ int handle_input() {
             } else {
                 log_msg("::no piece selected");
             }
-            char_ctr = 0;
-            msg_log[msg_ctr][char_ctr] = '\0';
+            clear_buffer();
         } else if (char_ctr == 0) {
             // nothing in buffer
             // do nothing

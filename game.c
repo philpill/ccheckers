@@ -36,15 +36,9 @@ void end_turn() {
  */
 void act_on_selected_piece(Piece *piece, int x, int y) {
 
-    log_fmsg("::select square: %d, %d", 2, x+1, y+1);
-
-    Piece *check_piece = malloc(sizeof(Piece));
-
-    log_msg("piece currently selected");
+    Piece *check_piece = 0;
 
     piece = get_selected_piece();
-
-    log_fmsg("::position: %d, %d", 2, piece->x_pos, piece->y_pos);
 
     //deselect
     if (piece->x_pos == x && piece->y_pos == y) {
@@ -53,7 +47,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
         deselect_piece();
 
-    } else if (select_piece_by_position(check_piece, x, y)) {
+    } else if (get_piece_by_position(&check_piece, x, y)) {
+
+        log_fmsg("::get_piece_by_position: %d, %d", 2, check_piece->colour, game->playerColour);
 
         if (check_piece->colour == game->playerColour) {
 
@@ -108,7 +104,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
         }
     }
 
-    free(check_piece);
+    // free(check_piece);
 }
 
 int select_square(int x, int y) {
@@ -120,14 +116,14 @@ int select_square(int x, int y) {
     log_msg(msg);
 
     Piece *selected_piece = malloc(sizeof(Piece));
-    Piece *check_piece = malloc(sizeof(Piece));
+    Piece *check_piece = 0;
 
     if (!is_piece_selected()) {
 
         log_msg("no piece currently selected");
 
         //select piece if owned
-        if (get_piece_by_position(check_piece, x, y)) {
+        if (get_piece_by_position(&check_piece, x, y)) {
 
             log_msg("piece detected");
 
@@ -162,5 +158,5 @@ int select_square(int x, int y) {
     }
 
     // free(selected_piece);
-    free(check_piece);
+    // free(check_piece);
 }

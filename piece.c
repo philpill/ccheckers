@@ -55,14 +55,14 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 	int player_colour = 0;
 	int adj_x = (curr_pos->x)+dx;
 	int adj_y = (curr_pos->y)+dy;
-    Piece *piece = NULL;
+    Piece *piece = 0;
 
 	// 2 squares up/down and 2 squares left/right
 	if (!is_jump_move(curr_pos, new_pos)) {
 		return false;
 	}
 	// there must be a piece to jump over
-	if (!get_piece_by_position(piece, adj_x, adj_y)) {
+	if (!get_piece_by_position(&piece, adj_x, adj_y)) {
 		return false;
 	}
 	// checked piece is opposing
@@ -79,25 +79,24 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 // check x-1 y-1 for x-2 y-2
 bool is_valid_jump(Position *curr_pos, Position *new_pos) {
 
-	if (!is_valid_jump_move(curr_pos, new_pos, 1, 1)) {
-		return false;
-	}
 
-	if (!is_valid_jump_move(curr_pos, new_pos, 1, -1)) {
-		return false;
-	}
+	bool thing1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
 
-	// king only
-	if (!is_valid_jump_move(curr_pos, new_pos, -1, 1)) {
-		return false;
-	}
+	bool thing2 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
+
+    log_msg(thing1 ? "thing1 true": "thing1 false");
+
+    log_msg(thing2 ? "thing2 true": "thing2 false");
 
 	// king only
-	if (!is_valid_jump_move(curr_pos, new_pos, -1, -1)) {
-		return false;
-	}
+	//is_valid_jump = is_valid_jump
+    //                    || is_valid_jump_move(curr_pos, new_pos, -1, 1);
 
-	return true;
+	// king only
+	//is_valid_jump = is_valid_jump
+    //                    || is_valid_jump_move(curr_pos, new_pos, -1, -1);
+
+	return thing1 || thing2;
 }
 
 /*
@@ -322,12 +321,16 @@ void copy_piece(Piece *source, Piece *dest) {
     dest->y_pos = source->y_pos;
 }
 
-bool get_piece_by_position(Piece *piece, int x, int y) {
+/*
+ *
+ */
+bool get_piece_by_position(Piece **piece, int x, int y) {
+    *piece = malloc (sizeof (Piece));
     log_msg("get_piece_by_position()");
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            log_fmsg("::piece->id: %d", 1, all_pieces[i].id);
-            *piece = all_pieces[i];
+            log_fmsg("::all_pieces[i].id: %d", 1, all_pieces[i].id);
+            *piece = &all_pieces[i];
             return true;
         }
     }
@@ -347,10 +350,11 @@ Piece *get_selected_piece() {
  * @return captured piece
  */
 Piece *capture_piece_at_position(Position *pos) {
-    int x = 0;
-    int y = 0;
-    Piece *piece = NULL;
-    if (get_piece_by_position(piece, x, y)) {
+    int x = pos->x;
+    int y = pos->y;
+    Piece *piece = 0;
+    if (get_piece_by_position(&piece, x, y)) {
+        log_fmsg("capture_piece_at_position(): %d, [%d, %d]", 3, piece->id, x, y);
         piece->is_captured = 1;
         piece->x_pos = 0;
         piece->y_pos = 0;
@@ -434,5 +438,8 @@ void init_pieces(Piece *pieces) {
         pieces[i].y_pos = 7;
         j += 2;
     }
+
+    pieces[10].x_pos = 5;
+    pieces[10].y_pos = 4;
 }
 

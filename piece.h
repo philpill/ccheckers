@@ -31,7 +31,7 @@ Piece *capture_piece_at_position(Position *pos);
 
 bool select_piece_by_position(Piece *piece, int x, int y);
 
-bool get_piece_by_position(Piece *piece, int x, int y);
+bool get_piece_by_position(Piece **piece, int x, int y);
 
 bool is_piece_selected();
 
