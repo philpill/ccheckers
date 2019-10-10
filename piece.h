@@ -19,6 +19,8 @@ typedef struct {
     int id;
 } Piece;
 
+void init_pieces_by_file();
+
 void init_pieces(Piece pieces[]);
 
 void select_piece(Piece *piece);
@@ -44,8 +46,6 @@ bool is_valid_move(Position *curr_pos, Position *new_pos, Piece *piece);
 bool is_jump_move(Position *curr_pos, Position *new_pos);
 
 void move_piece(Piece *piece, int x, int y);
-
-bool is_player_turn_over(int colour);
 
 bool is_player_dead(int colour);
 

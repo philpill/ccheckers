@@ -4,6 +4,7 @@
 #include "piece.h"
 #include "input.h"
 #include "log.h"
+#include "resource.h"
 
 Piece *all_pieces = NULL;
 Piece *selected_piece = NULL;
@@ -138,29 +139,6 @@ bool is_piece_at_position(int x, int y) {
         }
     }
     return is_at_position;
-}
-
-/*
- * Check all piece to see if all pieces have moved
- *
- * @param  colour player to check pieces for
- * @return true - player has no more pieces to move,
- *         false - pieces have moves left
- */
-bool is_player_turn_over(int colour) {
-    bool is_over = true;
-    //int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
-    // log_fmsg("all_pieces_len: %d", 1, all_pieces_len);
-    int all_pieces_len = 24;
-    for (int i = 0; i < all_pieces_len; i++) {
-        if ((all_pieces[i].colour == colour)
-            && (!all_pieces[i].is_captured)
-            && (all_pieces[i].is_active)) {
-                is_over = false;
-            }
-    }
-
-    return is_over;
 }
 
 /*
@@ -378,6 +356,18 @@ void set_all_pieces_active(int colour) {
             all_pieces[i].is_active = false;
         }
     }
+}
+
+/**
+ * Load initial piece positions from file
+ */
+void init_pieces_by_file() {
+
+    int map[8][4];
+
+    load_file(map);
+
+    log_fmsg("init_pieces_by_file(): %d", 1, map[5][3]);
 }
 
 void init_pieces(Piece *pieces) {

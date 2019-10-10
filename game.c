@@ -91,10 +91,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                 // end move
                 piece->is_active = false;
 
-                // check if all pieces have moved
-                if (is_player_turn_over(game->playerColour)) {
-                    end_turn();
-                }
+                end_turn();
 
             } else {
                 log_msg("invalid move");
@@ -115,7 +112,7 @@ int select_square(int x, int y) {
 
     log_msg(msg);
 
-    Piece *selected_piece = malloc(sizeof(Piece));
+    Piece *selected_piece = 0;
     Piece *check_piece = 0;
 
     if (!is_piece_selected()) {

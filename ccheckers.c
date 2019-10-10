@@ -1,3 +1,4 @@
+#include <ncurses.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <time.h>
@@ -5,8 +6,8 @@
 #include "game.h"
 #include "render.h"
 #include "input.h"
+#include "resource.h"
 #include "windowmanager.h"
-#include <ncurses.h>
 
 Piece pieces[24];
 
@@ -37,24 +38,28 @@ int run_loop() {
 }
 
 int main() {
-   
+
     printf("Checkers in C! \n");
 
-    Game game = { 0, 0, 0 };    
+    Game game = { 0, 0, 0 };
 
     int exit = 0;
 
     init_game(&game);
+
 
     init_pieces(pieces);
 
     WINDOW *windows[3];
 
     init_render(windows);
-    
+
     get_windows(windows);
 
+
+
     init_input(windows);
+    init_pieces_by_file();
 
     while (exit == 0) {
 
@@ -65,6 +70,6 @@ int main() {
 
     delete_windows(windows);
 
-    return 0;   
+    return 0;
 }
 
