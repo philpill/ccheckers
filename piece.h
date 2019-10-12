@@ -19,7 +19,7 @@ typedef struct {
     int id;
 } Piece;
 
-void init_pieces_by_file();
+void init_pieces_by_file(Piece pieces[]);
 
 void init_pieces(Piece pieces[]);
 

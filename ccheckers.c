@@ -47,8 +47,9 @@ int main() {
 
     init_game(&game);
 
+    init_pieces_by_file(pieces);
 
-    init_pieces(pieces);
+    // init_pieces(pieces);
 
     WINDOW *windows[3];
 
@@ -59,7 +60,6 @@ int main() {
 
 
     init_input(windows);
-    init_pieces_by_file();
 
     while (exit == 0) {
 

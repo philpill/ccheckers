@@ -361,13 +361,47 @@ void set_all_pieces_active(int colour) {
 /**
  * Load initial piece positions from file
  */
-void init_pieces_by_file() {
+void init_pieces_by_file(Piece *pieces) {
 
-    int map[8][4];
+    int map[8][8];
 
-    load_file(map);
+    load_file("2", map);
 
-    log_fmsg("init_pieces_by_file(): %d", 1, map[5][3]);
+    //log_fmsg("init_pieces_by_file(): %d", 1, map[5][3]);
+
+    all_pieces = pieces;
+
+    selected_piece = malloc(sizeof(Piece));
+
+    int id = 0;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+
+            if (map[i][j] != 0) {
+
+                pieces[id].is_active = 1;
+                pieces[id].is_captured = 0;
+                pieces[id].id = id + 1;
+                pieces[id].x_pos = j;
+                pieces[id].y_pos = i;
+
+                if (map[i][j] == 3 || map[i][j] == 4) {
+                    pieces[id].is_king = 1;
+                } else {
+                    pieces[id].is_king = 0;
+                }
+
+                if (map[i][j] == 1 || map[i][j] == 3) {
+                    pieces[id].colour = 1;
+                } else {
+                    pieces[id].colour = 0;
+                }
+
+                id++;
+            }
+        }
+    }
 }
 
 void init_pieces(Piece *pieces) {

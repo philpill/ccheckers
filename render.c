@@ -57,7 +57,7 @@ void label_grid(char grid[GRID_H][GRID_W]) {
 
 void populate_grid(Piece *pieces, char grid[GRID_H][GRID_W]) {
     for (int i = 0; i < NUM_PIECES; i++) {
-        if (!pieces[i].is_captured) {
+        if (!pieces[i].is_captured && pieces[i].id != 0) {
             int x_pos = pieces[i].x_pos;
             int y_pos = pieces[i].y_pos;
             int x = (x_pos*4)+6;
