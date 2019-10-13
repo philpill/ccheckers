@@ -47,9 +47,9 @@ int main() {
 
     init_game(&game);
 
-    init_pieces_by_file(pieces);
+    char *filename = "2";
 
-    // init_pieces(pieces);
+    init_pieces(pieces, filename);
 
     WINDOW *windows[3];
 

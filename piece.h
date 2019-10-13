@@ -10,18 +10,17 @@ typedef struct {
 
 typedef struct {
     int colour;
-    int is_king;
-    int is_active;
-    int is_captured;
+    bool is_king;
+    bool is_captured;
     int x_pos;
     int y_pos;
     Position position;
     int id;
 } Piece;
 
-void init_pieces_by_file(Piece pieces[]);
+void init_pieces(Piece pieces[], char *filename);
 
-void init_pieces(Piece pieces[]);
+void init_pieces_x(Piece pieces[]);
 
 void select_piece(Piece *piece);
 
@@ -48,7 +47,5 @@ bool is_jump_move(Position *curr_pos, Position *new_pos);
 void move_piece(Piece *piece, int x, int y);
 
 bool is_player_dead(int colour);
-
-void set_all_pieces_active(int colour);
 
 #endif

@@ -19,8 +19,6 @@ void end_turn() {
     // switch player
     // https://stackoverflow.com/a/4084058
     game->playerColour = 1 - game->playerColour;
-    // set all pieces active
-    set_all_pieces_active(game->playerColour);
     game->turnCounter = game->turnCounter+1;
 }
 
@@ -66,7 +64,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
     } else {
 
-        if (piece->is_active && !piece->is_captured) {
+        if (!piece->is_captured) {
 
             log_msg("moving piece...");
             // move selected piece to empty square
@@ -89,8 +87,6 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                 }
 
                 // end move
-                piece->is_active = false;
-
                 end_turn();
 
             } else {

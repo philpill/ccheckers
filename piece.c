@@ -80,7 +80,6 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 // check x-1 y-1 for x-2 y-2
 bool is_valid_jump(Position *curr_pos, Position *new_pos) {
 
-
 	bool thing1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
 
 	bool thing2 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
@@ -263,9 +262,6 @@ void move_piece(Piece *piece, int x, int y) {
     log_fmsg("::move piece: %d, %d", 2, x+1, y+1);
     piece->x_pos = x;
     piece->y_pos = y;
-    // deactivate for rest of turn, but need to
-    // check for further possible hops
-    piece->is_active = false;
 }
 
 bool select_piece_by_position(Piece *piece, int x, int y) {
@@ -294,7 +290,6 @@ void copy_piece(Piece *source, Piece *dest) {
     dest->id = source->id;
     dest->colour = source->colour;
     dest->is_king = source->is_king;
-    dest->is_active = source->is_active;
     dest->x_pos = source->x_pos;
     dest->y_pos = source->y_pos;
 }
@@ -338,34 +333,24 @@ Piece *capture_piece_at_position(Position *pos) {
     Piece *piece = 0;
     if (get_piece_by_position(&piece, x, y)) {
         log_fmsg("capture_piece_at_position(): %d, [%d, %d]", 3, piece->id, x, y);
-        piece->is_captured = 1;
+        piece->is_captured = true;
         piece->x_pos = 0;
         piece->y_pos = 0;
     }
     return piece;
 }
 
-void set_all_pieces_active(int colour) {
-    // int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
-    int all_pieces_len = 24;
-    for (int i = 0; i < all_pieces_len; i++) {
-        Piece piece = all_pieces[i];
-        if (piece.colour == colour && !piece.is_captured) {
-            all_pieces[i].is_active = true;
-        } else {
-            all_pieces[i].is_active = false;
-        }
-    }
-}
-
 /**
  * Load initial piece positions from file
+ *
+ * @param pieces memory-allocated array to fill with pieces data
+ * @param filename file (without extension) to load piece data
  */
-void init_pieces_by_file(Piece *pieces) {
+void init_pieces(Piece *pieces, char *filename) {
 
     int map[8][8];
 
-    load_file("2", map);
+    load_file(filename, map);
 
     //log_fmsg("init_pieces_by_file(): %d", 1, map[5][3]);
 
@@ -380,23 +365,13 @@ void init_pieces_by_file(Piece *pieces) {
 
             if (map[i][j] != 0) {
 
-                pieces[id].is_active = 1;
-                pieces[id].is_captured = 0;
+                pieces[id].is_captured = false;
                 pieces[id].id = id + 1;
                 pieces[id].x_pos = j;
                 pieces[id].y_pos = i;
 
-                if (map[i][j] == 3 || map[i][j] == 4) {
-                    pieces[id].is_king = 1;
-                } else {
-                    pieces[id].is_king = 0;
-                }
-
-                if (map[i][j] == 1 || map[i][j] == 3) {
-                    pieces[id].colour = 1;
-                } else {
-                    pieces[id].colour = 0;
-                }
+                pieces[id].is_king = (map[i][j] == 3 || map[i][j] == 4);
+                pieces[id].colour = (map[i][j] == 1 || map[i][j] == 3) ? 1 : 0;
 
                 id++;
             }
@@ -404,7 +379,7 @@ void init_pieces_by_file(Piece *pieces) {
     }
 }
 
-void init_pieces(Piece *pieces) {
+void init_pieces_x(Piece *pieces) {
 
     selected_piece = malloc(sizeof(Piece));
 
@@ -414,9 +389,8 @@ void init_pieces(Piece *pieces) {
     all_pieces = pieces;
 
     for (i = 0; i < 24; i++) {
-        pieces[i].is_king = 0;
-        pieces[i].is_active = 1;
-        pieces[i].is_captured = 0;
+        pieces[i].is_king = false;
+        pieces[i].is_captured = false;
         pieces[i].id = i + 1;
     }
 
