@@ -78,7 +78,7 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 // check x-1 y+1 for x-2 y+2
 // check x+1 y-1 for x+2 y-2
 // check x-1 y-1 for x-2 y-2
-bool is_valid_jump(Position *curr_pos, Position *new_pos) {
+bool is_valid_jump(Position *curr_pos, Position *new_pos, bool is_king) {
 
 	bool thing1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
 
@@ -202,7 +202,7 @@ bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
 	}
     // check jump squares are not only accessible via own piece
 	if (is_jump_move(curr_pos, new_pos)
-			&& !is_valid_jump(curr_pos, new_pos)) {
+			&& !is_valid_jump(curr_pos, new_pos, piece->is_king)) {
         log_msg("::invalid jump");
 		return false;
 	}
