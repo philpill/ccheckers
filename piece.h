@@ -16,9 +16,10 @@ typedef struct {
     int y_pos;
     Position position;
     int id;
+    int direction;
 } Piece;
 
-void init_pieces(Piece pieces[], char *filename);
+void init_pieces(Piece pieces[], char *filename, int direction);
 
 void init_pieces_x(Piece pieces[]);
 

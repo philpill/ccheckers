@@ -49,15 +49,15 @@ int main() {
 
     char *filename = "2";
 
-    init_pieces(pieces, filename);
+    int direction = 1;
+
+    init_pieces(pieces, filename, direction);
 
     WINDOW *windows[3];
 
     init_render(windows);
 
     get_windows(windows);
-
-
 
     init_input(windows);
 

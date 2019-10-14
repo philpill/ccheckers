@@ -50,7 +50,6 @@ bool is_jump_move(Position *curr_pos, Position *new_pos) {
  * @param  dx       x direction - 1 or -1
  * @param  dy       y direction - 1 or -1
  * @return 0 - not valid, 1 - is valid
- *
  */
 bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 	int player_colour = 0;
@@ -66,6 +65,13 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 	if (!get_piece_by_position(&piece, adj_x, adj_y)) {
 		return false;
 	}
+
+    // TODO: NEED TO CHECK ADJACENT SQUARE IS
+    // ALSO ADJACENT TO DESTINATION SQUARE
+    if ((adj_x + dx != new_pos->x) || (adj_y + dy != new_pos->y)) {
+        return false;
+    }
+
 	// checked piece is opposing
 	// cannot jump over own piece
 	if (piece->colour == player_colour) {
@@ -80,23 +86,17 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 // check x-1 y-1 for x-2 y-2
 bool is_valid_jump(Position *curr_pos, Position *new_pos, bool is_king) {
 
-	bool thing1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
+	bool jump1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
+	bool jump2 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
+    bool jump3 = false;
+    bool jump4 = false;
 
-	bool thing2 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
+	if (is_king) {
+        jump3 = is_valid_jump_move(curr_pos, new_pos, -1, 1);
+        jump4 = is_valid_jump_move(curr_pos, new_pos, -1, -1);
+    }
 
-    log_msg(thing1 ? "thing1 true": "thing1 false");
-
-    log_msg(thing2 ? "thing2 true": "thing2 false");
-
-	// king only
-	//is_valid_jump = is_valid_jump
-    //                    || is_valid_jump_move(curr_pos, new_pos, -1, 1);
-
-	// king only
-	//is_valid_jump = is_valid_jump
-    //                    || is_valid_jump_move(curr_pos, new_pos, -1, -1);
-
-	return thing1 || thing2;
+	return jump1 || jump2 || jump3 || jump4;
 }
 
 /*
@@ -345,8 +345,9 @@ Piece *capture_piece_at_position(Position *pos) {
  *
  * @param pieces memory-allocated array to fill with pieces data
  * @param filename file (without extension) to load piece data
+ * @param direction 1: moving down the board, -1: moving up
  */
-void init_pieces(Piece *pieces, char *filename) {
+void init_pieces(Piece *pieces, char *filename, int direction) {
 
     int map[8][8];
 
@@ -369,9 +370,11 @@ void init_pieces(Piece *pieces, char *filename) {
                 pieces[id].id = id + 1;
                 pieces[id].x_pos = j;
                 pieces[id].y_pos = i;
+                pieces[id].position = (Position){ .x = j, .y = i };
 
                 pieces[id].is_king = (map[i][j] == 3 || map[i][j] == 4);
                 pieces[id].colour = (map[i][j] == 1 || map[i][j] == 3) ? 1 : 0;
+                pieces[id].direction = pieces[id].colour == 1 ? 1 : -1;
 
                 id++;
             }
