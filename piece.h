@@ -49,4 +49,8 @@ void move_piece(Piece *piece, int x, int y);
 
 bool is_player_dead(int colour);
 
+void set_piece_king(Piece *piece);
+
+bool is_positive_movement(int colour);
+
 #endif

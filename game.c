@@ -23,8 +23,6 @@ void end_turn() {
 }
 
 /*
- * Function: act_on_selected_piece
- *
  * Attempt to break down and refactor massive
  * nested 'if' statement.
  *

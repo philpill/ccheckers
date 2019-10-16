@@ -22,6 +22,18 @@ bool is_piece_selected() {
 }
 
 /*
+ * WIP Check the direction of movement according to colour
+ *
+ * Positive/negative refers to grid numbers
+ *
+ * @param  colour the colour to check
+ * @return true: positive/forwards, false: negative/backwards
+ */
+bool is_positive_movement(int colour) {
+    return colour == 0;
+}
+
+/*
  * Check if new, proposed position is
  * a jump move.
  * Jump moves are two squares up/down
@@ -185,6 +197,16 @@ bool is_within_boundary(Position *pos) {
  * @return true if new position is a valid move from current position
  */
 bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
+
+    // check direction
+    bool is_forward_move = new_pos->y > curr_pos->y;
+    bool is_forward_colour = is_positive_movement(piece->colour);
+    if (!piece->is_king && ((is_forward_colour && !is_forward_move)
+            || (!is_forward_colour && is_forward_move))) {
+        log_msg("::wrong direction");
+        return false;
+    }
+
     // check valid move
 	if (!is_move(curr_pos, new_pos)) {
         log_msg("::invalid move");
@@ -264,6 +286,15 @@ void move_piece(Piece *piece, int x, int y) {
     piece->y_pos = y;
 }
 
+/*
+ * Populate parameter with data if match is found
+ * at coordinates
+ *
+ * @param  piece memory allocated variable to populate with match
+ * @param  x position to search
+ * @param  y position to search
+ * @return true if piece found at given coordinates
+ */
 bool select_piece_by_position(Piece *piece, int x, int y) {
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
@@ -340,7 +371,11 @@ Piece *capture_piece_at_position(Position *pos) {
     return piece;
 }
 
-/**
+void set_piece_king(Piece *piece) {
+    piece->is_king = true;
+}
+
+/*
  * Load initial piece positions from file
  *
  * @param pieces memory-allocated array to fill with pieces data
