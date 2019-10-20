@@ -70,7 +70,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
             Position curr_pos = { piece->x_pos, piece->y_pos };
             Position new_pos = { x, y };
-            if (is_valid_move(&curr_pos, &new_pos, piece)) {
+            if (is_valid_move(&curr_pos, &new_pos)) {
                 log_msg("valid move");
                 move_piece(piece, x, y);
                 if (is_jump_move(&curr_pos, &new_pos)) {

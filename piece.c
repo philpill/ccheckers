@@ -94,14 +94,14 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 // check x-1 y+1 for x-2 y+2
 // check x+1 y-1 for x+2 y-2
 // check x-1 y-1 for x-2 y-2
-bool is_valid_jump(Position *curr_pos, Position *new_pos, bool is_king) {
+bool is_valid_jump(Position *curr_pos, Position *new_pos) {
 
 	bool jump1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
 	bool jump2 = is_valid_jump_move(curr_pos, new_pos, -1, 1);
     bool jump3 = false;
     bool jump4 = false;
 
-	if (is_king) {
+	if (selected_piece->is_king) {
         jump3 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
         jump4 = is_valid_jump_move(curr_pos, new_pos, -1, -1);
     }
@@ -194,12 +194,12 @@ bool is_within_boundary(Position *pos) {
  * @param  piece
  * @return true if new position is a valid move from current position
  */
-bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
+bool is_valid_move(Position *curr_pos, Position *new_pos) {
 
     // check direction
     bool is_forward_move = new_pos->y > curr_pos->y;
-    bool is_forward_colour = is_positive_movement(piece->colour);
-    if (!piece->is_king && ((is_forward_colour && !is_forward_move)
+    bool is_forward_colour = is_positive_movement(selected_piece->colour);
+    if (!selected_piece->is_king && ((is_forward_colour && !is_forward_move)
             || (!is_forward_colour && is_forward_move))) {
         log_msg("::wrong direction");
         return false;
@@ -222,7 +222,7 @@ bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
 	}
     // check jump squares are not only accessible via own piece
 	if (is_jump_move(curr_pos, new_pos)
-			&& !is_valid_jump(curr_pos, new_pos, piece->is_king)) {
+			&& !is_valid_jump(curr_pos, new_pos)) {
         log_msg("::invalid jump");
 		return false;
 	}
@@ -230,7 +230,7 @@ bool is_valid_move(Position *curr_pos, Position *new_pos, Piece* piece) {
     return true;
 }
 
-int get_all_valid_moves(Position *current_pos, Position *valid_pos[8], Piece *piece) {
+int get_all_valid_moves(Position *current_pos, Position *valid_pos[8]) {
     int num_valid_moves = 0;
 
     Position all_pos[] = {
@@ -246,7 +246,7 @@ int get_all_valid_moves(Position *current_pos, Position *valid_pos[8], Piece *pi
 
     for (int i = 0; i < 8; i++) {
 		Position new_pos = { all_pos[i].x, all_pos[i].y };
-        if (is_valid_move(current_pos, &new_pos, piece)) {
+        if (is_valid_move(current_pos, &new_pos)) {
             valid_pos[num_valid_moves++] = &all_pos[i];
         }
     }

@@ -41,7 +41,7 @@ bool is_piece_at_position(int x, int y);
 
 bool is_piece_selected_by_id(int id);
 
-bool is_valid_move(Position *curr_pos, Position *new_pos, Piece *piece);
+bool is_valid_move(Position *curr_pos, Position *new_pos);
 
 bool is_jump_move(Position *curr_pos, Position *new_pos);
 
