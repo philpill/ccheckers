@@ -30,6 +30,7 @@ bool is_piece_selected() {
  * @return true: positive/forwards, false: negative/backwards
  */
 bool is_positive_movement(int colour) {
+    log_fmsg("is_positive_movement(): %d", 1, colour);
     return colour == 0;
 }
 
@@ -64,29 +65,26 @@ bool is_jump_move(Position *curr_pos, Position *new_pos) {
  * @return 0 - not valid, 1 - is valid
  */
 bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
-	int player_colour = 0;
-	int adj_x = (curr_pos->x)+dx;
-	int adj_y = (curr_pos->y)+dy;
+
+    int adj_x = (curr_pos->x+new_pos->x)/2;
+	int adj_y = (curr_pos->y+new_pos->y)/2;
     Piece *piece = 0;
 
 	// 2 squares up/down and 2 squares left/right
 	if (!is_jump_move(curr_pos, new_pos)) {
+        log_msg("::not valid jump move");
 		return false;
 	}
 	// there must be a piece to jump over
 	if (!get_piece_by_position(&piece, adj_x, adj_y)) {
+        log_fmsg("::no intervening piece: %d, %d", 2, adj_x, adj_y);
 		return false;
 	}
 
-    // TODO: NEED TO CHECK ADJACENT SQUARE IS
-    // ALSO ADJACENT TO DESTINATION SQUARE
-    if ((adj_x + dx != new_pos->x) || (adj_y + dy != new_pos->y)) {
-        return false;
-    }
-
 	// checked piece is opposing
 	// cannot jump over own piece
-	if (piece->colour == player_colour) {
+	if (piece->colour == selected_piece->colour) {
+        log_msg("::intervening piece is friendly");
 		return false;
 	}
 	return true;
@@ -99,12 +97,12 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 bool is_valid_jump(Position *curr_pos, Position *new_pos, bool is_king) {
 
 	bool jump1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
-	bool jump2 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
+	bool jump2 = is_valid_jump_move(curr_pos, new_pos, -1, 1);
     bool jump3 = false;
     bool jump4 = false;
 
 	if (is_king) {
-        jump3 = is_valid_jump_move(curr_pos, new_pos, -1, 1);
+        jump3 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
         jump4 = is_valid_jump_move(curr_pos, new_pos, -1, -1);
     }
 
