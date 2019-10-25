@@ -41,7 +41,7 @@ int main() {
 
     printf("Checkers in C! \n");
 
-    Game game = { 0, 0, 0 };
+    Game game = { 0, 0, 0, 0 };
 
     int exit = 0;
 
@@ -51,7 +51,7 @@ int main() {
 
     int direction = 1;
 
-    init_pieces(pieces, filename, direction);
+    init_piece(&game, pieces, filename, direction);
 
     WINDOW *windows[3];
 

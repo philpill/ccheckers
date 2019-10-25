@@ -8,6 +8,7 @@
 
 Piece *all_pieces = NULL;
 Piece *selected_piece = NULL;
+Game *game_data = NULL;
 
 bool is_selected = false;
 
@@ -22,8 +23,6 @@ bool is_piece_selected() {
 }
 
 /*
- * WIP Check the direction of movement according to colour
- *
  * Positive/negative refers to grid numbers
  *
  * @param  colour the colour to check
@@ -31,7 +30,7 @@ bool is_piece_selected() {
  */
 bool is_positive_movement(int colour) {
     log_fmsg("is_positive_movement(): %d", 1, colour);
-    return colour == 0;
+    return colour == game_data->player_positive_move;
 }
 
 /*
@@ -141,13 +140,12 @@ bool is_move(Position *curr_pos, Position *new_pos) {
  * @return true - piece found, false - no piece
  */
 bool is_piece_at_position(int x, int y) {
-    bool is_at_position = false;
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            is_at_position = true;
+            return true;
         }
     }
-    return is_at_position;
+    return false;
 }
 
 /*
@@ -312,6 +310,7 @@ void select_piece(Piece *piece) {
 
 void deselect_piece() {
     log_msg("deselect_piece()");
+    selected_piece = NULL;
     is_selected = false;
 }
 
@@ -376,13 +375,16 @@ void set_piece_king(Piece *piece) {
 /*
  * Load initial piece positions from file
  *
+ * @param game struct containing game data including current turn
  * @param pieces memory-allocated array to fill with pieces data
  * @param filename file (without extension) to load piece data
  * @param direction 1: moving down the board, -1: moving up
  */
-void init_pieces(Piece *pieces, char *filename, int direction) {
+void init_piece(Game *game, Piece *pieces, char *filename, int direction) {
 
     int map[8][8];
+
+    game_data = game;
 
     load_file(filename, map);
 
@@ -415,6 +417,9 @@ void init_pieces(Piece *pieces, char *filename, int direction) {
     }
 }
 
+/*
+ * @deprecated
+ */
 void init_pieces_x(Piece *pieces) {
 
     selected_piece = malloc(sizeof(Piece));

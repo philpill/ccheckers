@@ -2,9 +2,10 @@
 #define GAME_H_
 
 typedef struct {
-    int turnCounter;
-    int playerColour;
-    int playerWin;
+    int turn_counter;
+    int player_colour;
+    int player_win;
+    int player_positive_move;
 } Game;
 
 void init_game(Game *game);

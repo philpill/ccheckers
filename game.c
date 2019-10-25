@@ -18,8 +18,8 @@ void end_turn() {
     deselect_piece();
     // switch player
     // https://stackoverflow.com/a/4084058
-    game->playerColour = 1 - game->playerColour;
-    game->turnCounter = game->turnCounter+1;
+    game->player_colour = 1 - game->player_colour;
+    game->turn_counter = game->turn_counter+1;
 }
 
 /*
@@ -45,9 +45,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
     } else if (get_piece_by_position(&check_piece, x, y)) {
 
-        log_fmsg("::get_piece_by_position: %d, %d", 2, check_piece->colour, game->playerColour);
+        log_fmsg("::get_piece_by_position: %d, %d", 2, check_piece->colour, game->player_colour);
 
-        if (check_piece->colour == game->playerColour) {
+        if (check_piece->colour == game->player_colour) {
 
             // select alternative piece
             log_msg("select different piece");
@@ -78,7 +78,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                     if (get_intervening_position(&pos, &curr_pos, &new_pos)) {
                         capture_piece_at_position(&pos);
                         // need to check if all pieces are captured i.e. win
-                        if (is_player_dead(1 - game->playerColour)) {
+                        if (is_player_dead(1 - game->player_colour)) {
                             // player win!
                         }
                     }
@@ -120,9 +120,9 @@ int select_square(int x, int y) {
 
             log_fmsg("::piece->id: %d", 1, check_piece->id);
 
-            log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->playerColour);
+            log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->player_colour);
 
-            if (check_piece->colour == game->playerColour) {
+            if (check_piece->colour == game->player_colour) {
 
                 log_msg("piece owned - selecting");
 

@@ -2,6 +2,7 @@
 #define PIECE_H
 
 #include <stdbool.h>
+#include "game.h"
 
 typedef struct {
     int x;
@@ -19,7 +20,7 @@ typedef struct {
     int direction;
 } Piece;
 
-void init_pieces(Piece pieces[], char *filename, int direction);
+void init_piece(Game *game, Piece pieces[], char *filename, int direction);
 
 void init_pieces_x(Piece pieces[]);
 
