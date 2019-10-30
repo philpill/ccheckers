@@ -73,6 +73,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
             if (is_valid_move(&curr_pos, &new_pos)) {
                 log_msg("valid move");
                 move_piece(piece, x, y);
+                if (is_piece_at_kings_row(y, piece->direction)) {
+                    piece->is_king = true;
+                }
                 if (is_jump_move(&curr_pos, &new_pos)) {
                     Position pos;
                     if (get_intervening_position(&pos, &curr_pos, &new_pos)) {

@@ -40,6 +40,8 @@ bool is_piece_selected();
 
 bool is_piece_at_position(int x, int y);
 
+bool is_piece_at_kings_row(int y, int direction);
+
 bool is_piece_selected_by_id(int id);
 
 bool is_valid_move(Position *curr_pos, Position *new_pos);

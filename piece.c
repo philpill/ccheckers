@@ -5,6 +5,7 @@
 #include "input.h"
 #include "log.h"
 #include "resource.h"
+#include "global.h"
 
 Piece *all_pieces = NULL;
 Piece *selected_piece = NULL;
@@ -149,6 +150,26 @@ bool is_piece_at_position(int x, int y) {
 }
 
 /*
+ * Check if piece is at position to be promoted to king
+ *
+ * @param  y piece's y position
+ * @param  direction piece's direction of movement
+ * @return true - at kings row, else false
+ */
+bool is_piece_at_kings_row(int y, int direction) {
+
+    if (direction == 1 && y == HEIGHT-1) {
+        return true;
+    }
+
+    if (direction == -1 && y == 0) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
  * For want of a better name ...
  * Check if all of a player's pieces
  * have been captured
@@ -158,7 +179,6 @@ bool is_piece_at_position(int x, int y) {
  */
 bool is_player_dead(int colour) {
     bool is_dead = true;
-    // int all_pieces_len = sizeof(all_pieces)/sizeof(Piece);
     int all_pieces_len = 24;
     for (int i = 0; i < all_pieces_len; i++) {
         if ((all_pieces[i].colour == colour)
@@ -176,7 +196,7 @@ bool is_player_dead(int colour) {
  * @return true if position is within game boundaries
  */
 bool is_within_boundary(Position *pos) {
-    if ((pos->x < 0) || (pos->x > 7) || (pos->y < 0) || (pos->y > 7)) {
+    if ((pos->x < 0) || (pos->x >= WIDTH) || (pos->y < 0) || (pos->y >= HEIGHT)) {
         return false;
     }
 	return true;
