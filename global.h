@@ -7,4 +7,11 @@ extern const int NUM_PIECES;
 extern const int HEIGHT;
 extern const int WIDTH;
 
+extern const char SYMBOL1;
+extern const char SYMBOL2;
+
+extern const char SYMBOL1_KING;
+extern const char SYMBOL2_KING;
+
+
 #endif

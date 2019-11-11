@@ -96,12 +96,12 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 // check x-1 y-1 for x-2 y-2
 bool is_valid_jump(Position *curr_pos, Position *new_pos) {
 
-	bool jump1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
-	bool jump2 = is_valid_jump_move(curr_pos, new_pos, -1, 1);
+    bool jump1 = is_valid_jump_move(curr_pos, new_pos, 1, 1);
+    bool jump2 = is_valid_jump_move(curr_pos, new_pos, -1, 1);
     bool jump3 = false;
     bool jump4 = false;
 
-	if (selected_piece->is_king) {
+    if (selected_piece->is_king) {
         jump3 = is_valid_jump_move(curr_pos, new_pos, 1, -1);
         jump4 = is_valid_jump_move(curr_pos, new_pos, -1, -1);
     }

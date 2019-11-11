@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <string.h>
+#include <stdlib.h>
 #include "piece.h"
 #include "game.h"
 #include "windowmanager.h"
@@ -9,11 +10,22 @@
 WINDOW **windows;
 
 void init_render(WINDOW **render_windows) {
+
     windows = render_windows;
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+
+    if (has_colors() == FALSE) {
+        endwin();
+        printf("Your terminal does not support color\n");
+        exit(1);
+    }
+
+    start_color();
+
+    init_pair(1, COLOR_YELLOW, COLOR_GREEN);
 }
 
 void get_blank_grid(char grid[GRID_H][GRID_W]) {
@@ -62,13 +74,39 @@ void populate_grid(Piece *pieces, char grid[GRID_H][GRID_W]) {
             int y_pos = pieces[i].y_pos;
             int x = (x_pos*4)+6;
             int y = (y_pos*2)+2;
-            //log_msg("::xy: %d, %d", 2, x, y);
-            //log_msg("::pos: %d, %d", 2, x_pos, y_pos);
-            char piece = pieces[i].colour == 0 ? 'x' : 'o';
+            char piece = pieces[i].colour == 0 ? SYMBOL1 : SYMBOL2;
             if (is_piece_selected_by_id(pieces[i].id)) {
-                piece = pieces[i].colour == 0 ? 'X' : 'O';
+                // piece = pieces[i].colour == 0
+                //             ? SYMBOL1_SELECTED
+                //             : SYMBOL2_SELECTED;
             }
             grid[y][x] = piece;
+        }
+    }
+}
+
+void render_pieces(Piece *pieces, WINDOW *board_win) {
+    for (int i = 0; i < NUM_PIECES; i++) {
+        if (!pieces[i].is_captured && pieces[i].id != 0) {
+            int x_pos = pieces[i].x_pos;
+            int y_pos = pieces[i].y_pos;
+            int x = (x_pos*4)+6+1;
+            int y = (y_pos*2)+2;
+            char piece = pieces[i].colour == 0 ? SYMBOL1 : SYMBOL2;
+            if (piece == SYMBOL1 && pieces[i].is_king) {
+                piece = SYMBOL1_KING;
+            }
+            if (piece == SYMBOL2 && pieces[i].is_king) {
+                piece = SYMBOL2_KING;
+            }
+            if (is_piece_selected_by_id(pieces[i].id)) {
+                // attron(COLOR_PAIR(1));
+                mvwaddch(board_win, y, x, piece);
+                // attroff(COLOR_PAIR(1));
+            } else {
+                mvwaddch(board_win, y, x, piece);
+            }
+
         }
     }
 }
@@ -77,10 +115,13 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
     char board[GRID_H][GRID_W];
     get_blank_grid(board);
     label_grid(board);
-    populate_grid(pieces, board);
+    // populate_grid(pieces, board);
     for (int i = 0; i < GRID_H; i++) {
         mvwprintw(board_win, i, 1, board[i]);
     }
+
+    render_pieces(pieces, board_win);
+
 }
 
 void render(Game game, Piece *pieces) {
