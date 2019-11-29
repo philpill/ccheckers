@@ -10,6 +10,3 @@ const int WIDTH = 8;
 
 const char SYMBOL1 = 'x';
 const char SYMBOL2 = 'o';
-
-const char SYMBOL1_KING = 'X';
-const char SYMBOL2_KING = 'O';

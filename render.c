@@ -27,6 +27,10 @@ void init_render(WINDOW **render_windows) {
     start_color();
 
     init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_WHITE, COLOR_BLACK);
+
+    init_pair(3, COLOR_RED, COLOR_WHITE);
+    init_pair(4, COLOR_RED, COLOR_BLACK);
 }
 
 void get_blank_grid(char grid[GRID_H][GRID_W]) {
@@ -76,18 +80,26 @@ void render_pieces(Piece *pieces, WINDOW *board_win) {
             int x = (x_pos*4)+6+1;
             int y = (y_pos*2)+2;
             char piece = pieces[i].colour == 0 ? SYMBOL1 : SYMBOL2;
-            if (piece == SYMBOL1 && pieces[i].is_king) {
-                piece = SYMBOL1_KING;
-            }
-            if (piece == SYMBOL2 && pieces[i].is_king) {
-                piece = SYMBOL2_KING;
-            }
             if (is_piece_selected_by_id(pieces[i].id)) {
-                wattron(board_win, COLOR_PAIR(1));
+                if (pieces[i].is_king) {
+                    wattron(board_win, COLOR_PAIR(3));
+                } else {
+                    wattron(board_win, COLOR_PAIR(1));
+                }
                 mvwaddch(board_win, y, x, piece);
+                mvwaddch(board_win, y, x-1, ' ');
+                mvwaddch(board_win, y, x+1, ' ');
                 wattroff(board_win, COLOR_PAIR(1));
+                wattroff(board_win, COLOR_PAIR(3));
             } else {
+                if (pieces[i].is_king) {
+                    wattron(board_win, COLOR_PAIR(4));
+                } else {
+                    wattron(board_win, COLOR_PAIR(2));
+                }
                 mvwaddch(board_win, y, x, piece);
+                wattroff(board_win, COLOR_PAIR(2));
+                wattroff(board_win, COLOR_PAIR(4));
             }
         }
     }
@@ -97,7 +109,6 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
     char board[GRID_H][GRID_W];
     get_blank_grid(board);
     label_grid(board);
-    // populate_grid(pieces, board);
     for (int i = 0; i < GRID_H; i++) {
         mvwprintw(board_win, i, 1, board[i]);
     }
