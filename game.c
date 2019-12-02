@@ -52,7 +52,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
             // select alternative piece
             log_msg("select different piece");
 
-            piece = check_piece;
+            //piece = check_piece;
+            deselect_piece();
+            select_piece_by_position(piece, x, y);
 
         } else {
 

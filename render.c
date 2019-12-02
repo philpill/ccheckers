@@ -67,8 +67,9 @@ void label_grid(char grid[GRID_H][GRID_W]) {
     for (int i = 0; i < 8; i++) {
         grid[(i * 2) + 2][2] = '0' + i + 1;
     }
-    for (int i = 0; i < 8; i++) {
-        grid[18][(i * 4) + 6] = '0' + i + 1;
+    char c = 'A';
+    for (int i = 0; c <= 'H'; i++, c++) {
+        grid[18][(i * 4) + 6] = c;
     }
 }
 
