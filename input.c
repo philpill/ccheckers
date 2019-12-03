@@ -62,12 +62,69 @@ void init_input(WINDOW **windows) {
     log_msg("Checkers in C!");
 }
 
+/*
+ * Get corresponding int value for letter for
+ * square on board
+ * e.g.
+ * a == 1, B == 2, d == 4
+ *
+ * @param  x_char_pos x position letter
+ * @return 0 if not valid, else corresponding position
+ */
+static int get_int_x_pos(char x_char_pos) {
+
+    int x_int_pos = 0;
+
+    switch (x_char_pos) {
+        case 'A':
+        case 'a':
+            x_int_pos = 1;
+            break;
+        case 'B':
+        case 'b':
+            x_int_pos = 2;
+            break;
+        case 'C':
+        case 'c':
+            x_int_pos = 3;
+            break;
+        case 'D':
+        case 'd':
+            x_int_pos = 4;
+            break;
+        case 'E':
+        case 'e':
+            x_int_pos = 5;
+            break;
+        case 'F':
+        case 'f':
+            x_int_pos = 6;
+            break;
+        case 'G':
+        case 'g':
+            x_int_pos = 7;
+            break;
+        case 'H':
+        case 'h':
+            x_int_pos = 8;
+            break;
+
+        default:
+            x_int_pos = 0;
+    }
+
+    return x_int_pos;
+}
+
 static void parse_command(char *command) {
     if (strlen(command) == 2) {
-        int x = command[0];
+        char x = command[0];
         int y = command[1];
-        if ((isdigit(x) != 0) && (isdigit(y) != 0)) {
-            select_square((x - '0') - 1, (y - '0') - 1);
+        bool is_y_digit = isdigit(y) != 0;
+        bool is_x_alpha = isalpha(x) != 0;
+        if (is_y_digit && is_x_alpha) {
+            int x_pos = get_int_x_pos(x);
+            select_square(x_pos - 1, (y - '0') - 1);
         }
     }
 }
