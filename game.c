@@ -14,7 +14,7 @@ void init_game(Game *new_game) {
 }
 
 void end_turn() {
-    log_msg("end turn");
+    log_msg("::end turn");
     deselect_piece();
     // switch player
     // https://stackoverflow.com/a/4084058
@@ -66,16 +66,17 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
         if (!piece->is_captured) {
 
-            log_msg("moving piece...");
+            // log_msg("moving piece...");
             // move selected piece to empty square
             // is move valid?
 
             Position curr_pos = { piece->x_pos, piece->y_pos };
             Position new_pos = { x, y };
             if (is_valid_move(&curr_pos, &new_pos)) {
-                log_msg("valid move");
+                // log_msg("valid move");
                 move_piece(piece, x, y);
                 if (is_piece_at_kings_row(y, piece->direction)) {
+                    // log_msg("::is_piece_at_kings_row(): true");
                     piece->is_king = true;
                 }
                 if (is_jump_move(&curr_pos, &new_pos)) {
@@ -116,20 +117,20 @@ int select_square(int x, int y) {
 
     if (!is_piece_selected()) {
 
-        log_msg("no piece currently selected");
+        // log_msg("no piece currently selected");
 
         //select piece if owned
         if (get_piece_by_position(&check_piece, x, y)) {
 
-            log_msg("piece detected");
+            // log_msg("piece detected");
 
             log_fmsg("::piece->id: %d", 1, check_piece->id);
 
-            log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->player_colour);
+            // log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->player_colour);
 
             if (check_piece->colour == game->player_colour) {
 
-                log_msg("piece owned - selecting");
+                // log_msg("piece owned - selecting");
 
                 select_piece_by_position(selected_piece, x, y);
 
@@ -146,7 +147,7 @@ int select_square(int x, int y) {
 
     } else {
 
-        log_msg("piece currently selected");
+        // log_msg("piece currently selected");
 
         selected_piece = get_selected_piece();
 

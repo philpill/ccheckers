@@ -30,7 +30,7 @@ bool is_piece_selected() {
  * @return true: positive/forwards, false: negative/backwards
  */
 bool is_positive_movement(int colour) {
-    log_fmsg("is_positive_movement(): %d", 1, colour);
+    // log_fmsg("is_positive_movement(): %d", 1, colour);
     return colour == game_data->player_positive_move;
 }
 
@@ -157,15 +157,13 @@ bool is_piece_at_position(int x, int y) {
  * @return true - at kings row, else false
  */
 bool is_piece_at_kings_row(int y, int direction) {
-
-    if (direction == 1 && y == HEIGHT-1) {
+    // log_fmsg("::is_piece_at_kings_row: %d %d", 2, y, direction);
+    if (direction == -1 && y == HEIGHT-1) {
         return true;
     }
-
-    if (direction == -1 && y == 0) {
+    if (direction == 1 && y == 0) {
         return true;
     }
-
     return false;
 }
 
@@ -324,12 +322,12 @@ bool select_piece_by_position(Piece *piece, int x, int y) {
 
 void select_piece(Piece *piece) {
     selected_piece = piece;
-    log_fmsg("::pointers: %d, %d", 2, piece->x_pos, selected_piece->x_pos);
+    // log_fmsg("::pointers: %d, %d", 2, piece->x_pos, selected_piece->x_pos);
     is_selected = true;
 }
 
 void deselect_piece() {
-    log_msg("deselect_piece()");
+    // log_msg("deselect_piece()");
     selected_piece = NULL;
     is_selected = false;
 }
@@ -352,10 +350,10 @@ void copy_piece(Piece *source, Piece *dest) {
  */
 bool get_piece_by_position(Piece **piece, int x, int y) {
     *piece = malloc (sizeof (Piece));
-    log_msg("get_piece_by_position()");
+    // log_msg("get_piece_by_position()");
     for (int i = 0; i < 24; i++) {
         if ((all_pieces[i].x_pos == x) && (all_pieces[i].y_pos == y)) {
-            log_fmsg("::all_pieces[i].id: %d", 1, all_pieces[i].id);
+            // log_fmsg("::all_pieces[i].id: %d", 1, all_pieces[i].id);
             *piece = &all_pieces[i];
             return true;
         }
@@ -380,7 +378,7 @@ Piece *capture_piece_at_position(Position *pos) {
     int y = pos->y;
     Piece *piece = 0;
     if (get_piece_by_position(&piece, x, y)) {
-        log_fmsg("capture_piece_at_position(): %d, [%d, %d]", 3, piece->id, x, y);
+        log_fmsg("::capture_piece_at_position(): %d, [%d, %d]", 3, piece->id, x, y);
         piece->is_captured = true;
         piece->x_pos = 0;
         piece->y_pos = 0;
