@@ -8,6 +8,7 @@
 #include "input.h"
 #include "resource.h"
 #include "windowmanager.h"
+#include "log.h"
 
 Piece pieces[24];
 
@@ -16,6 +17,10 @@ Game game;
 long current_ntime;
 
 int run_loop() {
+
+    clock_t start_t, end_t, total_t;
+
+    start_t = clock();
 
     int return_code = 0;
 
@@ -28,11 +33,20 @@ int run_loop() {
     render(game, pieces);
     render_text();
 
-    // 1000000 = 1fps
-    // 33333.3 = 30fps
-    // 50000 = 20fps
-    // 100000 = 10fps
-    usleep(100000);
+    end_t = clock();
+
+    total_t = end_t - start_t;
+
+    double total_s = (double)(total_t/CLOCKS_PER_SEC);
+
+    double total_t_ms = (double)(total_t/CLOCKS_PER_SEC)*1000;
+
+    log_fmsg("time: %d %d %d", 3, total_t, total_s, total_t_ms);
+
+    //usleep(1000000);
+    usleep((1000/10)*1000);
+
+    //usleep((1000/30 - total_t)/1000);
 
     return return_code;
 }
