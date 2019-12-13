@@ -14,15 +14,13 @@ Piece pieces[24];
 
 Game game;
 
-long current_ntime;
-
 int run_loop() {
 
     clock_t start_t, end_t, total_t;
 
-    start_t = clock();
-
     int return_code = 0;
+
+    start_t = clock();
 
     // get input
     return_code = handle_input();
@@ -37,16 +35,15 @@ int run_loop() {
 
     total_t = end_t - start_t;
 
-    double total_s = (double)(total_t/CLOCKS_PER_SEC);
+    doupdate();
 
-    double total_t_ms = (double)(total_t/CLOCKS_PER_SEC)*1000;
+    log_fmsg("time: %d", 1, total_t);
 
-    log_fmsg("time: %d %d %d", 3, total_t, total_s, total_t_ms);
+    // 30fps = 33300us
 
-    //usleep(1000000);
-    usleep((1000/10)*1000);
+    // usleep(33300 - total_t);
 
-    //usleep((1000/30 - total_t)/1000);
+    usleep(33300 - total_t);
 
     return return_code;
 }

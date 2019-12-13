@@ -120,18 +120,18 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
 
 void render(Game game, Piece *pieces) {
     WINDOW *window = windows[1];
-    wclear(window);
+    werase(window);
     draw_grid(window, pieces);
     box(window, 0, 0);
-    wrefresh(window);
+    wnoutrefresh(window);
 }
 
 void render_text() {
     WINDOW *window = windows[2];
-    wclear(window);
+    werase(window);
     output_msg();
     box(window, 0, 0);
-    wrefresh(window);
+    wnoutrefresh(window);
 }
 
 void quit_render() {
