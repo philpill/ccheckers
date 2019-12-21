@@ -7,7 +7,7 @@
  * Only valid if there is exactly one square
  * between the two given parameters.
  *
- * This could be trivial, but I win't know till
+ * This could be trivial, but I won't know till
  * after I've tried this ...
  *
  * @param  intervening_pos position to populate if valid

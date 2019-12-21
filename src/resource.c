@@ -12,7 +12,7 @@ void load_file(char *filename, int map[8][8]) {
 
     FILE *file;
 
-    char path[255] = "resources/";
+    char path[255] = "res/";
 
     strcat(path, filename);
 

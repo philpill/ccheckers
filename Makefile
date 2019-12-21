@@ -5,22 +5,22 @@ CC = gcc
 all: build run
 
 run:
-	./a.out
+	./bin/ccheckers
 
 build:
-	${CC} $(CFLAGS) *.c -lncursesw -lcmocka
+	${CC} $(CFLAGS) src/*.c -lncursesw -lcmocka -o ./bin/ccheckers
 
 debug:
-	${CC} $(CFLAGS) *.c -lncursesw -lcmocka -g && gdb a.out
+	${CC} $(CFLAGS) src/*.c -lncursesw -lcmocka -g -o ./bin/ccheckers && gdb ./bin/ccheckers
 
 install:
 	sudo apt-get install libncursesw5-dev libcmocka-dev valgrind
 
 memcheck:
-	valgrind --leak-check=yes ./a.out
+	valgrind --leak-check=yes ./bin/ccheckers
 
 clean:
-	rm ./*gch ./*swp ./*swo ./a.out
+	rm ./*gch ./*swp ./*swo ./bin/*
 
 run_test:
-	gcc ./test/*.c -lcmocka -lncurses && ./a.out
+	gcc ./test/*.c -lcmocka -lncurses -o ./bin/cc_tests && ./bin/cc_tests
