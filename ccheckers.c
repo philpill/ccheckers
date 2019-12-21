@@ -37,11 +37,9 @@ int run_loop() {
 
     doupdate();
 
-    log_fmsg("time: %d", 1, total_t);
+    //log_fmsg("time: %d", 1, total_t);
 
     // 30fps = 33300us
-
-    // usleep(33300 - total_t);
 
     usleep(33300 - total_t);
 

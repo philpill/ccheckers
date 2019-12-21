@@ -86,6 +86,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                         // need to check if all pieces are captured i.e. win
                         if (is_player_dead(1 - game->player_colour)) {
                             // player win!
+                            log_msg("win!");
                         }
                     }
                 }
