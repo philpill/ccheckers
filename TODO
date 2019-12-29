@@ -20,3 +20,8 @@ Upgrade Makefile
     https://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html
     http://nuclear.mutantstargoat.com/articles/make/#enter-make
     https://stackoverflow.com/questions/1484817/how-do-i-make-a-simple-makefile-for-gcc-on-linux
+
+Separate ncurses window width const from display string array length
+
+
+Interchangeable x/y input order
