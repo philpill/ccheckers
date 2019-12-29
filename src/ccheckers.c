@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <time.h>
+#include <locale.h>
 #include "piece.h"
 #include "game.h"
 #include "render.h"
@@ -50,6 +51,8 @@ int main() {
 
     printf("Checkers in C! \n");
 
+    setlocale(LC_ALL, "");
+
     Game game = { 0, 0, 0, 0 };
 
     int exit = 0;
@@ -62,7 +65,7 @@ int main() {
 
     init_piece(&game, pieces, filename, direction);
 
-    WINDOW *windows[3];
+    WINDOW *windows[4];
 
     init_render(windows);
 

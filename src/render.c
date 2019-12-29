@@ -33,10 +33,14 @@ void init_render(WINDOW **render_windows) {
     init_pair(4, COLOR_RED, COLOR_BLACK);
 }
 
+// http://www.fileformat.info/info/unicode/char/search.htm?q=box+drawings&preview=entity
+// http://yjlv.blogspot.com/2015/10/displaying-unicode-with-ncurses-in-c.html
 void get_blank_grid(char grid[GRID_H][GRID_W]) {
-    char end_line[]    = "    . . . . . . . . . . . . . . . . .";
-    char data_line[]   = "    :   :   :   :   :   :   :   :   :";
-    char spacer_line[] = "    : . : . : . : . : . : . : . : . :";
+
+    char end_line[]    = "    ┌───┬───┬───┬───┬───┬───┬───┬───┐";
+    char data_line[]   = "    │   │   │   │   │   │   │   │   │";
+    char spacer_line[] = "    ├───┼───┼───┼───┼───┼───┼───┼───┤";
+    char close_line[]  = "    └───┴───┴───┴───┴───┴───┴───┴───┘";
     strcpy(grid[0], end_line);
     strcpy(grid[1], end_line);
     strcpy(grid[2], data_line);
@@ -54,7 +58,7 @@ void get_blank_grid(char grid[GRID_H][GRID_W]) {
     strcpy(grid[14], data_line);
     strcpy(grid[15], spacer_line);
     strcpy(grid[16], data_line);
-    strcpy(grid[17], spacer_line);
+    strcpy(grid[17], close_line);
 
     for (int i = 18; i < GRID_H; i++) {
         char blank_line[GRID_W];
