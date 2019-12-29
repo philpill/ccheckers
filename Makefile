@@ -14,7 +14,7 @@ debug:
 	${CC} $(CFLAGS) src/*.c -lncursesw -lcmocka -g -o ./bin/ccheckers && gdb ./bin/ccheckers
 
 install:
-	sudo apt-get install libncursesw5-dev libcmocka-dev valgrind
+	sudo apt-get install libncursesw5-dev libncurses5-dev libcmocka-dev valgrind
 
 memcheck:
 	valgrind --leak-check=yes ./bin/ccheckers
