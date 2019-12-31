@@ -10,6 +10,8 @@
 #include "resource.h"
 #include "windowmanager.h"
 #include "log.h"
+#include "file.h"
+#include "utilities.h"
 
 Piece pieces[24];
 
@@ -53,6 +55,10 @@ int main() {
 
     setlocale(LC_ALL, "");
 
+    int game_id = get_id();
+
+    init_log(game_id);
+
     Game game = { 0, 0, 0, 0 };
 
     int exit = 0;
@@ -81,6 +87,8 @@ int main() {
     quit_render();
 
     delete_windows(windows);
+
+    destroy_file();
 
     return 0;
 }

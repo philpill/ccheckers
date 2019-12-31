@@ -4,21 +4,33 @@
 #include <string.h>
 #include <ctype.h>
 #include "log.h"
+#include "file.h"
+#include "utilities.h"
 
 static char msg_log[5000][255]; // const this value
 
 static int msg_ctr = 0;
 
+static char log_path[] = "log";
+FILE *log_file;
+
 static void insert_msg(char *message) {
     strcpy(msg_log[msg_ctr], message);
+    fputs(msg_log[msg_ctr], log_file);
     msg_ctr++;
 }
 
 void log_msg(char *msg) {
-
     insert_msg(msg);
+}
 
-    // do something with all these logs
+void init_log(int game_id) {
+    char path_buf[30];
+    char time_buf[30];
+    snprintf(path_buf, 30, "log/%d", game_id);
+    log_file = open_file(path_buf);
+    get_timestamp(time_buf);
+    log_msg(time_buf);
 }
 
 void log_fmsg(char *msg, int num, ...) {
@@ -33,8 +45,6 @@ void log_fmsg(char *msg, int num, ...) {
         insert_msg(buffer);
         va_end(valist);
     }
-
-    // do something with all these logs
 }
 
 static char *get_log_entry(int index) {

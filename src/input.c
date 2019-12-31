@@ -58,8 +58,8 @@ void init_input(WINDOW **windows) {
     input_window = windows[0];
     output_window = windows[2];
     nodelay(windows[0], true);
-    log_msg("***"); // blank placeholder
-    log_msg("Checkers in C!");
+    log_msg("***\n"); // blank placeholder
+    log_msg("Checkers in C!\n");
 }
 
 /*

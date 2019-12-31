@@ -39,18 +39,18 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
     //deselect
     if (piece->x_pos == x && piece->y_pos == y) {
 
-        log_msg("piece at position - deselect piece");
+        log_msg("piece at position - deselect piece\n");
 
         deselect_piece();
 
     } else if (get_piece_by_position(&check_piece, x, y)) {
 
-        log_fmsg("::get_piece_by_position: %d, %d", 2, check_piece->colour, game->player_colour);
+        log_fmsg("::get_piece_by_position: %d, %d\n", 2, check_piece->colour, game->player_colour);
 
         if (check_piece->colour == game->player_colour) {
 
             // select alternative piece
-            log_msg("select different piece");
+            log_msg("select different piece\n");
 
             //piece = check_piece;
             deselect_piece();
@@ -59,7 +59,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
         } else {
 
             // not owned - do nothing
-            log_msg("piece not owned");
+            log_msg("piece not owned\n");
         }
 
     } else {
@@ -86,7 +86,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                         // need to check if all pieces are captured i.e. win
                         if (is_player_dead(1 - game->player_colour)) {
                             // player win!
-                            log_msg("win!");
+                            log_msg("win!\n");
                         }
                     }
                 }
@@ -95,10 +95,10 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                 end_turn();
 
             } else {
-                log_msg("invalid move");
+                log_msg("invalid move\n");
             }
         } else {
-            log_msg("piece has already moved");
+            log_msg("piece has already moved\n");
         }
     }
 
@@ -109,7 +109,7 @@ int select_square(int x, int y) {
 
     char msg[50];
 
-    sprintf(msg, "::select square: %d, %d", x+1, y+1);
+    sprintf(msg, "::select square: %d, %d\n", x+1, y+1);
 
     log_msg(msg);
 
@@ -125,7 +125,7 @@ int select_square(int x, int y) {
 
             // log_msg("piece detected");
 
-            log_fmsg("::piece->id: %d", 1, check_piece->id);
+            log_fmsg("::piece->id: %d\n", 1, check_piece->id);
 
             // log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->player_colour);
 
@@ -138,12 +138,12 @@ int select_square(int x, int y) {
             } else {
 
                 // piece is not owned - do nothing
-                log_msg("piece not owned");
+                log_msg("piece not owned\n");
             }
 
         } else {
 
-            log_msg("empty square");
+            log_msg("empty square\n");
         }
 
     } else {

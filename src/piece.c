@@ -72,19 +72,19 @@ bool is_valid_jump_move(Position *curr_pos, Position *new_pos, int dx, int dy) {
 
 	// 2 squares up/down and 2 squares left/right
 	if (!is_jump_move(curr_pos, new_pos)) {
-        log_msg("::not valid jump move");
+        log_msg("::not valid jump move\n");
 		return false;
 	}
 	// there must be a piece to jump over
 	if (!get_piece_by_position(&piece, adj_x, adj_y)) {
-        log_fmsg("::no intervening piece: %d, %d", 2, adj_x, adj_y);
+        log_fmsg("::no intervening piece: %d, %d\n", 2, adj_x, adj_y);
 		return false;
 	}
 
 	// checked piece is opposing
 	// cannot jump over own piece
 	if (piece->colour == selected_piece->colour) {
-        log_msg("::intervening piece is friendly");
+        log_msg("::intervening piece is friendly\n");
 		return false;
 	}
 	return true;
@@ -217,29 +217,29 @@ bool is_valid_move(Position *curr_pos, Position *new_pos) {
     bool is_forward_colour = is_positive_movement(selected_piece->colour);
     if (!selected_piece->is_king && ((is_forward_colour && !is_forward_move)
             || (!is_forward_colour && is_forward_move))) {
-        log_msg("::wrong direction");
+        log_msg("::wrong direction\n");
         return false;
     }
 
     // check valid move
 	if (!is_move(curr_pos, new_pos)) {
-        log_msg("::invalid move");
+        log_msg("::invalid move\n");
         return false;
     }
     // check boundaries
     if (!is_within_boundary(new_pos)) {
-        log_msg("::out of bounds");
+        log_msg("::out of bounds\n");
         return false;
     }
     // check square is unoccupied
 	if (is_piece_at_position(new_pos->x, new_pos->y)) {
-		log_msg("::space occupied");
+		log_msg("::space occupied\n");
 		return false;
 	}
     // check jump squares are not only accessible via own piece
 	if (is_jump_move(curr_pos, new_pos)
 			&& !is_valid_jump(curr_pos, new_pos)) {
-        log_msg("::invalid jump");
+        log_msg("::invalid jump\n");
 		return false;
 	}
 
@@ -295,7 +295,7 @@ bool is_piece_selected_by_id(int id) {
  * @param y new y position to assign
  */
 void move_piece(Piece *piece, int x, int y) {
-    log_fmsg("::move piece: %d, %d", 2, x+1, y+1);
+    log_fmsg("::move piece: %d, %d\n", 2, x+1, y+1);
     piece->x_pos = x;
     piece->y_pos = y;
 }
@@ -378,7 +378,7 @@ Piece *capture_piece_at_position(Position *pos) {
     int y = pos->y;
     Piece *piece = 0;
     if (get_piece_by_position(&piece, x, y)) {
-        log_fmsg("::capture_piece_at_position(): %d, [%d, %d]", 3, piece->id, x, y);
+        log_fmsg("::capture_piece_at_position(): %d, [%d, %d]\n", 3, piece->id, x, y);
         piece->is_captured = true;
         piece->x_pos = 0;
         piece->y_pos = 0;

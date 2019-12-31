@@ -20,7 +20,7 @@ memcheck:
 	valgrind --leak-check=yes ./bin/ccheckers
 
 clean:
-	rm ./*gch ./*swp ./*swo ./bin/*
+	rm ./*gch ./*swp ./*swo ./bin/* ./log/*
 
 run_test:
 	gcc ./test/*.c -lcmocka -lncurses -o ./bin/cc_tests && ./bin/cc_tests
