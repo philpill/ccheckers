@@ -17,6 +17,7 @@ FILE *log_file;
 static void insert_msg(char *message) {
     strcpy(msg_log[msg_ctr], message);
     fputs(msg_log[msg_ctr], log_file);
+    fflush(log_file);
     msg_ctr++;
 }
 
@@ -28,7 +29,7 @@ void init_log(int game_id) {
     char path_buf[30];
     char time_buf[30];
     snprintf(path_buf, 30, "log/%d", game_id);
-    log_file = open_file(path_buf);
+    log_file = open_file(path_buf, "w+");
     get_timestamp(time_buf);
     log_msg(time_buf);
 }

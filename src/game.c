@@ -14,7 +14,7 @@ void init_game(Game *new_game) {
 }
 
 void end_turn() {
-    log_msg("::end turn");
+    log_msg("::end turn\n");
     deselect_piece();
     // switch player
     // https://stackoverflow.com/a/4084058

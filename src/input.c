@@ -28,7 +28,7 @@ void output_msg() {
     int start_msg_ctr = log_count - 1 - y + 2;
     if (start_msg_ctr < 0) { start_msg_ctr = 0; }
     for (int i = 0; i < log_count - 1 && i < y + 2; i++) {
-        mvwprintw(output_window, i, 1, logs[start_msg_ctr+i]);
+        mvwprintw(output_window, i+1, 1, logs[start_msg_ctr+i]);
     }
     mvwprintw(output_window, y-2, 1, msg_log[msg_ctr]);
 }
@@ -58,7 +58,6 @@ void init_input(WINDOW **windows) {
     input_window = windows[0];
     output_window = windows[2];
     nodelay(windows[0], true);
-    log_msg("***\n"); // blank placeholder
     log_msg("Checkers in C!\n");
 }
 

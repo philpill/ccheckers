@@ -44,6 +44,13 @@ int get_id() {
     return r;
 }
 
+/*
+ * Get timestamp for logging
+ * https://stackoverflow.com/a/9596994
+ * 
+ * @param  buf string buffer to populate with timestamp
+ * @return number of chars (see docs snprintf())
+ */
 int get_timestamp(char *buf) {
 
     time_t ltime; /* calendar time */
