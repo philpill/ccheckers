@@ -31,7 +31,7 @@ int run_loop() {
     // resolve state
 
     // render
-    render(game, pieces);
+    render_board(game, pieces);
     render_text();
 
     end_t = clock();
@@ -71,7 +71,7 @@ int main() {
 
     init_piece(&game, pieces, filename, direction);
 
-    WINDOW *windows[4];
+    WINDOW *windows[3];
 
     init_render(windows);
 

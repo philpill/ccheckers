@@ -5,10 +5,13 @@ Restructure project
 AI Player
 
 Network support
+    https://www.codeproject.com/Articles/586000/Networking-and-Socket-programming-tutorial-in-C
+    https://en.wikibooks.org/wiki/C_Programming/Networking_in_UNIX
 
 Intro screen
 
-Finish/restart screen
+Finish/restart screen - use menu/panel
+    https://invisible-island.net/ncurses/ncurses-intro.html#menu
 
 Doxygen to generate docs
     http://www.doxygen.nl/manual/faq.html
@@ -25,8 +28,9 @@ Separate ncurses window width const from display string array length
 
 Separate engine/core code
 
-Interchangeable x/y input order
+Interchangeable board x/y input order
 
 Adaptive resolution
 
-Logging to file
+Mouse interface
+    https://invisible-island.net/ncurses/ncurses-intro.html#mouse

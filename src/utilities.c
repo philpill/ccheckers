@@ -56,5 +56,5 @@ int get_timestamp(char *buf) {
     time_t ltime; /* calendar time */
     ltime=time(NULL); /* get current cal time */
 
-    return snprintf(buf, 30, "%s", asctime( localtime(&ltime) ));
+    return snprintf(buf, 30, "%s", asctime(localtime(&ltime)));
 }

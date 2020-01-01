@@ -6,7 +6,7 @@
 
 void init_render(WINDOW **render_windows);
 
-void render(Game game, Piece *pieces);
+void render_board(Game game, Piece *pieces);
 void render_text();
 void quit_render();
 

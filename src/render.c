@@ -122,7 +122,7 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
 
 }
 
-void render(Game game, Piece *pieces) {
+void render_board(Game game, Piece *pieces) {
     WINDOW *window = windows[1];
     werase(window);
     draw_grid(window, pieces);
