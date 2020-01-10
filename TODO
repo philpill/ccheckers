@@ -12,6 +12,7 @@ Intro screen
 
 Finish/restart screen - use menu/panel
     https://invisible-island.net/ncurses/ncurses-intro.html#menu
+    http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/panels.html
 
 Doxygen to generate docs
     http://www.doxygen.nl/manual/faq.html
@@ -34,3 +35,10 @@ Adaptive resolution
 
 Mouse interface
     https://invisible-island.net/ncurses/ncurses-intro.html#mouse
+
+PD Curses for Windows?
+    https://pdcurses.org/
+
+Shift Position struct to core
+
+commnd line arguments for initial map load

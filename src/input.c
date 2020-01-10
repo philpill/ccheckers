@@ -66,6 +66,7 @@ void init_input(WINDOW **windows) {
  * square on board
  * e.g.
  * a == 1, B == 2, d == 4
+ * TODO use enum here?
  *
  * @param  x_char_pos x position letter
  * @return 0 if not valid, else corresponding position

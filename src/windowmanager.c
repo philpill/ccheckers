@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <panel.h>
 #include "global.h"
 
 WINDOW *get_windows(WINDOW **windows) {
