@@ -2,16 +2,21 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "../piece.c"
-#include "../utilities.c"
-#include "../input.c"
-#include "../game.c"
+#include "../piece.h"
+#include "../utilities.h"
+#include "../input.h"
+#include "../game.h"
+#include "../log.h"
 
 static void piece_init(void** state) {
 
     Piece pieces[24];
 
-    init_pieces(pieces);
+    Game game = { 0, 0, 0, 0 };
+
+    char *filename = "1";
+
+    init_piece(&game, pieces, filename, 0);
 
     assert_int_equal(pieces[0].id, 1);
 }
