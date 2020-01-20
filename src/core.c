@@ -5,7 +5,7 @@
  * 
  * @param  state Board to clear of pieces
  */
-static void initialise_state(int *state[WIDTH][HEIGHT]) {
+static void initialise_state(int state[WIDTH][HEIGHT]) {
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
             state[i][j] = 0;
@@ -20,7 +20,7 @@ static void initialise_state(int *state[WIDTH][HEIGHT]) {
  * @param  state Board and pieces to validate
  * @return true is state of board is valid
  */
-bool is_state_valid(int *state[WIDTH][HEIGHT]) {
+static bool is_state_valid(int state[WIDTH][HEIGHT]) {
 
     int num_pieces = 0;
 
@@ -50,7 +50,7 @@ bool is_state_valid(int *state[WIDTH][HEIGHT]) {
  * @param pos   Origin position to calculate other moves
  * @param moves Array of possible moves
  */
-static void get_all_moves(Position pos, Position *moves[8]) {
+static void get_all_moves(Position pos, Position moves[8]) {
 
     Position pos1 = { pos.x+1, pos.y+1 };
     Position pos2 = { pos.x+1, pos.y-1 };
@@ -62,15 +62,15 @@ static void get_all_moves(Position pos, Position *moves[8]) {
     Position pos7 = { pos.x-2, pos.y+2 };
     Position pos8 = { pos.x-2, pos.y-2 };
 
-    moves[0] = &pos1;
-    moves[1] = &pos2;
-    moves[2] = &pos3;
-    moves[3] = &pos4;
+    moves[0] = pos1;
+    moves[1] = pos2;
+    moves[2] = pos3;
+    moves[3] = pos4;
 
-    moves[4] = &pos5;
-    moves[5] = &pos6;
-    moves[6] = &pos7;
-    moves[7] = &pos8;
+    moves[4] = pos5;
+    moves[5] = pos6;
+    moves[6] = pos7;
+    moves[7] = pos8;
 }
 
 /*
@@ -80,7 +80,7 @@ static void get_all_moves(Position pos, Position *moves[8]) {
  * @param  move Proposed move
  * @return true if move is valid
  */
-static bool is_valid_move(Position pos, Position *move, int *state[WIDTH][HEIGHT]) {
+static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
 
     bool is_valid = true;
 
@@ -96,8 +96,8 @@ static bool is_valid_move(Position pos, Position *move, int *state[WIDTH][HEIGHT
  * @param  moves Possible moves
  * @return number of valid moves
  */
-int get_moves(Position pos, int *state[WIDTH][HEIGHT], 
-                Position *moves[]) {
+int get_moves(Position pos, int state[WIDTH][HEIGHT], 
+                Position moves[]) {
 
     int valid_moves_cnt = 0;
 
@@ -127,7 +127,7 @@ int get_moves(Position pos, int *state[WIDTH][HEIGHT],
  * @return true if success  
  */
 bool get_result(Position origin, Position dest, 
-                int *state[WIDTH][HEIGHT], int *result[WIDTH][HEIGHT], 
+                int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], 
                 char *msg[]) {
 
     if (!is_state_valid(state)) {

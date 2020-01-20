@@ -12,10 +12,10 @@ typedef struct {
     int y;
 } Position;
 
-int get_moves(Position pos, int *state[WIDTH][HEIGHT], 
-                        Position *moves[]);
+int get_moves(Position pos, int state[WIDTH][HEIGHT], 
+                        Position moves[]);
 
 bool get_result(Position origin, Position dest, 
-                int *state[WIDTH][HEIGHT], int *result[WIDTH][HEIGHT], char *msg[]);
+                int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], char *msg[]);
 
 #endif
