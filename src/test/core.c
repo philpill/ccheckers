@@ -5,7 +5,7 @@
 #include "../core.h"
 #include "../resource.h"
 
-static void test_get_moves_works(void** state) {
+static void test_get_piece_moves_works(void** state) {
 
     Position pos = { 1, 1 };
 
@@ -15,7 +15,44 @@ static void test_get_moves_works(void** state) {
 
     Position moves[8];
 
-    int moves_cnt = get_moves(pos, map, moves);
+    int moves_cnt = get_piece_moves(pos, map, moves);
 
-    assert_int_equal(moves_cnt, 0);
+    assert_in_range(moves_cnt, 0, 8);
+}
+
+static void test_move_within_bounds(void** state) {
+
+    Position pos = { 0, 0 };
+
+    int map[8][8];
+
+    load_file("0", map);
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 2);
+}
+
+static void test_move_unoccupied_spaces(void** state) {
+
+    Position pos = { 4, 4 };
+
+    int map[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 2, 0},
+        {0, 0, 0, 2, 0, 2, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 0, 0, 2, 0, 0},
+        {0, 0, 0, 0, 0, 0, 2, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 3);
 }

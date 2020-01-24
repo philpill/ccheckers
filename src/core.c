@@ -74,6 +74,35 @@ static void get_all_moves(Position pos, Position moves[8]) {
 }
 
 /*
+ * Check if move is within bounds of play
+ * Currently fixed at 8 square grid
+ * 
+ * @param  move Destination position
+ * @return true if within bounds
+ */
+static bool is_move_within_bounds(Position move) {
+    bool is_within = true;
+    is_within = move.x < 8 
+                && move.x > -1 
+                && move.y < 8
+                && move.y > -1;
+    return is_within;
+}
+
+/*
+ * Check if proposed move is blocked
+ * by another piece
+ * 
+ * @param  move Destination position
+ * @return true if space is occupied
+ */
+static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
+    bool is_occupied = false;
+    is_occupied = state[move.x][move.y] != 0;
+    return is_occupied;
+}
+
+/*
  * Check if proposed move is valid, given current game state
  * 
  * @param  pos  Current position
@@ -82,10 +111,13 @@ static void get_all_moves(Position pos, Position moves[8]) {
  */
 static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
 
-    bool is_valid = true;
+    if (!is_move_within_bounds(move)) return false;
+    if (is_space_occupied(move, state)) return false; 
 
+    // test for forward movement
+    // test for valid jump
 
-    return is_valid;
+    return true;
 }
 
 /*
@@ -96,21 +128,25 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT])
  * @param  moves Possible moves
  * @return number of valid moves
  */
-int get_moves(Position pos, int state[WIDTH][HEIGHT], 
+int get_piece_moves(Position pos, int state[WIDTH][HEIGHT], 
                 Position moves[]) {
 
     int valid_moves_cnt = 0;
+    Position possible_moves[8];
 
     if (!is_state_valid(state)) {
         return valid_moves_cnt;
     }
 
     // get the eight possible grid moves
-    get_all_moves(pos, moves);
+    get_all_moves(pos, possible_moves);
 
     // test each grid
     for (int i = 0; i < 8; i++) {
-        is_valid_move(pos, moves[i], state);
+        if (is_valid_move(pos, possible_moves[i], state)) {
+            moves[valid_moves_cnt] = possible_moves[i];
+            valid_moves_cnt++;
+        }
     }
 
     return valid_moves_cnt;
