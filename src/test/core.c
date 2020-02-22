@@ -28,6 +28,8 @@ static void test_move_within_bounds(void** state) {
 
     load_file("0", map);
 
+    map[0][0] = 1;
+
     Position moves[8];
 
     int moves_cnt = get_piece_moves(pos, map, moves);
@@ -55,4 +57,26 @@ static void test_move_unoccupied_spaces(void** state) {
     int moves_cnt = get_piece_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 3);
+}
+
+static void test_move_forward(void **state) {
+
+    Position pos = { 4, 4 };
+
+    int map[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 2, 0, 0, 0, 2, 0},
+        {0, 0, 0, 2, 0, 2, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 2, 0, 0, 0, 2, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 2);
 }

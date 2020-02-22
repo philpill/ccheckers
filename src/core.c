@@ -1,4 +1,5 @@
 #include "core.h"
+#include <stdio.h>
 
 /*
  * Initialise board to zeroes
@@ -81,11 +82,16 @@ static void get_all_moves(Position pos, Position moves[8]) {
  * @return true if within bounds
  */
 static bool is_move_within_bounds(Position move) {
+
+
     bool is_within = true;
     is_within = move.x < 8 
                 && move.x > -1 
                 && move.y < 8
                 && move.y > -1;
+
+    printf("is_move_within_bounds(): %d\n", is_within);
+
     return is_within;
 }
 
@@ -97,9 +103,53 @@ static bool is_move_within_bounds(Position move) {
  * @return true if space is occupied
  */
 static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
+
+
     bool is_occupied = false;
     is_occupied = state[move.x][move.y] != 0;
+
+    printf("is_space_occupied(): %d\n", is_occupied);
+
+    if (is_occupied) {
+    printf("--> %d\n", state[move.x][move.y]);
+
+    }
+
     return is_occupied;
+}
+
+/*
+ * Check if piece is a king
+ * 
+ * @param  piece Value from state data
+ * @return true is piece is a king 
+ */
+
+static bool is_king(int piece) {
+    return piece == 3 || piece == 4;
+}
+
+/*
+ * Check is piece is moving forwards or backwards
+ * 
+ * @param  piece Value from state data
+ * @param  pos   Original position
+ * @param  move  Destination position
+ * @return true is proposed move is forward advance
+ */
+static bool is_forward_move(int piece, Position pos, Position move) {
+
+    printf("is_forward_move(): ");
+
+    bool is_down = move.y > pos.y;
+
+    //printf("%d -> %d = %d\n", pos.y, move.y, is_down);
+
+    bool is_forward_move = ((piece == 1 || piece == 3) && is_down);
+
+    printf("%d\n", is_forward_move);
+
+    return is_forward_move;
 }
 
 /*
@@ -111,10 +161,16 @@ static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
  */
 static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
 
+    printf("----------\n[%d, %d]\n----------\n", move.x, move.y);
+
     if (!is_move_within_bounds(move)) return false;
     if (is_space_occupied(move, state)) return false; 
 
     // test for forward movement
+    bool is_piece_king = is_king(state[pos.x][pos.y]);
+    bool is_piece_forward_move = is_forward_move(state[pos.x][pos.y], pos, move); 
+    if (!is_piece_forward_move && !is_piece_king) return false;
+
     // test for valid jump
 
     return true;

@@ -1,20 +1,13 @@
 C Checkers
 https://en.wikipedia.org/wiki/Draughts
 
-sudo apt-get install libc6-dev libncurses5-dev
+make install
 
-vim src/*.c src/*.h src/test/*.c
-gcc src/*.c -lncurses -o ./bin/ccheckers
+make build
+make run
 
 debug
-gcc src/*.c -lncurses -g -o ./bin/ccheckers
-
+make debug
 
 cmocka
-gcc ./src/test/*.c -lcmocka -lncurses -o ./bin/cc_tests && ./bin/cc_tests
-
-TODO
-restructure project
-https://stackoverflow.com/q/8523078
-https://stackoverflow.com/a/2512086
-
+make run_test
