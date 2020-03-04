@@ -1,5 +1,6 @@
-#include "core.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include "core.h"
 
 /*
  * Initialise board to zeroes
@@ -90,7 +91,7 @@ static bool is_move_within_bounds(Position move) {
                 && move.y < 8
                 && move.y > -1;
 
-    printf("is_move_within_bounds(): %d\n", is_within);
+    //printf("is_move_within_bounds(): %d\n", is_within);
 
     return is_within;
 }
@@ -106,14 +107,14 @@ static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
 
 
     bool is_occupied = false;
-    is_occupied = state[move.x][move.y] != 0;
+    is_occupied = state[move.y][move.x] != 0;
 
-    printf("is_space_occupied(): %d\n", is_occupied);
+    //printf("is_space_occupied(): %d\n", is_occupied);
 
-    if (is_occupied) {
-    printf("--> %d\n", state[move.x][move.y]);
+    //if (is_occupied) {
+    //printf("--> %d\n", state[move.y][move.x]);
 
-    }
+    //}
 
     return is_occupied;
 }
@@ -139,17 +140,29 @@ static bool is_king(int piece) {
  */
 static bool is_forward_move(int piece, Position pos, Position move) {
 
-    printf("is_forward_move(): ");
+    //printf("is_forward_move(): ");
 
     bool is_down = move.y > pos.y;
 
-    //printf("%d -> %d = %d\n", pos.y, move.y, is_down);
+    //printf("%d -> %d = %d, %d\n", pos.y, move.y, is_down, piece);
 
     bool is_forward_move = ((piece == 1 || piece == 3) && is_down);
 
-    printf("%d\n", is_forward_move);
+    //printf("%d\n", is_forward_move);
 
     return is_forward_move;
+}
+
+static bool is_jump_move(Position pos, Position move) {
+    if (abs(pos.x-move.x) == 2) {
+        return true;
+    }
+    return false;
+}
+
+static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
+    // check intervening piece
+    return false;
 }
 
 /*
@@ -161,17 +174,27 @@ static bool is_forward_move(int piece, Position pos, Position move) {
  */
 static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
 
-    printf("----------\n[%d, %d]\n----------\n", move.x, move.y);
+    //printf("----------\n[%d, %d]\n", move.x, move.y);
 
     if (!is_move_within_bounds(move)) return false;
     if (is_space_occupied(move, state)) return false; 
 
     // test for forward movement
-    bool is_piece_king = is_king(state[pos.x][pos.y]);
-    bool is_piece_forward_move = is_forward_move(state[pos.x][pos.y], pos, move); 
-    if (!is_piece_forward_move && !is_piece_king) return false;
+    bool is_piece_king = is_king(state[pos.y][pos.x]);
+    bool is_piece_forward_move = is_forward_move(state[pos.y][pos.x], pos, move); 
+    if (!is_piece_forward_move) {   
+        if (!is_piece_king) { 
+            return false;
+        }
+    }
 
     // test for valid jump
+    // doesn't have to be a jump move to be valid
+    if (is_jump_move(pos, move)) {
+        if (!is_valid_jump_move(pos, move, state)) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -186,6 +209,8 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT])
  */
 int get_piece_moves(Position pos, int state[WIDTH][HEIGHT], 
                 Position moves[]) {
+
+    //printf("get_piece_moves(): %d\n", state[pos.y][pos.x]);
 
     int valid_moves_cnt = 0;
     Position possible_moves[8];

@@ -34,7 +34,7 @@ static void test_move_within_bounds(void** state) {
 
     int moves_cnt = get_piece_moves(pos, map, moves);
 
-    assert_int_equal(moves_cnt, 2);
+    assert_int_equal(moves_cnt, 1);
 }
 
 static void test_move_unoccupied_spaces(void** state) {
@@ -56,21 +56,65 @@ static void test_move_unoccupied_spaces(void** state) {
 
     int moves_cnt = get_piece_moves(pos, map, moves);
 
-    assert_int_equal(moves_cnt, 3);
+    assert_int_equal(moves_cnt, 1);
 }
 
-static void test_move_forward(void **state) {
+static void test_move_forward_1_l(void **state) {
 
-    Position pos = { 4, 4 };
+    Position pos = { 0, 2 };
 
     int map[8][8] = {
         {0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 2, 0, 0, 0, 2, 0},
-        {0, 0, 0, 2, 0, 2, 0, 0},
-        {0, 0, 0, 0, 1, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 2, 0, 0, 0, 2, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 1);
+}
+
+static void test_move_forward_1_r(void **state) {
+
+    Position pos = { 7, 1 };
+
+    int map[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 1},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 1);
+}
+
+static void test_move_forward_2(void **state) {
+
+    Position pos = { 2, 0 };
+
+    int map[8][8] = {
+        {0, 0, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0},
     };
 
@@ -79,4 +123,48 @@ static void test_move_forward(void **state) {
     int moves_cnt = get_piece_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 2);
+}
+
+static void test_move_forward_0(void **state) {
+
+    Position pos = { 1, 7 };
+
+    int map[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 1, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 0);
+}
+
+static void test_calibrate_position(void **state) {
+
+    Position pos = { 0, 0 };
+
+    int map[8][8] = {
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 1);
 }
