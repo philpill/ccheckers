@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
@@ -167,4 +168,63 @@ static void test_calibrate_position(void **state) {
     int moves_cnt = get_piece_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 1);
+}
+
+static void test_jump_move(void **state) {
+
+    Position pos = { 0, 0 };
+
+    int map[8][8] = {
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 2, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 1);
+}
+
+static void test_invalid_jump_move(void **state) {
+
+    Position pos = { 0, 0 };
+
+    int map[8][8] = {
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 0);
+}
+
+static void test_file_load(void **state) {
+
+    Position pos = { 1, 1 };
+
+    int map[8][8];
+
+    load_file("3", map);
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 2);
 }

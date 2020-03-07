@@ -105,7 +105,6 @@ static bool is_move_within_bounds(Position move) {
  */
 static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
 
-
     bool is_occupied = false;
     is_occupied = state[move.y][move.x] != 0;
 
@@ -113,7 +112,6 @@ static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
 
     //if (is_occupied) {
     //printf("--> %d\n", state[move.y][move.x]);
-
     //}
 
     return is_occupied;
@@ -153,6 +151,14 @@ static bool is_forward_move(int piece, Position pos, Position move) {
     return is_forward_move;
 }
 
+/*
+ * Check if a proposed move is a jump
+ * (forwards or backwards)
+ * 
+ * @param  pos  Original position
+ * @param  move Destination position
+ * @return true if proposed move is a jump 
+ */
 static bool is_jump_move(Position pos, Position move) {
     if (abs(pos.x-move.x) == 2) {
         return true;
@@ -160,16 +166,43 @@ static bool is_jump_move(Position pos, Position move) {
     return false;
 }
 
+/*
+ * Check if a proposed move is a valid jump
+ * (forwards or backwards)
+ * 
+ * @param  pos   Original position
+ * @param  move  Destination position
+ * @param  state Board with pieces data
+ * @return true if proposed move is a valid jump 
+ */
 static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
-    // check intervening piece
-    return false;
+    if (!is_jump_move(pos, move)) {
+        return false;
+    }
+    int x = (pos.x+move.x)/2;
+    int y = (pos.y+move.y)/2;
+    int piece = state[pos.y][pos.x];
+    int intervening_piece = state[y][x];
+    if (intervening_piece == 0) {
+        return false;
+    } else {
+        if ((piece == 1 || piece == 3)
+            && (intervening_piece == 1 || intervening_piece == 3)) {
+            return false;
+        } else if ((piece == 2 || piece == 4)
+            && (intervening_piece == 2 || intervening_piece == 4)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /*
  * Check if proposed move is valid, given current game state
  * 
- * @param  pos  Current position
- * @param  move Proposed move
+ * @param  pos   Current position
+ * @param  move  Proposed move
+ * @param  state Board with pieces data
  * @return true if move is valid
  */
 static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
