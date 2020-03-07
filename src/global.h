@@ -3,9 +3,6 @@
 
 extern const int GRID_H;
 extern const int GRID_W;
-extern const int NUM_PIECES;
-extern const int HEIGHT;
-extern const int WIDTH;
 
 extern const char SYMBOL1;
 extern const char SYMBOL2;

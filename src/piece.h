@@ -3,11 +3,7 @@
 
 #include <stdbool.h>
 #include "game.h"
-
-typedef struct {
-    int x;
-    int y;
-} Position;
+#include "core.h"
 
 typedef struct {
     int colour;

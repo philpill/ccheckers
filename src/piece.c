@@ -6,6 +6,7 @@
 #include "log.h"
 #include "resource.h"
 #include "global.h"
+#include "core.h"
 
 Piece *all_pieces = NULL;
 Piece *selected_piece = NULL;
