@@ -286,5 +286,46 @@ bool get_result(Position origin, Position dest,
 
     initialise_state(result);
 
-    return false;
+    // validate move
+    if (!is_valid_move(origin, dest, state)) {
+        return false;
+    }
+
+    // copy positions from state to result
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (state[i][j] != 0) {
+                result[i][j] = state[i][j];
+            }
+        }
+    }
+
+    // move piece
+    result[dest.y][dest.x] = state[origin.y][origin.x];
+    result[origin.y][origin.x] = 0;
+
+    // remove pieces if captured
+    if (abs(dest.y - origin.y) == 2) {
+        // 4 -> 6 ... 4 - 6 = -2 ... -2/2 = -1
+        // 6 -> 4 ... 6 - 4 = 2 ... 2/2  = 1
+
+        int result_y = origin.y - ((origin.y - dest.y)/2);
+        int result_x = origin.x - ((origin.x - dest.x)/2);
+
+        result[result_y][result_x] = 0;
+
+        // 4 - ((4 - 6)/2) = 4 - ((-2)/2) = 4 - -1 = 5
+        // 3 - ((3 - 1)/2) = 3 - ((2)/2) = 3 - 1 = 2 
+    }
+
+    // promote piece if on king's row
+    if ((state[origin.y][origin.x] == 1) && (dest.y == 7)) {
+        result[dest.y][dest.x] = 3;
+    }
+
+    if ((state[origin.y][origin.x] == 2) && (dest.y == 0)) {
+        result[dest.y][dest.x] = 4;
+    }
+
+    return true;
 }
