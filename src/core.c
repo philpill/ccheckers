@@ -274,21 +274,25 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
  * @param  state  Current board with pieces data
  * @param  result Board with processed pieces data
  * @param  msg    Error information
- * @return true if success  
+ * @return 0      success
+ *         1      supplied state invalid
+ *         2      proposed move invalid
  */
-bool get_result(Position origin, Position dest, 
+int get_result(Position origin, Position dest, 
                 int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], 
-                char *msg[]) {
+                char msg[]) {
 
     if (!is_state_valid(state)) {
-        return false;
+        msg = "Supplied state invalid";
+        return 1;
     }
 
     initialise_state(result);
 
     // validate move
     if (!is_valid_move(origin, dest, state)) {
-        return false;
+        msg = "proposed move invalid";
+        return 2;
     }
 
     // copy positions from state to result
@@ -327,5 +331,5 @@ bool get_result(Position origin, Position dest,
         result[dest.y][dest.x] = 4;
     }
 
-    return true;
+    return 0;
 }

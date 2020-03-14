@@ -228,3 +228,23 @@ static void test_file_load(void **state) {
 
     assert_int_equal(moves_cnt, 2);
 }
+
+static void test_get_result_works(void **state) {
+
+    Position origin = { 0, 0 };
+    Position dest = { 1, 1 };
+
+    int state_data[8][8];
+    int result_data[8][8];
+
+    char msg[255];
+
+    load_file("0", state_data);
+    load_file("0", result_data);
+
+    state_data[0][0] = 1;
+
+    int result = get_result(origin, dest, state_data, result_data, msg);
+
+    assert_int_equal(result, 0);
+}
