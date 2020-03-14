@@ -234,17 +234,123 @@ static void test_get_result_works(void **state) {
     Position origin = { 0, 0 };
     Position dest = { 1, 1 };
 
-    int state_data[8][8];
     int result_data[8][8];
 
     char msg[255];
 
-    load_file("0", state_data);
-    load_file("0", result_data);
-
-    state_data[0][0] = 1;
+    int state_data[8][8] = {
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
 
     int result = get_result(origin, dest, state_data, result_data, msg);
 
     assert_int_equal(result, 0);
+
+    assert_int_equal(result_data[1][1], 1);
+}
+
+static void test_capture(void **state) {
+
+    Position origin = { 0, 0 };
+    Position dest = { 2, 2 };
+
+    int result_data[8][8];
+
+    char msg[255];
+
+    int state_data[8][8] = {
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 2, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    // piece in expected position
+    assert_int_equal(state_data[0][0], 1); 
+
+    // target piece in expected position
+    assert_int_equal(state_data[1][1], 2); 
+
+    // destination position empty
+    assert_int_equal(state_data[2][2], 0); 
+
+    int result = get_result(origin, dest, state_data, result_data, msg);
+
+    // no errors
+    assert_int_equal(result, 0); 
+
+    // target piece removed from board
+    assert_int_equal(result_data[1][1], 0); 
+
+    // piece moved from original position
+    assert_int_equal(result_data[0][0], 0); 
+
+    // piece moved to new position
+    assert_int_equal(result_data[2][2], 1); 
+}
+
+static void test_board_orientation(void **state) {
+
+    Position origin = { 0, 2 };
+    Position dest = { 1, 3 };
+
+    int result_data[8][8];
+
+    char msg[255];
+
+    int state_data[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    int result = get_result(origin, dest, state_data, result_data, msg);
+
+    assert_int_equal(result, 0);
+
+    // x and y are swapped round to what you might expect ...
+    // i.e. first ordinal is y and second is x
+    assert_int_equal(result_data[3][1], 1); 
+}
+
+static void test_promote_king(void **state) {
+
+    Position origin = { 0, 6 };
+    Position dest = { 1, 7 };
+
+    int result_data[8][8];
+
+    char msg[255];
+
+    int state_data[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    int result = get_result(origin, dest, state_data, result_data, msg);
+
+    // piece promoted
+    assert_int_equal(result_data[7][1], 3); 
 }
