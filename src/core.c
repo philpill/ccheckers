@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "core.h"
 
 /*
@@ -280,10 +281,11 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
  */
 int get_result(Position origin, Position dest, 
                 int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], 
-                char msg[]) {
+                Report report) {
 
     if (!is_state_valid(state)) {
-        msg = "Supplied state invalid";
+        report.is_error = true;
+        strcpy(report.error_msg, "Supplied state invalid");
         return 1;
     }
 
@@ -291,7 +293,8 @@ int get_result(Position origin, Position dest,
 
     // validate move
     if (!is_valid_move(origin, dest, state)) {
-        msg = "proposed move invalid";
+        report.is_error = true;
+        strcpy(report.error_msg, "proposed move invalid");
         return 2;
     }
 
@@ -308,6 +311,11 @@ int get_result(Position origin, Position dest,
     result[dest.y][dest.x] = state[origin.y][origin.x];
     result[origin.y][origin.x] = 0;
 
+    Position origin_pos = { origin.x, origin.y };
+    report.piece_moved_old_pos = origin_pos;
+    Position dest_pos = { dest.x, dest.y };
+    report.piece_moved_new_pos = dest_pos;
+
     // remove pieces if captured
     if (abs(dest.y - origin.y) == 2) {
         // 4 -> 6 ... 4 - 6 = -2 ... -2/2 = -1
@@ -318,6 +326,9 @@ int get_result(Position origin, Position dest,
 
         result[result_y][result_x] = 0;
 
+        Position captured = { result_x, result_y };
+        report.piece_captured_pos = captured;
+
         // 4 - ((4 - 6)/2) = 4 - ((-2)/2) = 4 - -1 = 5
         // 3 - ((3 - 1)/2) = 3 - ((2)/2) = 3 - 1 = 2 
     }
@@ -325,10 +336,12 @@ int get_result(Position origin, Position dest,
     // promote piece if on king's row
     if ((state[origin.y][origin.x] == 1) && (dest.y == 7)) {
         result[dest.y][dest.x] = 3;
+        report.is_piece_promoted = true;
     }
 
     if ((state[origin.y][origin.x] == 2) && (dest.y == 0)) {
         result[dest.y][dest.x] = 4;
+        report.is_piece_promoted = true;
     }
 
     return 0;
