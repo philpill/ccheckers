@@ -77,6 +77,26 @@ static void get_all_moves(Position pos, Position moves[8]) {
 }
 
 /*
+ * Get the 4 theoretical possible squares for a piece to 
+ * jump forward/backward to
+ *'
+ * @param pos   Origin position to calculate other moves
+ * @param moves Array of possible moves
+ */
+static void get_all_jumps(Position pos, Position moves[8]) {
+
+    Position pos1 = { pos.x+2, pos.y+2 };
+    Position pos2 = { pos.x+2, pos.y-2 };
+    Position pos3 = { pos.x-2, pos.y+2 };
+    Position pos4 = { pos.x-2, pos.y-2 };
+
+    moves[0] = pos1;
+    moves[1] = pos2;
+    moves[2] = pos3;
+    moves[3] = pos4;
+}
+
+/*
  * Check if move is within bounds of play
  * Currently fixed at 8 square grid
  * 
@@ -234,6 +254,38 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT])
 }
 
 /*
+ * Get all possible jumps for piece at position specified
+ * 
+ * @param  pos   Positing of piece to get jumps for
+ * @param  state Board with pieces data
+ * @param  jumps Possible jumps
+ * @return number of valid jumps
+ */
+int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT], 
+                Position jumps[]) {
+
+    int valid_jumps_cnt = 0;
+    Position possible_jumps[4];
+
+    if (!is_state_valid(state)) {
+        return valid_jumps_cnt;
+    }
+
+    // get the four possible grid jumps
+    get_all_jumps(pos, possible_jumps);
+
+    // test each grid
+    for (int i = 0; i < 4; i++) {
+        if (is_valid_move(pos, possible_jumps[i], state)) {
+            jumps[valid_jumps_cnt] = possible_jumps[i];
+            valid_jumps_cnt++;
+        }
+    }
+
+    return valid_jumps_cnt;
+}
+
+/*
  * Get all possible moves for piece at position specified
  * 
  * @param  pos   Positing of piece to get moves for
@@ -275,18 +327,16 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
  * @param  state  Current board with pieces data
  * @param  result Board with processed pieces data
  * @param  msg    Error information
- * @return 0      success
- *         1      supplied state invalid
- *         2      proposed move invalid
+ * @return true if success, else false
  */
-int get_result(Position origin, Position dest, 
+bool get_result(Position origin, Position dest, 
                 int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], 
                 Report report) {
 
     if (!is_state_valid(state)) {
         report.is_error = true;
         strcpy(report.error_msg, "Supplied state invalid");
-        return 1;
+        return false;
     }
 
     initialise_state(result);
@@ -295,7 +345,7 @@ int get_result(Position origin, Position dest,
     if (!is_valid_move(origin, dest, state)) {
         report.is_error = true;
         strcpy(report.error_msg, "proposed move invalid");
-        return 2;
+        return false;
     }
 
     // copy positions from state to result
@@ -344,5 +394,5 @@ int get_result(Position origin, Position dest,
         report.is_piece_promoted = true;
     }
 
-    return 0;
+    return true;
 }

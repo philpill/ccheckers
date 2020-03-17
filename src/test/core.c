@@ -251,9 +251,9 @@ static void test_get_result_works(void **state) {
 
     Report report = {};
 
-    int result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, report);
 
-    assert_int_equal(result, 0);
+    assert_int_equal(result, true);
 
     assert_int_equal(result_data[1][1], 1);
 }
@@ -289,10 +289,10 @@ static void test_capture(void **state) {
     // destination position empty
     assert_int_equal(state_data[2][2], 0); 
 
-    int result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, report);
 
     // no errors
-    assert_int_equal(result, 0); 
+    assert_int_equal(result, true); 
 
     // target piece removed from board
     assert_int_equal(result_data[1][1], 0); 
@@ -326,9 +326,9 @@ static void test_board_orientation(void **state) {
 
     Report report = {};
 
-    int result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, report);
 
-    assert_int_equal(result, 0);
+    assert_int_equal(result, true);
 
     // x and y are swapped round to what you might expect ...
     // i.e. first ordinal is y and second is x
@@ -357,8 +357,32 @@ static void test_promote_king(void **state) {
 
     Report report = { };
 
-    int result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, report);
 
     // piece promoted
     assert_int_equal(result_data[7][1], 3); 
+}
+
+static void test_get_jumps_works(void **state) {
+
+    Position pos = { 2, 2 };
+
+    int result_data[8][8];
+
+    int state_data[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 2, 0, 0, 0, 0, 0, 0},
+        {0, 0, 3, 0, 0, 0, 0, 0},
+        {0, 2, 0, 2, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position jumps[8];
+
+    int jumps_cnt = get_piece_jumps(pos, state_data, jumps);
+
+    assert_int_equal(jumps_cnt, 2);
 }

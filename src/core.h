@@ -26,7 +26,10 @@ typedef struct {
 int get_piece_moves(Position pos, int state[WIDTH][HEIGHT], 
                         Position moves[]);
 
-int get_result(Position origin, Position dest, 
+int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT], 
+                        Position jumps[]);
+
+bool get_result(Position origin, Position dest, 
                 int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], Report report);
 
 #endif
