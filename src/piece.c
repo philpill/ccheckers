@@ -14,6 +14,20 @@ Game *game_data = NULL;
 
 bool is_selected = false;
 
+void get_state_by_pieces(int state[WIDTH][HEIGHT]) {
+    int piece = 0;
+    for (int i = 0; i < 24; i++) {
+        if (!all_pieces[i].is_captured) {
+            if (all_pieces[i].is_king) {
+                piece = all_pieces[i].colour == 0 ? 2 : 4;
+            } else {
+                piece = all_pieces[i].colour == 1 ? 1 : 3;
+            }
+        }
+        state[all_pieces[i].y_pos][all_pieces[i].x_pos] = piece;
+    }
+}
+
 /*
  * Check if a piece is currently selected.
  * Needs refactoring to use bool type
@@ -435,74 +449,3 @@ void init_piece(Game *game, Piece *pieces, char *filename, int direction) {
         }
     }
 }
-
-/*
- * @deprecated
- */
-void init_pieces_x(Piece *pieces) {
-
-    selected_piece = malloc(sizeof(Piece));
-
-    int i = 0;
-    int j = 0;
-
-    all_pieces = pieces;
-
-    for (i = 0; i < 24; i++) {
-        pieces[i].is_king = false;
-        pieces[i].is_captured = false;
-        pieces[i].id = i + 1;
-    }
-
-        j = 1;
-    for (i = 0; i < 4; i++) {
-        pieces[i].colour = 1;
-        pieces[i].x_pos = j;
-        pieces[i].y_pos = 0;
-        j += 2;
-    }
-
-        j = 0;
-    for (i = 4; i < 8; i++) {
-        pieces[i].colour = 1;
-        pieces[i].x_pos = j;
-        pieces[i].y_pos = 1;
-        j += 2;
-    }
-
-        j = 1;
-    for (i = 8; i < 12; i++) {
-        pieces[i].colour = 1;
-        pieces[i].x_pos = j;
-        pieces[i].y_pos = 2;
-        j += 2;
-    }
-
-        j = 0;
-    for (i = 12; i < 16; i++) {
-        pieces[i].colour = 0;
-        pieces[i].x_pos = j;
-        pieces[i].y_pos = 5;
-        j += 2;
-    }
-
-        j = 1;
-    for (i = 16; i < 20; i++) {
-        pieces[i].colour = 0;
-        pieces[i].x_pos = j;
-        pieces[i].y_pos = 6;
-        j += 2;
-    }
-
-        j = 0;
-    for (i = 20; i < 24; i++) {
-        pieces[i].colour = 0;
-        pieces[i].x_pos = j;
-        pieces[i].y_pos = 7;
-        j += 2;
-    }
-
-    pieces[10].x_pos = 5;
-    pieces[10].y_pos = 4;
-}
-

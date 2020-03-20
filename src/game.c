@@ -6,6 +6,7 @@
 #include "piece.h"
 #include "input.h"
 #include "log.h"
+#include "core.h"
 
 Game *game;
 
@@ -72,6 +73,30 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
             Position curr_pos = { piece->x_pos, piece->y_pos };
             Position new_pos = { x, y };
+
+/*
+    Position piece_captured_pos;
+    Position piece_moved_new_pos;
+    Position piece_moved_old_pos;
+    bool is_piece_promoted;
+    int total_pieces_remaining;
+    bool is_error;
+    char error_msg[255];
+*/
+            int state[WIDTH][HEIGHT] = {{0}};
+            int result[WIDTH][HEIGHT] = {{0}};
+            Report report = { };
+
+            get_state_by_pieces(state);
+
+            if (get_result(curr_pos, new_pos, state, result, &report)) {
+                log_msg("awesome!\n");
+            } else {
+                log_msg(report.error_msg);
+            }
+
+
+
             if (is_valid_move(&curr_pos, &new_pos)) {
                 // log_msg("valid move");
                 move_piece(piece, x, y);

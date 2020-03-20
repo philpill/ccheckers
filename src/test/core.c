@@ -251,7 +251,7 @@ static void test_get_result_works(void **state) {
 
     Report report = {};
 
-    bool result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, &report);
 
     assert_int_equal(result, true);
 
@@ -289,7 +289,7 @@ static void test_capture(void **state) {
     // destination position empty
     assert_int_equal(state_data[2][2], 0); 
 
-    bool result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, &report);
 
     // no errors
     assert_int_equal(result, true); 
@@ -326,7 +326,7 @@ static void test_board_orientation(void **state) {
 
     Report report = {};
 
-    bool result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, &report);
 
     assert_int_equal(result, true);
 
@@ -357,7 +357,7 @@ static void test_promote_king(void **state) {
 
     Report report = { };
 
-    bool result = get_result(origin, dest, state_data, result_data, report);
+    bool result = get_result(origin, dest, state_data, result_data, &report);
 
     // piece promoted
     assert_int_equal(result_data[7][1], 3); 

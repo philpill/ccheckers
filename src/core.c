@@ -20,10 +20,11 @@ static void initialise_state(int state[WIDTH][HEIGHT]) {
  * Validate state of board and pieces
  *  - if there are not more than the max number of pieces
  * 
- * @param  state Board and pieces to validate
+ * @param  state     Board and pieces to validate
+ * @param  error_msg Reason for failure
  * @return true is state of board is valid
  */
-static bool is_state_valid(int state[WIDTH][HEIGHT]) {
+static bool is_state_valid(int state[WIDTH][HEIGHT], char error_msg[]) {
 
     int num_pieces = 0;
 
@@ -36,6 +37,7 @@ static bool is_state_valid(int state[WIDTH][HEIGHT]) {
     }
 
     if (num_pieces > NUM_PIECES) {
+        strcpy(error_msg, "number of pieces in given state exceed expected value");
         return false;
     }
 
@@ -165,7 +167,8 @@ static bool is_forward_move(int piece, Position pos, Position move) {
 
     //printf("%d -> %d = %d, %d\n", pos.y, move.y, is_down, piece);
 
-    bool is_forward_move = ((piece == 1 || piece == 3) && is_down);
+    bool is_forward_move = ((piece == 1 || piece == 3) && is_down) 
+                            || ((piece == 2 || piece == 4) && !is_down);
 
     //printf("%d\n", is_forward_move);
 
@@ -191,12 +194,14 @@ static bool is_jump_move(Position pos, Position move) {
  * Check if a proposed move is a valid jump
  * (forwards or backwards)
  * 
- * @param  pos   Original position
- * @param  move  Destination position
- * @param  state Board with pieces data
+ * @param  pos       Original position
+ * @param  move      Destination position
+ * @param  state     Board with pieces data
+ * @param  error_msg Reason for failure
  * @return true if proposed move is a valid jump 
  */
-static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
+static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEIGHT], 
+                                char error_msg[]) {
     if (!is_jump_move(pos, move)) {
         return false;
     }
@@ -205,13 +210,16 @@ static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEI
     int piece = state[pos.y][pos.x];
     int intervening_piece = state[y][x];
     if (intervening_piece == 0) {
+        strcpy(error_msg, "No intervening piece to jump");
         return false;
     } else {
         if ((piece == 1 || piece == 3)
             && (intervening_piece == 1 || intervening_piece == 3)) {
+            strcpy(error_msg, "Cannot jump friendly piece");
             return false;
         } else if ((piece == 2 || piece == 4)
             && (intervening_piece == 2 || intervening_piece == 4)) {
+            strcpy(error_msg, "Cannot jump friendly piece");
             return false;
         }
     }
@@ -221,12 +229,14 @@ static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEI
 /*
  * Check if proposed move is valid, given current game state
  * 
- * @param  pos   Current position
- * @param  move  Proposed move
- * @param  state Board with pieces data
+ * @param  pos       Current position
+ * @param  move      Proposed move
+ * @param  state     Board with pieces data
+ * @param  error_msg Reason for failure
  * @return true if move is valid
  */
-static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT]) {
+static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT], 
+                            char error_msg[]) {
 
     //printf("----------\n[%d, %d]\n", move.x, move.y);
 
@@ -238,6 +248,7 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT])
     bool is_piece_forward_move = is_forward_move(state[pos.y][pos.x], pos, move); 
     if (!is_piece_forward_move) {   
         if (!is_piece_king) { 
+            strcpy(error_msg, "Non-king piece cannot move backwards");
             return false;
         }
     }
@@ -245,7 +256,7 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT])
     // test for valid jump
     // doesn't have to be a jump move to be valid
     if (is_jump_move(pos, move)) {
-        if (!is_valid_jump_move(pos, move, state)) {
+        if (!is_valid_jump_move(pos, move, state, error_msg)) {
             return false;
         }
     }
@@ -266,8 +277,9 @@ int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT],
 
     int valid_jumps_cnt = 0;
     Position possible_jumps[4];
+    char error_msg[255];
 
-    if (!is_state_valid(state)) {
+    if (!is_state_valid(state, error_msg)) {
         return valid_jumps_cnt;
     }
 
@@ -276,7 +288,7 @@ int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT],
 
     // test each grid
     for (int i = 0; i < 4; i++) {
-        if (is_valid_move(pos, possible_jumps[i], state)) {
+        if (is_valid_move(pos, possible_jumps[i], state, error_msg)) {
             jumps[valid_jumps_cnt] = possible_jumps[i];
             valid_jumps_cnt++;
         }
@@ -300,8 +312,9 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
 
     int valid_moves_cnt = 0;
     Position possible_moves[8];
+    char error_msg[255];
 
-    if (!is_state_valid(state)) {
+    if (!is_state_valid(state, error_msg)) {
         return valid_moves_cnt;
     }
 
@@ -310,7 +323,7 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
 
     // test each grid
     for (int i = 0; i < 8; i++) {
-        if (is_valid_move(pos, possible_moves[i], state)) {
+        if (is_valid_move(pos, possible_moves[i], state, error_msg)) {
             moves[valid_moves_cnt] = possible_moves[i];
             valid_moves_cnt++;
         }
@@ -331,20 +344,22 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
  */
 bool get_result(Position origin, Position dest, 
                 int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], 
-                Report report) {
+                Report *report) {
 
-    if (!is_state_valid(state)) {
-        report.is_error = true;
-        strcpy(report.error_msg, "Supplied state invalid");
+    char error_msg[255];
+
+    if (!is_state_valid(state, error_msg)) {
+        report->is_error = true;
+        strcpy(report->error_msg, error_msg);
         return false;
     }
 
     initialise_state(result);
 
     // validate move
-    if (!is_valid_move(origin, dest, state)) {
-        report.is_error = true;
-        strcpy(report.error_msg, "proposed move invalid");
+    if (!is_valid_move(origin, dest, state, error_msg)) {
+        report->is_error = true;
+        strcpy(report->error_msg, error_msg);
         return false;
     }
 
@@ -362,9 +377,9 @@ bool get_result(Position origin, Position dest,
     result[origin.y][origin.x] = 0;
 
     Position origin_pos = { origin.x, origin.y };
-    report.piece_moved_old_pos = origin_pos;
+    report->piece_moved_old_pos = origin_pos;
     Position dest_pos = { dest.x, dest.y };
-    report.piece_moved_new_pos = dest_pos;
+    report->piece_moved_new_pos = dest_pos;
 
     // remove pieces if captured
     if (abs(dest.y - origin.y) == 2) {
@@ -377,7 +392,7 @@ bool get_result(Position origin, Position dest,
         result[result_y][result_x] = 0;
 
         Position captured = { result_x, result_y };
-        report.piece_captured_pos = captured;
+        report->piece_captured_pos = captured;
 
         // 4 - ((4 - 6)/2) = 4 - ((-2)/2) = 4 - -1 = 5
         // 3 - ((3 - 1)/2) = 3 - ((2)/2) = 3 - 1 = 2 
@@ -386,12 +401,12 @@ bool get_result(Position origin, Position dest,
     // promote piece if on king's row
     if ((state[origin.y][origin.x] == 1) && (dest.y == 7)) {
         result[dest.y][dest.x] = 3;
-        report.is_piece_promoted = true;
+        report->is_piece_promoted = true;
     }
 
     if ((state[origin.y][origin.x] == 2) && (dest.y == 0)) {
         result[dest.y][dest.x] = 4;
-        report.is_piece_promoted = true;
+        report->is_piece_promoted = true;
     }
 
     return true;

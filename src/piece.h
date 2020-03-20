@@ -18,7 +18,7 @@ typedef struct {
 
 void init_piece(Game *game, Piece pieces[], char *filename, int direction);
 
-void init_pieces_x(Piece pieces[]);
+void get_state_by_pieces(int state[WIDTH][HEIGHT]);
 
 void select_piece(Piece *piece);
 

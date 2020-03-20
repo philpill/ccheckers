@@ -30,6 +30,6 @@ int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT],
                         Position jumps[]);
 
 bool get_result(Position origin, Position dest, 
-                int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], Report report);
+                int state[WIDTH][HEIGHT], int result[WIDTH][HEIGHT], Report *report);
 
 #endif
