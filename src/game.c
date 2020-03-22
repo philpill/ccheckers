@@ -67,22 +67,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
         if (!piece->is_captured) {
 
-            // log_msg("moving piece...");
-            // move selected piece to empty square
-            // is move valid?
-
             Position curr_pos = { piece->x_pos, piece->y_pos };
             Position new_pos = { x, y };
 
-/*
-    Position piece_captured_pos;
-    Position piece_moved_new_pos;
-    Position piece_moved_old_pos;
-    bool is_piece_promoted;
-    int total_pieces_remaining;
-    bool is_error;
-    char error_msg[255];
-*/
             int state[WIDTH][HEIGHT] = {{0}};
             int result[WIDTH][HEIGHT] = {{0}};
             Report report = { };
@@ -90,29 +77,18 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
             get_state_by_pieces(state);
 
             if (get_result(curr_pos, new_pos, state, result, &report)) {
-                log_msg("awesome!");
-            } else {
-                log_msg(report.error_msg);
-            }
-
-
-
-            if (is_valid_move(&curr_pos, &new_pos)) {
-                // log_msg("valid move");
+                
                 move_piece(piece, x, y);
-                if (is_piece_at_kings_row(y, piece->direction)) {
-                    // log_msg("::is_piece_at_kings_row(): true");
+                if (report.is_piece_promoted) {
                     piece->is_king = true;
                 }
-                if (is_jump_move(&curr_pos, &new_pos)) {
-                    Position pos;
-                    if (get_intervening_position(&pos, &curr_pos, &new_pos)) {
-                        capture_piece_at_position(&pos);
-                        // need to check if all pieces are captured i.e. win
-                        if (is_player_dead(1 - game->player_colour)) {
-                            // player win!
-                            log_msg("win!\n");
-                        }
+                if (report.is_jump && report.is_capture) {
+                    
+                    capture_piece_at_position(&report.piece_captured_pos);
+
+                    if (is_player_dead(1 - game->player_colour)) {
+                        // player win!
+                        log_msg("win!\n");
                     }
                 }
 
@@ -120,8 +96,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                 end_turn();
 
             } else {
-                log_msg("invalid move\n");
+                log_msg(report.error_msg);
             }
+
         } else {
             log_msg("piece has already moved\n");
         }

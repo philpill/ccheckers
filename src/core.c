@@ -385,19 +385,28 @@ bool get_result(Position origin, Position dest,
 
     // remove pieces if captured
     if (abs(dest.y - origin.y) == 2) {
+
+        report->is_jump = true;
+
         // 4 -> 6 ... 4 - 6 = -2 ... -2/2 = -1
         // 6 -> 4 ... 6 - 4 = 2 ... 2/2  = 1
 
         int result_y = origin.y - ((origin.y - dest.y)/2);
         int result_x = origin.x - ((origin.x - dest.x)/2);
 
-        result[result_y][result_x] = 0;
+        if (state[result_y][result_x] != 0) {
 
-        Position captured = { result_x, result_y };
-        report->piece_captured_pos = captured;
+            result[result_y][result_x] = 0;
 
-        // 4 - ((4 - 6)/2) = 4 - ((-2)/2) = 4 - -1 = 5
-        // 3 - ((3 - 1)/2) = 3 - ((2)/2) = 3 - 1 = 2 
+            Position captured = { result_x, result_y };
+            report->piece_captured_pos = captured;
+
+            // 4 - ((4 - 6)/2) = 4 - ((-2)/2) = 4 - -1 = 5
+            // 3 - ((3 - 1)/2) = 3 - ((2)/2) = 3 - 1 = 2 
+
+            report->is_capture = true;    
+        }
+
     }
 
     // promote piece if on king's row

@@ -17,6 +17,8 @@ typedef struct {
     Position piece_moved_new_pos;
     Position piece_moved_old_pos;
     bool is_piece_promoted;
+    bool is_jump;
+    bool is_capture;
     int total_pieces_remaining;
     bool is_error;
     char error_msg[255];

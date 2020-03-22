@@ -34,22 +34,10 @@ bool get_piece_by_position(Piece **piece, int x, int y);
 
 bool is_piece_selected();
 
-bool is_piece_at_position(int x, int y);
-
-bool is_piece_at_kings_row(int y, int direction);
-
 bool is_piece_selected_by_id(int id);
-
-bool is_valid_move(Position *curr_pos, Position *new_pos);
-
-bool is_jump_move(Position *curr_pos, Position *new_pos);
 
 void move_piece(Piece *piece, int x, int y);
 
 bool is_player_dead(int colour);
-
-void set_piece_king(Piece *piece);
-
-bool is_positive_movement(int colour);
 
 #endif
