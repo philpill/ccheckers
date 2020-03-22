@@ -18,6 +18,7 @@ int main(void)
         cmocka_unit_test(test_move_forward_1_l),
         cmocka_unit_test(test_move_forward_1_r),
         cmocka_unit_test(test_move_forward_2),
+        cmocka_unit_test(test_move_forward_3),
         cmocka_unit_test(test_calibrate_position),
         cmocka_unit_test(test_jump_move),
         cmocka_unit_test(test_invalid_jump_move),

@@ -21,7 +21,7 @@ void get_state_by_pieces(int state[WIDTH][HEIGHT]) {
             if (all_pieces[i].is_king) {
                 piece = all_pieces[i].colour == 0 ? 2 : 4;
             } else {
-                piece = all_pieces[i].colour == 1 ? 1 : 3;
+                piece = all_pieces[i].colour == 0 ? 1 : 3;
             }
         }
         state[all_pieces[i].y_pos][all_pieces[i].x_pos] = piece;

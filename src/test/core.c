@@ -148,6 +148,28 @@ static void test_move_forward_0(void **state) {
     assert_int_equal(moves_cnt, 0);
 }
 
+static void test_move_forward_3(void **state) {
+
+    Position pos = { 1, 7 };
+
+    int map[8][8] = {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 2, 0, 0, 0, 0, 0, 0},
+    };
+
+    Position moves[8];
+
+    int moves_cnt = get_piece_moves(pos, map, moves);
+
+    assert_int_equal(moves_cnt, 2);
+}
+
 static void test_calibrate_position(void **state) {
 
     Position pos = { 0, 0 };

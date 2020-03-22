@@ -90,7 +90,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
             get_state_by_pieces(state);
 
             if (get_result(curr_pos, new_pos, state, result, &report)) {
-                log_msg("awesome!\n");
+                log_msg("awesome!");
             } else {
                 log_msg(report.error_msg);
             }
