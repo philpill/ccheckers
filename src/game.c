@@ -79,27 +79,31 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
             if (get_result(curr_pos, new_pos, state, result, &report)) {
                 
                 move_piece(piece, x, y);
+                
                 if (report.is_piece_promoted) {
+                    log_msg("piece promoted to king\n");
                     piece->is_king = true;
                 }
-                if (report.is_jump && report.is_capture) {
-                    
-                    capture_piece_at_position(&report.piece_captured_pos);
 
-                    if (is_player_dead(1 - game->player_colour)) {
-                        // player win!
-                        log_msg("win!\n");
-                    }
+                if (report.is_jump && report.is_capture) {
+                    capture_piece_at_position(&report.piece_captured_pos);
                 }
 
                 // end move
                 end_turn();
 
+                if (is_player_dead(1 - game->player_colour)) {
+                    // player win!
+                    log_msg("win!\n");
+                }
+
             } else {
+
                 log_msg(report.error_msg);
             }
 
         } else {
+
             log_msg("piece has already moved\n");
         }
     }

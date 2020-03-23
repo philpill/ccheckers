@@ -247,10 +247,8 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT],
     bool is_piece_king = is_king(state[pos.y][pos.x]);
     bool is_piece_forward_move = is_forward_move(state[pos.y][pos.x], pos, move); 
     if (!is_piece_forward_move) {
-        // sprintf(error_msg, "%d %d %d %d", state[4][1], state[3][4], state[1][2], state[4][3]);
-        strcat(error_msg, "Not forward move. "); 
         if (!is_piece_king) { 
-            strcat(error_msg, "Non-king piece cannot move backwards. ");
+            strcpy(error_msg, "Non-king piece cannot move backwards. ");
             return false;
         }
     }
@@ -314,7 +312,7 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
 
     int valid_moves_cnt = 0;
     Position possible_moves[8];
-    char error_msg[255];
+    char error_msg[255] = "";
 
     if (!is_state_valid(state, error_msg)) {
         return valid_moves_cnt;
