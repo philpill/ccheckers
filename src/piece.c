@@ -19,12 +19,12 @@ void get_state_by_pieces(int state[WIDTH][HEIGHT]) {
     for (int i = 0; i < 24; i++) {
         if (!all_pieces[i].is_captured) {
             if (all_pieces[i].is_king) {
-                piece = all_pieces[i].colour == 0 ? 2 : 4;
+                piece = all_pieces[i].colour == 0 ? 3 : 4;
             } else {
-                piece = all_pieces[i].colour == 0 ? 1 : 3;
+                piece = all_pieces[i].colour == 0 ? 1 : 2;
             }
+            state[all_pieces[i].y_pos][all_pieces[i].x_pos] = piece;
         }
-        state[all_pieces[i].y_pos][all_pieces[i].x_pos] = piece;
     }
 }
 
@@ -173,8 +173,9 @@ Piece *capture_piece_at_position(Position *pos) {
  * @param pieces memory-allocated array to fill with pieces data
  * @param filename file (without extension) to load piece data
  * @param direction 1: moving down the board, -1: moving up
+ * @return pieces count
  */
-void init_piece(Game *game, Piece *pieces, char *filename, int direction) {
+int init_piece(Game *game, Piece *pieces, char *filename, int direction) {
 
     int map[8][8];
 
@@ -209,4 +210,19 @@ void init_piece(Game *game, Piece *pieces, char *filename, int direction) {
             }
         }
     }
+
+    for (int k = id; k < 24; k++) {
+
+        pieces[k].is_captured = true;
+        pieces[k].id = k;
+        pieces[k].x_pos = 0;
+        pieces[k].y_pos = 0;
+        pieces[k].position = (Position){ .x = 0, .y = 0 };
+
+        pieces[k].is_king = false;
+        pieces[k].colour = 0;
+        pieces[k].direction = 1;
+    }
+
+    return id;
 }

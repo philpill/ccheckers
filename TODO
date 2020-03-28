@@ -1,3 +1,13 @@
+... Separate engine/core code
+
+✓ Shift Position struct to core
+
+VS Code GDB
+    https://code.visualstudio.com/docs/cpp/cpp-debug
+
+Check for memory leaks with valgrind
+    https://valgrind.org/docs/manual/quick-start.html#quick-start.prepare
+
 Restructure project
     https://stackoverflow.com/q/8523078
     https://stackoverflow.com/a/2512086
@@ -18,6 +28,7 @@ Doxygen to generate docs
     http://www.doxygen.nl/manual/faq.html
 
 Multiple, successive captures in a single jump
+    mandatory option
 
 Upgrade Makefile
     http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
@@ -29,8 +40,6 @@ Fix tests with reorg'ed makefile - include all *.c except main
 
 Separate ncurses window width const from display string array length
 
-Separate engine/core code
-
 Interchangeable board x/y input order
 
 Adaptive resolution
@@ -41,6 +50,7 @@ Mouse interface
 PD Curses for Windows?
     https://pdcurses.org/
 
-Shift Position struct to core
-
-commnd line arguments for initial map load
+commnd line arguments for initial map load and settings
+    https://stackoverflow.com/questions/3898021/regarding-mainint-argc-char-argv
+    https://www.thegeekstuff.com/2013/01/c-argc-argv/
+    https://www.tutorialspoint.com/cprogramming/c_command_line_arguments.htm

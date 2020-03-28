@@ -167,8 +167,8 @@ static bool is_forward_move(int piece, Position pos, Position move) {
 
     //printf("%d -> %d = %d, %d\n", pos.y, move.y, is_down, piece);
 
-    bool is_forward_move = ((piece == 1 || piece == 3) && is_down) 
-                            || ((piece == 2 || piece == 4) && !is_down);
+    bool is_forward_move = ((piece == 1 && is_down) 
+                            || (piece == 2 && !is_down));
 
     //printf("%d\n", is_forward_move);
 
@@ -247,6 +247,8 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT],
     bool is_piece_king = is_king(state[pos.y][pos.x]);
     bool is_piece_forward_move = is_forward_move(state[pos.y][pos.x], pos, move); 
     if (!is_piece_forward_move) {
+        strcpy(error_msg, "Not forward move. ");
+        return false;
         if (!is_piece_king) { 
             strcpy(error_msg, "Non-king piece cannot move backwards. ");
             return false;
@@ -404,17 +406,16 @@ bool get_result(Position origin, Position dest,
 
             report->is_capture = true;    
         }
-
     }
 
     // promote piece if on king's row
-    if ((state[origin.y][origin.x] == 1) && (dest.y == 7)) {
-        result[dest.y][dest.x] = 3;
+    if ((state[origin.y][origin.x] == 2) && (dest.y == 0)) {
+        result[dest.y][dest.x] = 4;
         report->is_piece_promoted = true;
     }
 
-    if ((state[origin.y][origin.x] == 2) && (dest.y == 0)) {
-        result[dest.y][dest.x] = 4;
+    if ((state[origin.y][origin.x] == 1) && (dest.y == 7)) {
+        result[dest.y][dest.x] = 3;
         report->is_piece_promoted = true;
     }
 

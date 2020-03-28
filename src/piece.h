@@ -16,7 +16,7 @@ typedef struct {
     int direction;
 } Piece;
 
-void init_piece(Game *game, Piece pieces[], char *filename, int direction);
+int init_piece(Game *game, Piece pieces[], char *filename, int direction);
 
 void get_state_by_pieces(int state[WIDTH][HEIGHT]);
 

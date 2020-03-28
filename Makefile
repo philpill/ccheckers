@@ -8,7 +8,7 @@ run:
 	./bin/ccheckers
 
 build:
-	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -o ./bin/ccheckers
+	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -g -o ./bin/ccheckers
 
 debug:
 	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -g -o ./bin/ccheckers && gdb ./bin/ccheckers

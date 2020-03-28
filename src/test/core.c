@@ -408,3 +408,14 @@ static void test_get_jumps_works(void **state) {
 
     assert_int_equal(jumps_cnt, 2);
 }
+
+static void test_initial_population_0(void **state) {
+
+    int map[8][8];
+
+    load_file("4", map);
+
+    Position moves[8];
+
+    assert_int_equal(map[2][3], 1);
+}
