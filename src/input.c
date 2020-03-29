@@ -25,9 +25,9 @@ void output_msg() {
     char *logs[log_count];
     get_logs(logs, log_count);
 
-    int start_msg_ctr = log_count - 1 - y + 2;
+    int start_msg_ctr = log_count - 1 - y + 3;
     if (start_msg_ctr < 0) { start_msg_ctr = 0; }
-    for (int i = 0; i < log_count - 1 && i < y + 2; i++) {
+    for (int i = 0; i < log_count - 1 && i < y + 3; i++) {
         mvwprintw(output_window, i+1, 1, logs[start_msg_ctr+i]);
     }
     mvwprintw(output_window, y-2, 1, msg_log[msg_ctr]);

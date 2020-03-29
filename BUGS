@@ -1,3 +1,2 @@
-Last line of output runs over input line
-
+✓ Last line of output runs over input line
 ✓ Piece moving onto kings row doesn't update to new status in display 
