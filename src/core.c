@@ -247,8 +247,6 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT],
     bool is_piece_king = is_king(state[pos.y][pos.x]);
     bool is_piece_forward_move = is_forward_move(state[pos.y][pos.x], pos, move); 
     if (!is_piece_forward_move) {
-        strcpy(error_msg, "Not forward move. ");
-        return false;
         if (!is_piece_king) { 
             strcpy(error_msg, "Non-king piece cannot move backwards. ");
             return false;
