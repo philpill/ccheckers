@@ -11,7 +11,7 @@
 static void initialise_state(int state[WIDTH][HEIGHT]) {
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
-            state[i][j] = 0;
+            state[i][j] = STATE_EMPTY;
         }
     }
 }
@@ -30,7 +30,7 @@ static bool is_state_valid(int state[WIDTH][HEIGHT], char error_msg[]) {
 
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
-            if (state[i][j] != 0) {
+            if (state[i][j] != STATE_EMPTY) {
                 num_pieces++;
             }
         }
@@ -148,7 +148,7 @@ static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
  */
 
 static bool is_king(int piece) {
-    return piece == 3 || piece == 4;
+    return piece == STATE_WHITE_KING || piece == STATE_BLACK_KING;
 }
 
 /*
@@ -167,8 +167,10 @@ static bool is_forward_move(int piece, Position pos, Position move) {
 
     //printf("%d -> %d = %d, %d\n", pos.y, move.y, is_down, piece);
 
-    bool is_forward_move = ((piece == 1 && is_down) 
-                            || (piece == 2 && !is_down));
+    bool is_forward_move = ((piece == STATE_WHITE_PAWN && is_down) 
+                            || (piece == STATE_WHITE_KING && is_down) 
+                            || (piece == STATE_BLACK_PAWN && !is_down)
+                            || (piece == STATE_BLACK_KING && !is_down));
 
     //printf("%d\n", is_forward_move);
 
@@ -209,16 +211,16 @@ static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEI
     int y = (pos.y+move.y)/2;
     int piece = state[pos.y][pos.x];
     int intervening_piece = state[y][x];
-    if (intervening_piece == 0) {
+    if (intervening_piece == STATE_EMPTY) {
         strcpy(error_msg, "No intervening piece to jump");
         return false;
     } else {
-        if ((piece == 1 || piece == 3)
-            && (intervening_piece == 1 || intervening_piece == 3)) {
+        if ((piece == STATE_WHITE_PAWN || piece == STATE_WHITE_KING)
+            && (intervening_piece == STATE_WHITE_PAWN || intervening_piece == STATE_WHITE_KING)) {
             strcpy(error_msg, "Cannot jump friendly piece");
             return false;
-        } else if ((piece == 2 || piece == 4)
-            && (intervening_piece == 2 || intervening_piece == 4)) {
+        } else if ((piece == STATE_BLACK_PAWN || piece == STATE_BLACK_KING)
+            && (intervening_piece == STATE_BLACK_PAWN || intervening_piece == STATE_BLACK_KING)) {
             strcpy(error_msg, "Cannot jump friendly piece");
             return false;
         }
@@ -366,7 +368,7 @@ bool get_result(Position origin, Position dest,
     // copy positions from state to result
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            if (state[i][j] != 0) {
+            if (state[i][j] != STATE_EMPTY) {
                 result[i][j] = state[i][j];
             }
         }
@@ -374,7 +376,7 @@ bool get_result(Position origin, Position dest,
 
     // move piece
     result[dest.y][dest.x] = state[origin.y][origin.x];
-    result[origin.y][origin.x] = 0;
+    result[origin.y][origin.x] = STATE_EMPTY;
 
     Position origin_pos = { origin.x, origin.y };
     report->piece_moved_old_pos = origin_pos;
@@ -392,9 +394,9 @@ bool get_result(Position origin, Position dest,
         int result_y = origin.y - ((origin.y - dest.y)/2);
         int result_x = origin.x - ((origin.x - dest.x)/2);
 
-        if (state[result_y][result_x] != 0) {
+        if (state[result_y][result_x] != STATE_EMPTY) {
 
-            result[result_y][result_x] = 0;
+            result[result_y][result_x] = STATE_EMPTY;
 
             Position captured = { result_x, result_y };
             report->piece_captured_pos = captured;
@@ -407,13 +409,13 @@ bool get_result(Position origin, Position dest,
     }
 
     // promote piece if on king's row
-    if ((state[origin.y][origin.x] == 2) && (dest.y == 0)) {
-        result[dest.y][dest.x] = 4;
+    if ((state[origin.y][origin.x] == STATE_BLACK_PAWN) && (dest.y == KINGS_ROW_BLACK)) {
+        result[dest.y][dest.x] = STATE_BLACK_KING;
         report->is_piece_promoted = true;
     }
 
-    if ((state[origin.y][origin.x] == 1) && (dest.y == 7)) {
-        result[dest.y][dest.x] = 3;
+    if ((state[origin.y][origin.x] == STATE_WHITE_PAWN) && (dest.y == KINGS_ROW_WHITE)) {
+        result[dest.y][dest.x] = STATE_WHITE_KING;
         report->is_piece_promoted = true;
     }
 

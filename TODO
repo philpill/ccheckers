@@ -54,3 +54,5 @@ commnd line arguments for initial map load and settings
     https://stackoverflow.com/questions/3898021/regarding-mainint-argc-char-argv
     https://www.thegeekstuff.com/2013/01/c-argc-argv/
     https://www.tutorialspoint.com/cprogramming/c_command_line_arguments.htm
+
+Terminology - Rename piece to pawn
