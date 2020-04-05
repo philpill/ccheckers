@@ -1,6 +1,8 @@
 #include <ncurses.h>
 #include <string.h>
 #include <stdlib.h>
+#include <panel.h>
+
 #include "piece.h"
 #include "game.h"
 #include "windowmanager.h"
@@ -8,11 +10,12 @@
 #include "log.h"
 #include "input.h"
 
-WINDOW **windows;
+PANEL **panels;
 
-void init_render(WINDOW **render_windows) {
+void init_render(PANEL **render_panels) {
 
-    windows = render_windows;
+    panels = render_panels;
+
     initscr();
     cbreak();
     noecho();
@@ -119,11 +122,39 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
     }
 
     render_pieces(pieces, board_win);
-
 }
 
-void render_board(Game game, Piece *pieces) {
-    WINDOW *window = windows[1];
+void render_menu() {
+    WINDOW *window = panels[3]->win;
+    werase(window);
+    if (!is_settings_panel_hidden(panels[3])) {
+        box(window, 0, 0);
+        int selected_option = get_selected_option();
+
+        if (selected_option == 0) {
+            wattron(window, COLOR_PAIR(1));
+        }
+        mvwprintw(window, 1, 2, "Resume");
+        wattroff(window, COLOR_PAIR(1));
+
+        if (selected_option == 1) {
+            wattron(window, COLOR_PAIR(1));
+        }
+        mvwprintw(window, 2, 2, "New Game");
+        wattroff(window, COLOR_PAIR(1));
+
+        if (selected_option == 2) {
+            wattron(window, COLOR_PAIR(1));
+        }
+        mvwprintw(window, 3, 2, "Quit");
+        wattroff(window, COLOR_PAIR(1));
+
+        wnoutrefresh(window);
+    }
+}
+
+void render_board(Piece *pieces) {
+    WINDOW *window = panels[1]->win;
     werase(window);
     draw_grid(window, pieces);
     box(window, 0, 0);
@@ -131,7 +162,7 @@ void render_board(Game game, Piece *pieces) {
 }
 
 void render_text() {
-    WINDOW *window = windows[2];
+    WINDOW *window = panels[2]->win;
     werase(window);
     output_msg();
     box(window, 0, 0);

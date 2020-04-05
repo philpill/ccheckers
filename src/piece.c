@@ -10,7 +10,7 @@
 
 Piece *all_pieces = NULL;
 Piece *selected_piece = NULL;
-Game *game_data = NULL;
+static Game *game_data = NULL;
 
 bool is_selected = false;
 
@@ -189,6 +189,19 @@ int init_piece(Game *game, Piece *pieces, char *filename, int direction) {
 
     selected_piece = malloc(sizeof(Piece));
 
+    for (int k = 0; k < 24; k++) {
+
+        pieces[k].is_captured = true;
+        pieces[k].id = k;
+        pieces[k].x_pos = 0;
+        pieces[k].y_pos = 0;
+        pieces[k].position = (Position){ .x = 0, .y = 0 };
+
+        pieces[k].is_king = false;
+        pieces[k].colour = 0;
+        pieces[k].direction = 1;
+    }
+
     int id = 0;
 
     for (int i = 0; i < 8; i++) {
@@ -209,19 +222,6 @@ int init_piece(Game *game, Piece *pieces, char *filename, int direction) {
                 id++;
             }
         }
-    }
-
-    for (int k = id; k < 24; k++) {
-
-        pieces[k].is_captured = true;
-        pieces[k].id = k;
-        pieces[k].x_pos = 0;
-        pieces[k].y_pos = 0;
-        pieces[k].position = (Position){ .x = 0, .y = 0 };
-
-        pieces[k].is_king = false;
-        pieces[k].colour = 0;
-        pieces[k].direction = 1;
     }
 
     return id;

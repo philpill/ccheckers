@@ -8,10 +8,13 @@
 #include "log.h"
 #include "core.h"
 
-Game *game;
+static Game *game_data;
 
 void init_game(Game *new_game) {
-    game = new_game;
+    game_data = new_game;
+    // go straight to game state
+    // there currently is no lobby
+    game_data->app_state = 2;
 }
 
 void end_turn() {
@@ -19,8 +22,8 @@ void end_turn() {
     deselect_piece();
     // switch player
     // https://stackoverflow.com/a/4084058
-    game->player_colour = 1 - game->player_colour;
-    game->turn_counter = game->turn_counter+1;
+    game_data->player_colour = 1 - game_data->player_colour;
+    game_data->turn_counter = game_data->turn_counter+1;
 }
 
 /*
@@ -46,9 +49,9 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
     } else if (get_piece_by_position(&check_piece, x, y)) {
 
-        log_fmsg("::get_piece_by_position: %d, %d\n", 2, check_piece->colour, game->player_colour);
+        log_fmsg("::get_piece_by_position: %d, %d\n", 2, check_piece->colour, game_data->player_colour);
 
-        if (check_piece->colour == game->player_colour) {
+        if (check_piece->colour == game_data->player_colour) {
 
             // select alternative piece
             log_msg("select different piece\n");
@@ -92,7 +95,7 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
                 // end move
                 end_turn();
 
-                if (is_player_dead(1 - game->player_colour)) {
+                if (is_player_dead(1 - game_data->player_colour)) {
                     // player win!
                     log_msg("win!\n");
                 }
@@ -135,7 +138,7 @@ int select_square(int x, int y) {
 
             // log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->player_colour);
 
-            if (check_piece->colour == game->player_colour) {
+            if (check_piece->colour == game_data->player_colour) {
 
                 // log_msg("piece owned - selecting");
 

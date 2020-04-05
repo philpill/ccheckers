@@ -18,7 +18,7 @@ Network support
     https://www.codeproject.com/Articles/586000/Networking-and-Socket-programming-tutorial-in-C
     https://en.wikibooks.org/wiki/C_Programming/Networking_in_UNIX
 
-Intro screen
+Intro screen/Settings panel
 
 Finish/restart screen - use menu/panel
     https://invisible-island.net/ncurses/ncurses-intro.html#menu
@@ -56,3 +56,7 @@ commnd line arguments for initial map load and settings
     https://www.tutorialspoint.com/cprogramming/c_command_line_arguments.htm
 
 Terminology - Rename piece to pawn
+
+Tidy/reformat
+    https://www.gnu.org/prep/standards/html_node/Writing-C.html
+    https://developer.gnome.org/programming-guidelines/stable/c-coding-style.html.en
