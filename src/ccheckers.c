@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <locale.h>
+#include <panel.h>
 #include "piece.h"
 #include "game.h"
 #include "render.h"
@@ -13,11 +14,9 @@
 #include "file.h"
 #include "utilities.h"
 
-Piece pieces[24];
+Piece pieces[NUM_PIECES] = {0};
 
-Game game;
-
-int run_loop() {
+int run_loop(Game *game) {
 
     clock_t start_t, end_t, total_t;
 
@@ -31,8 +30,9 @@ int run_loop() {
     // resolve state
 
     // render
-    render_board(game, pieces);
+    render_board(pieces);
     render_text();
+    render_menu();
 
     end_t = clock();
 
@@ -51,42 +51,40 @@ int run_loop() {
 
 int main() {
 
-    printf("Checkers in C! \n");
-
     setlocale(LC_ALL, "");
 
     int game_id = get_id();
 
     init_log(game_id);
 
-    Game game = { 0, 0, 0, 0 };
+    Game game = { 0, 0, 0, 0, 0 };
 
     int exit = 0;
 
     init_game(&game);
 
-    char *filename = "2";
+    char *filename = "1";
 
     int direction = 1;
 
     init_piece(&game, pieces, filename, direction);
 
-    WINDOW *windows[3];
+    PANEL *panels[4];
 
-    init_render(windows);
+    init_render(panels);
 
-    get_windows(windows);
+    get_panels(panels);
 
-    init_input(windows);
+    init_input(&game, panels);
 
     while (exit == 0) {
 
-        exit = run_loop();
+        exit = run_loop(&game);
     }
 
     quit_render();
 
-    delete_windows(windows);
+    delete_windows(panels);
 
     destroy_file();
 

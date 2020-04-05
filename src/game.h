@@ -1,11 +1,19 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+typedef enum {
+    unknown,
+    lobby,
+    game,
+    settings
+} APP_STATE;
+
 typedef struct {
     int turn_counter;
     int player_colour;
     int player_win;
     int player_positive_move;
+    APP_STATE app_state;
 } Game;
 
 void init_game(Game *game);

@@ -1,20 +1,40 @@
 #include <string.h>
 #include <ncurses.h>
+#include <panel.h>
 #include <ctype.h>
 #include "game.h"
 #include "input.h"
 #include "piece.h"
 #include "log.h"
+#include "windowmanager.h"
 
-WINDOW *input_window;
-WINDOW *output_window;
+static WINDOW *input_window;
+static WINDOW *output_window;
+
+static PANEL *settings_panel;
+
+static Game *game_data = NULL;
 
 static char msg_log[5000][255];
 
 static int msg_ctr = 0;
 static int char_ctr = 0;
 
-static char input_buffer;
+static int input_buffer;
+
+static int selected_option = 0;
+
+int get_selected_option() {
+    return selected_option;
+}
+
+int select_previous_option() {
+    selected_option = selected_option > 0 ? selected_option - 1: 0;
+}
+
+int select_next_option() {
+    selected_option = selected_option < 2 ? selected_option + 1: 2;
+}
 
 void output_msg() {
     int x = 0;
@@ -54,10 +74,11 @@ char* get_last_msg() {
     return msg_log[msg_ctr-1];
 }
 
-void init_input(WINDOW **windows) {
-    input_window = windows[0];
-    output_window = windows[2];
-    nodelay(windows[0], true);
+void init_input(Game *new_game, PANEL **panels) {
+    game_data = new_game;
+    settings_panel = panels[3];
+    input_window = panels[0]->win;
+    output_window = panels[2]->win;
     log_msg("Checkers in C!\n");
 }
 
@@ -158,46 +179,107 @@ void clear_buffer() {
     msg_log[msg_ctr][char_ctr] = '\0';
 }
 
+// https://stackoverflow.com/a/11432632
 int handle_input() {
+
     int exit = 0;
 
-    input_buffer = wgetch(input_window);
+    if (!is_settings_panel_hidden(settings_panel)) {
 
-    // printf("%d", input_buffer);
+        input_buffer = wgetch(settings_panel->win);
 
-    if (input_buffer == -1) {
-        // do nothing
-    } else if (input_buffer == 27) {
-        exit = 1;
-    } else if (input_buffer == 127) {
-        delete_char();
-    } else if (input_buffer == 10) {
-        if (is_end_turn(msg_log[msg_ctr])) {
-            end_turn();
-            clear_buffer();
-        } else if (is_exit(msg_log[msg_ctr])) {
-            exit = 1;
-        } else if (is_debug1(msg_log[msg_ctr])) {
-            if (is_piece_selected()) {
-                Piece *piece = get_selected_piece();
-                log_fmsg("id: %d", 1, piece->id);
-                log_fmsg("colour: %d", 1, piece->colour);
-            } else {
-                log_msg("::no piece selected");
-            }
-            clear_buffer();
-        } else if (char_ctr == 0) {
-            // nothing in buffer
-            // do nothing
-        } else {
-            int ctr = msg_ctr;
-            log_msg(msg_log[ctr]);
-            insert_msg(msg_log[ctr]);
-            parse_command(msg_log[ctr]);
+        switch(input_buffer) {
+            case -1:
+            break;
+            case 10:
+                //return 
+                if (get_selected_option() == 0) {
+                    game_data->app_state = 2;
+                    hide_settings_panel(settings_panel);
+                }
+
+                if (get_selected_option() == 1) {
+                    // new game
+                }
+
+                if (get_selected_option() == 2) {
+                    exit = 1;
+                }                
+            break;
+            case KEY_UP:
+                select_previous_option();
+            break;
+            case KEY_DOWN:
+                select_next_option();
+            break;
+            default:
+            break;
         }
     } else {
-        insert_char(input_buffer);
+
+        // printf("%d", input_buffer);
+
+        input_buffer = wgetch(input_window);
+
+        switch(input_buffer) {
+            case -1:
+            break;
+            case 127:
+                //backspace
+                delete_char();
+            break;
+            case 10:
+                //return 
+                if (is_end_turn(msg_log[msg_ctr])) {
+                    end_turn();
+                    clear_buffer();
+                }
+                
+                if (is_exit(msg_log[msg_ctr])) {
+                    exit = 1;
+                }
+                
+                if (is_debug1(msg_log[msg_ctr])) {
+                    if (is_piece_selected()) {
+                        Piece *piece = get_selected_piece();
+                        log_fmsg("id: %d", 1, piece->id);
+                        log_fmsg("colour: %d", 1, piece->colour);
+                    } else {
+                        log_msg("::no piece selected");
+                    }
+                    clear_buffer();
+                }
+                
+                if (char_ctr == 0) {
+                    // nothing in buffer
+                    // do nothing
+                } else {
+                    int ctr = msg_ctr;
+                    log_msg(msg_log[ctr]);
+                    insert_msg(msg_log[ctr]);
+                    parse_command(msg_log[ctr]);
+                }
+            break;
+            case 65:
+            case 66:
+            case 67:
+            case 68:
+            break;
+            case 27:
+                // escape
+                if (wgetch(input_window) != '[') {
+                    game_data->app_state = 3;
+                    show_settings_panel(settings_panel);
+                    //exit = 1;
+                }
+            break;
+            default:
+                insert_char(input_buffer);
+            break;
+        }
     }
+    
+
     return exit;
 }
 

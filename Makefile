@@ -11,7 +11,7 @@ build:
 	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -g -o ./bin/ccheckers
 
 debug:
-	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -g -o ./bin/ccheckers && gdb ./bin/ccheckers
+	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -g -o ./bin/ccheckers && gdb ./bin/ccheckers -tui
 
 install:
 	sudo apt-get install libncursesw5-dev libncurses5-dev libcmocka-dev valgrind
