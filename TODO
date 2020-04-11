@@ -8,7 +8,7 @@
 
 ... Intro screen/Settings panel
 
-... Terminology - Rename piece to pawn
+✓ Terminology - Rename piece to pawn
 
 Check for memory leaks with valgrind
     https://valgrind.org/docs/manual/quick-start.html#quick-start.prepare

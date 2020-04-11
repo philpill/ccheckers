@@ -129,7 +129,6 @@ void deselect_pawn() {
  * @return true if pawn is at position
  */
 bool get_pawn_by_position(Pawn **pawn, int x, int y) {
-    *pawn = malloc (sizeof (Pawn));
     // log_msg("get_pawn_by_position()");
     for (int i = 0; i < 24; i++) {
         if ((all_pawns[i].x_pos == x) && (all_pawns[i].y_pos == y)) {
@@ -186,8 +185,6 @@ int init_pawn(Game *game, Pawn *pawns, char *filename, int direction) {
     //log_fmsg("init_pawns_by_file(): %d", 1, map[5][3]);
 
     all_pawns = pawns;
-
-    selected_pawn = malloc(sizeof(Pawn));
 
     for (int k = 0; k < 24; k++) {
 
