@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "game.h"
 #include "utilities.h"
-#include "piece.h"
+#include "pawn.h"
 #include "input.h"
 #include "log.h"
 #include "core.h"
@@ -19,7 +19,7 @@ void init_game(Game *new_game) {
 
 void end_turn() {
     log_msg("::end turn\n");
-    deselect_piece();
+    deselect_pawn();
     // switch player
     // https://stackoverflow.com/a/4084058
     game_data->player_colour = 1 - game_data->player_colour;
@@ -30,66 +30,66 @@ void end_turn() {
  * Attempt to break down and refactor massive
  * nested 'if' statement.
  *
- * piece: selected piece
+ * pawn: selected pawn
  * x: user input x position
  * y: user input y position
  */
-void act_on_selected_piece(Piece *piece, int x, int y) {
+void act_on_selected_pawn(Pawn *pawn, int x, int y) {
 
-    Piece *check_piece = 0;
+    Pawn *check_pawn = 0;
 
-    piece = get_selected_piece();
+    pawn = get_selected_pawn();
 
     //deselect
-    if (piece->x_pos == x && piece->y_pos == y) {
+    if (pawn->x_pos == x && pawn->y_pos == y) {
 
-        log_msg("piece at position - deselect piece\n");
+        log_msg("pawn at position - deselect pawn\n");
 
-        deselect_piece();
+        deselect_pawn();
 
-    } else if (get_piece_by_position(&check_piece, x, y)) {
+    } else if (get_pawn_by_position(&check_pawn, x, y)) {
 
-        log_fmsg("::get_piece_by_position: %d, %d\n", 2, check_piece->colour, game_data->player_colour);
+        log_fmsg("::get_pawn_by_position: %d, %d\n", 2, check_pawn->colour, game_data->player_colour);
 
-        if (check_piece->colour == game_data->player_colour) {
+        if (check_pawn->colour == game_data->player_colour) {
 
-            // select alternative piece
-            log_msg("select different piece\n");
+            // select alternative pawn
+            log_msg("select different pawn\n");
 
-            //piece = check_piece;
-            deselect_piece();
-            select_piece_by_position(piece, x, y);
+            //pawn = check_pawn;
+            deselect_pawn();
+            select_pawn_by_position(pawn, x, y);
 
         } else {
 
             // not owned - do nothing
-            log_msg("piece not owned\n");
+            log_msg("pawn not owned\n");
         }
 
     } else {
 
-        if (!piece->is_captured) {
+        if (!pawn->is_captured) {
 
-            Position curr_pos = { piece->x_pos, piece->y_pos };
+            Position curr_pos = { pawn->x_pos, pawn->y_pos };
             Position new_pos = { x, y };
 
             int state[WIDTH][HEIGHT] = {{0}};
             int result[WIDTH][HEIGHT] = {{0}};
             Report report = { };
 
-            get_state_by_pieces(state);
+            get_state_by_pawns(state);
 
             if (get_result(curr_pos, new_pos, state, result, &report)) {
                 
-                move_piece(piece, x, y);
+                move_pawn(pawn, x, y);
                 
-                if (report.is_piece_promoted) {
-                    log_msg("piece promoted to king\n");
-                    piece->is_king = true;
+                if (report.is_pawn_promoted) {
+                    log_msg("pawn promoted to king\n");
+                    pawn->is_king = true;
                 }
 
                 if (report.is_jump && report.is_capture) {
-                    capture_piece_at_position(&report.piece_captured_pos);
+                    capture_pawn_at_position(&report.pawn_captured_pos);
                 }
 
                 // end move
@@ -107,11 +107,11 @@ void act_on_selected_piece(Piece *piece, int x, int y) {
 
         } else {
 
-            log_msg("piece has already moved\n");
+            log_msg("pawn has already moved\n");
         }
     }
 
-    // free(check_piece);
+    // free(check_pawn);
 }
 
 int select_square(int x, int y) {
@@ -122,32 +122,32 @@ int select_square(int x, int y) {
 
     log_msg(msg);
 
-    Piece *selected_piece = 0;
-    Piece *check_piece = 0;
+    Pawn *selected_pawn = 0;
+    Pawn *check_pawn = 0;
 
-    if (!is_piece_selected()) {
+    if (!is_pawn_selected()) {
 
-        // log_msg("no piece currently selected");
+        // log_msg("no pawn currently selected");
 
-        //select piece if owned
-        if (get_piece_by_position(&check_piece, x, y)) {
+        //select pawn if owned
+        if (get_pawn_by_position(&check_pawn, x, y)) {
 
-            // log_msg("piece detected");
+            // log_msg("pawn detected");
 
-            log_fmsg("::piece->id: %d\n", 1, check_piece->id);
+            log_fmsg("::pawn->id: %d\n", 1, check_pawn->id);
 
-            // log_fmsg("::colour: %d, %d", 2, check_piece->colour, game->player_colour);
+            // log_fmsg("::colour: %d, %d", 2, check_pawn->colour, game->player_colour);
 
-            if (check_piece->colour == game_data->player_colour) {
+            if (check_pawn->colour == game_data->player_colour) {
 
-                // log_msg("piece owned - selecting");
+                // log_msg("pawn owned - selecting");
 
-                select_piece_by_position(selected_piece, x, y);
+                select_pawn_by_position(selected_pawn, x, y);
 
             } else {
 
-                // piece is not owned - do nothing
-                log_msg("piece not owned\n");
+                // pawn is not owned - do nothing
+                log_msg("pawn not owned\n");
             }
 
         } else {
@@ -157,13 +157,13 @@ int select_square(int x, int y) {
 
     } else {
 
-        // log_msg("piece currently selected");
+        // log_msg("pawn currently selected");
 
-        selected_piece = get_selected_piece();
+        selected_pawn = get_selected_pawn();
 
-        act_on_selected_piece(selected_piece, x, y);
+        act_on_selected_pawn(selected_pawn, x, y);
     }
 
-    // free(selected_piece);
-    // free(check_piece);
+    // free(selected_pawn);
+    // free(check_pawn);
 }

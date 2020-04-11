@@ -1,7 +1,7 @@
 #ifndef CORE_H_
 #define CORE_H_
 
-#define NUM_PIECES 24
+#define NUM_PAWNS 24
 #define HEIGHT 8
 #define WIDTH 8
 #define STATE_EMPTY 0
@@ -14,7 +14,7 @@
 
 #include <stdbool.h>
 
-enum PIECE {
+enum PAWN {
     white = 1,
     black = 2,
     white_king = 3,
@@ -27,22 +27,22 @@ typedef struct {
 } Position;
 
 typedef struct {
-    Position piece_captured_pos;
-    Position piece_moved_new_pos;
-    Position piece_moved_old_pos;
-    bool is_piece_promoted;
+    Position pawn_captured_pos;
+    Position pawn_moved_new_pos;
+    Position pawn_moved_old_pos;
+    bool is_pawn_promoted;
     bool is_jump;
     bool is_capture;
-    int total_pieces_remaining;
+    int total_pawns_remaining;
     bool is_error;
     char error_msg[255];
 
 } Report;
 
-int get_piece_moves(Position pos, int state[WIDTH][HEIGHT], 
+int get_pawn_moves(Position pos, int state[WIDTH][HEIGHT], 
                         Position moves[]);
 
-int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT], 
+int get_pawn_jumps(Position pos, int state[WIDTH][HEIGHT], 
                         Position jumps[]);
 
 bool get_result(Position origin, Position dest, 

@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdio.h>
 #include "utilities.h"
-#include "piece.h"
+#include "pawn.h"
 #include "log.h"
 
 /*

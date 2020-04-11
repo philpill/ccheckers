@@ -4,7 +4,7 @@
 #include <time.h>
 #include <locale.h>
 #include <panel.h>
-#include "piece.h"
+#include "pawn.h"
 #include "game.h"
 #include "render.h"
 #include "input.h"
@@ -14,7 +14,7 @@
 #include "file.h"
 #include "utilities.h"
 
-Piece pieces[NUM_PIECES] = {0};
+Pawn pawns[NUM_PAWNS] = {0};
 
 int run_loop(Game *game) {
 
@@ -30,7 +30,7 @@ int run_loop(Game *game) {
     // resolve state
 
     // render
-    render_board(pieces);
+    render_board(pawns);
     render_text();
     render_menu();
 
@@ -67,7 +67,7 @@ int main() {
 
     int direction = 1;
 
-    init_piece(&game, pieces, filename, direction);
+    init_pawn(&game, pawns, filename, direction);
 
     PANEL *panels[4];
 

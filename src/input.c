@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "game.h"
 #include "input.h"
-#include "piece.h"
+#include "pawn.h"
 #include "log.h"
 #include "windowmanager.h"
 
@@ -240,12 +240,12 @@ int handle_input() {
                 }
                 
                 if (is_debug1(msg_log[msg_ctr])) {
-                    if (is_piece_selected()) {
-                        Piece *piece = get_selected_piece();
-                        log_fmsg("id: %d", 1, piece->id);
-                        log_fmsg("colour: %d", 1, piece->colour);
+                    if (is_pawn_selected()) {
+                        Pawn *pawn = get_selected_pawn();
+                        log_fmsg("id: %d", 1, pawn->id);
+                        log_fmsg("colour: %d", 1, pawn->colour);
                     } else {
-                        log_msg("::no piece selected");
+                        log_msg("::no pawn selected");
                     }
                     clear_buffer();
                 }

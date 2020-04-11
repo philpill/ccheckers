@@ -6,7 +6,7 @@
 /*
  * Initialise board to zeroes
  * 
- * @param  state Board to clear of pieces
+ * @param  state Board to clear of pawns
  */
 static void initialise_state(int state[WIDTH][HEIGHT]) {
     for (int i = 0; i < WIDTH; i++) {
@@ -17,31 +17,31 @@ static void initialise_state(int state[WIDTH][HEIGHT]) {
 }
 
 /*
- * Validate state of board and pieces
- *  - if there are not more than the max number of pieces
+ * Validate state of board and pawns
+ *  - if there are not more than the max number of pawns
  * 
- * @param  state     Board and pieces to validate
+ * @param  state     Board and pawns to validate
  * @param  error_msg Reason for failure
  * @return true is state of board is valid
  */
 static bool is_state_valid(int state[WIDTH][HEIGHT], char error_msg[]) {
 
-    int num_pieces = 0;
+    int num_pawns = 0;
 
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
             if (state[i][j] != STATE_EMPTY) {
-                num_pieces++;
+                num_pawns++;
             }
         }
     }
 
-    if (num_pieces > NUM_PIECES) {
-        strcpy(error_msg, "number of pieces in given state exceed expected value");
+    if (num_pawns > NUM_PAWNS) {
+        strcpy(error_msg, "number of pawns in given state exceed expected value");
         return false;
     }
 
-    // check pieces are not on the wrong squares
+    // check pawns are not on the wrong squares
     // i.e. black squares only
     // bottom left and top right
 
@@ -49,7 +49,7 @@ static bool is_state_valid(int state[WIDTH][HEIGHT], char error_msg[]) {
 }
 
 /*
- * Get the 8 theoretical possible squares for a piece to 
+ * Get the 8 theoretical possible squares for a pawn to 
  * move/jump forward/backward to
  *'
  * @param pos   Origin position to calculate other moves
@@ -79,7 +79,7 @@ static void get_all_moves(Position pos, Position moves[8]) {
 }
 
 /*
- * Get the 4 theoretical possible squares for a piece to 
+ * Get the 4 theoretical possible squares for a pawn to 
  * jump forward/backward to
  *'
  * @param pos   Origin position to calculate other moves
@@ -121,7 +121,7 @@ static bool is_move_within_bounds(Position move) {
 
 /*
  * Check if proposed move is blocked
- * by another piece
+ * by another pawn
  * 
  * @param  move Destination position
  * @return true if space is occupied
@@ -141,36 +141,36 @@ static bool is_space_occupied(Position move, int state[WIDTH][HEIGHT]) {
 }
 
 /*
- * Check if piece is a king
+ * Check if pawn is a king
  * 
- * @param  piece Value from state data
- * @return true is piece is a king 
+ * @param  pawn Value from state data
+ * @return true is pawn is a king 
  */
 
-static bool is_king(int piece) {
-    return piece == STATE_WHITE_KING || piece == STATE_BLACK_KING;
+static bool is_king(int pawn) {
+    return pawn == STATE_WHITE_KING || pawn == STATE_BLACK_KING;
 }
 
 /*
- * Check is piece is moving forwards or backwards
+ * Check is pawnis moving forwards or backwards
  * 
- * @param  piece Value from state data
+ * @param  pawn Value from state data
  * @param  pos   Original position
  * @param  move  Destination position
  * @return true is proposed move is forward advance
  */
-static bool is_forward_move(int piece, Position pos, Position move) {
+static bool is_forward_move(int pawn, Position pos, Position move) {
 
     //printf("is_forward_move(): ");
 
     bool is_down = move.y > pos.y;
 
-    //printf("%d -> %d = %d, %d\n", pos.y, move.y, is_down, piece);
+    //printf("%d -> %d = %d, %d\n", pos.y, move.y, is_down, pawn);
 
-    bool is_forward_move = ((piece == STATE_WHITE_PAWN && is_down) 
-                            || (piece == STATE_WHITE_KING && is_down) 
-                            || (piece == STATE_BLACK_PAWN && !is_down)
-                            || (piece == STATE_BLACK_KING && !is_down));
+    bool is_forward_move = ((pawn == STATE_WHITE_PAWN && is_down) 
+                            || (pawn == STATE_WHITE_KING && is_down) 
+                            || (pawn == STATE_BLACK_PAWN && !is_down)
+                            || (pawn == STATE_BLACK_KING && !is_down));
 
     //printf("%d\n", is_forward_move);
 
@@ -198,7 +198,7 @@ static bool is_jump_move(Position pos, Position move) {
  * 
  * @param  pos       Original position
  * @param  move      Destination position
- * @param  state     Board with pieces data
+ * @param  state     Board with pawns data
  * @param  error_msg Reason for failure
  * @return true if proposed move is a valid jump 
  */
@@ -209,19 +209,19 @@ static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEI
     }
     int x = (pos.x+move.x)/2;
     int y = (pos.y+move.y)/2;
-    int piece = state[pos.y][pos.x];
-    int intervening_piece = state[y][x];
-    if (intervening_piece == STATE_EMPTY) {
-        strcpy(error_msg, "No intervening piece to jump");
+    int pawn = state[pos.y][pos.x];
+    int intervening_pawn = state[y][x];
+    if (intervening_pawn == STATE_EMPTY) {
+        strcpy(error_msg, "No intervening pawn to jump");
         return false;
     } else {
-        if ((piece == STATE_WHITE_PAWN || piece == STATE_WHITE_KING)
-            && (intervening_piece == STATE_WHITE_PAWN || intervening_piece == STATE_WHITE_KING)) {
-            strcpy(error_msg, "Cannot jump friendly piece");
+        if ((pawn == STATE_WHITE_PAWN || pawn == STATE_WHITE_KING)
+            && (intervening_pawn == STATE_WHITE_PAWN || intervening_pawn == STATE_WHITE_KING)) {
+            strcpy(error_msg, "Cannot jump friendly pawn");
             return false;
-        } else if ((piece == STATE_BLACK_PAWN || piece == STATE_BLACK_KING)
-            && (intervening_piece == STATE_BLACK_PAWN || intervening_piece == STATE_BLACK_KING)) {
-            strcpy(error_msg, "Cannot jump friendly piece");
+        } else if ((pawn == STATE_BLACK_PAWN || pawn == STATE_BLACK_KING)
+            && (intervening_pawn == STATE_BLACK_PAWN || intervening_pawn == STATE_BLACK_KING)) {
+            strcpy(error_msg, "Cannot jump friendly pawn");
             return false;
         }
     }
@@ -233,7 +233,7 @@ static bool is_valid_jump_move(Position pos, Position move, int state[WIDTH][HEI
  * 
  * @param  pos       Current position
  * @param  move      Proposed move
- * @param  state     Board with pieces data
+ * @param  state     Board with pawns data
  * @param  error_msg Reason for failure
  * @return true if move is valid
  */
@@ -246,11 +246,11 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT],
     if (is_space_occupied(move, state)) return false; 
 
     // test for forward movement
-    bool is_piece_king = is_king(state[pos.y][pos.x]);
-    bool is_piece_forward_move = is_forward_move(state[pos.y][pos.x], pos, move); 
-    if (!is_piece_forward_move) {
-        if (!is_piece_king) { 
-            strcpy(error_msg, "Non-king piece cannot move backwards. ");
+    bool is_pawn_king = is_king(state[pos.y][pos.x]);
+    bool is_pawn_forward_move = is_forward_move(state[pos.y][pos.x], pos, move); 
+    if (!is_pawn_forward_move) {
+        if (!is_pawn_king) { 
+            strcpy(error_msg, "Non-king pawn cannot move backwards. ");
             return false;
         }
     }
@@ -267,14 +267,14 @@ static bool is_valid_move(Position pos, Position move, int state[WIDTH][HEIGHT],
 }
 
 /*
- * Get all possible jumps for piece at position specified
+ * Get all possible jumps for pawn at position specified
  * 
- * @param  pos   Positing of piece to get jumps for
- * @param  state Board with pieces data
+ * @param  pos   Positing of pawn to get jumps for
+ * @param  state Board with pawns data
  * @param  jumps Possible jumps
  * @return number of valid jumps
  */
-int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT], 
+int get_pawn_jumps(Position pos, int state[WIDTH][HEIGHT], 
                 Position jumps[]) {
 
     int valid_jumps_cnt = 0;
@@ -300,17 +300,17 @@ int get_piece_jumps(Position pos, int state[WIDTH][HEIGHT],
 }
 
 /*
- * Get all possible moves for piece at position specified
+ * Get all possible moves for pawn at position specified
  * 
- * @param  pos   Positing of piece to get moves for
- * @param  state Board with pieces data
+ * @param  pos   Positing of pawn to get moves for
+ * @param  state Board with pawns data
  * @param  moves Possible moves
  * @return number of valid moves
  */
-int get_piece_moves(Position pos, int state[WIDTH][HEIGHT], 
+int get_pawn_moves(Position pos, int state[WIDTH][HEIGHT], 
                 Position moves[]) {
 
-    //printf("get_piece_moves(): %d\n", state[pos.y][pos.x]);
+    //printf("get_pawn_moves(): %d\n", state[pos.y][pos.x]);
 
     int valid_moves_cnt = 0;
     Position possible_moves[8];
@@ -335,12 +335,12 @@ int get_piece_moves(Position pos, int state[WIDTH][HEIGHT],
 }
 
 /*
- * Get calculated results of moving a piece
+ * Get calculated results of moving a pawn
  * 
- * @param  origin Original position of piece
- * @param  dest   New position of piece
- * @param  state  Current board with pieces data
- * @param  result Board with processed pieces data
+ * @param  origin Original position of pawn
+ * @param  dest   New position of pawn
+ * @param  state  Current board with pawns data
+ * @param  result Board with processed pawns data
  * @param  msg    Error information
  * @return true if success, else false
  */
@@ -374,16 +374,16 @@ bool get_result(Position origin, Position dest,
         }
     }
 
-    // move piece
+    // move pawn
     result[dest.y][dest.x] = state[origin.y][origin.x];
     result[origin.y][origin.x] = STATE_EMPTY;
 
     Position origin_pos = { origin.x, origin.y };
-    report->piece_moved_old_pos = origin_pos;
+    report->pawn_moved_old_pos = origin_pos;
     Position dest_pos = { dest.x, dest.y };
-    report->piece_moved_new_pos = dest_pos;
+    report->pawn_moved_new_pos = dest_pos;
 
-    // remove pieces if captured
+    // remove pawns if captured
     if (abs(dest.y - origin.y) == 2) {
 
         report->is_jump = true;
@@ -399,7 +399,7 @@ bool get_result(Position origin, Position dest,
             result[result_y][result_x] = STATE_EMPTY;
 
             Position captured = { result_x, result_y };
-            report->piece_captured_pos = captured;
+            report->pawn_captured_pos = captured;
 
             // 4 - ((4 - 6)/2) = 4 - ((-2)/2) = 4 - -1 = 5
             // 3 - ((3 - 1)/2) = 3 - ((2)/2) = 3 - 1 = 2 
@@ -408,15 +408,15 @@ bool get_result(Position origin, Position dest,
         }
     }
 
-    // promote piece if on king's row
+    // promote pawn if on king's row
     if ((state[origin.y][origin.x] == STATE_BLACK_PAWN) && (dest.y == KINGS_ROW_BLACK)) {
         result[dest.y][dest.x] = STATE_BLACK_KING;
-        report->is_piece_promoted = true;
+        report->is_pawn_promoted = true;
     }
 
     if ((state[origin.y][origin.x] == STATE_WHITE_PAWN) && (dest.y == KINGS_ROW_WHITE)) {
         result[dest.y][dest.x] = STATE_WHITE_KING;
-        report->is_piece_promoted = true;
+        report->is_pawn_promoted = true;
     }
 
     return true;

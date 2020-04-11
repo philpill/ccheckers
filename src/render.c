@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <panel.h>
 
-#include "piece.h"
+#include "pawn.h"
 #include "game.h"
 #include "windowmanager.h"
 #include "global.h"
@@ -80,32 +80,32 @@ void label_grid(char grid[GRID_H][GRID_W]) {
     }
 }
 
-void render_pieces(Piece *pieces, WINDOW *board_win) {
-    for (int i = 0; i < NUM_PIECES; i++) {
-        if (!pieces[i].is_captured && pieces[i].id != 0) {
-            int x_pos = pieces[i].x_pos;
-            int y_pos = pieces[i].y_pos;
+void render_pawns(Pawn *pawns, WINDOW *board_win) {
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if (!pawns[i].is_captured && pawns[i].id != 0) {
+            int x_pos = pawns[i].x_pos;
+            int y_pos = pawns[i].y_pos;
             int x = (x_pos*4)+6+1;
             int y = (y_pos*2)+2;
-            char piece = pieces[i].colour == 0 ? SYMBOL1 : SYMBOL2;
-            if (is_piece_selected_by_id(pieces[i].id)) {
-                if (pieces[i].is_king) {
+            char pawn = pawns[i].colour == 0 ? SYMBOL1 : SYMBOL2;
+            if (is_pawn_selected_by_id(pawns[i].id)) {
+                if (pawns[i].is_king) {
                     wattron(board_win, COLOR_PAIR(3));
                 } else {
                     wattron(board_win, COLOR_PAIR(1));
                 }
-                mvwaddch(board_win, y, x, piece);
+                mvwaddch(board_win, y, x, pawn);
                 mvwaddch(board_win, y, x-1, ' ');
                 mvwaddch(board_win, y, x+1, ' ');
                 wattroff(board_win, COLOR_PAIR(1));
                 wattroff(board_win, COLOR_PAIR(3));
             } else {
-                if (pieces[i].is_king) {
+                if (pawns[i].is_king) {
                     wattron(board_win, COLOR_PAIR(4));
                 } else {
                     wattron(board_win, COLOR_PAIR(2));
                 }
-                mvwaddch(board_win, y, x, piece);
+                mvwaddch(board_win, y, x, pawn);
                 wattroff(board_win, COLOR_PAIR(2));
                 wattroff(board_win, COLOR_PAIR(4));
             }
@@ -113,7 +113,7 @@ void render_pieces(Piece *pieces, WINDOW *board_win) {
     }
 }
 
-void draw_grid(WINDOW *board_win, Piece *pieces) {
+void draw_grid(WINDOW *board_win, Pawn *pawns) {
     char board[GRID_H][GRID_W];
     get_blank_grid(board);
     label_grid(board);
@@ -121,7 +121,7 @@ void draw_grid(WINDOW *board_win, Piece *pieces) {
         mvwprintw(board_win, i, 1, board[i]);
     }
 
-    render_pieces(pieces, board_win);
+    render_pawns(pawns, board_win);
 }
 
 void render_menu() {
@@ -153,10 +153,10 @@ void render_menu() {
     }
 }
 
-void render_board(Piece *pieces) {
+void render_board(Pawn *pawns) {
     WINDOW *window = panels[1]->win;
     werase(window);
-    draw_grid(window, pieces);
+    draw_grid(window, pawns);
     box(window, 0, 0);
     wnoutrefresh(window);
 }

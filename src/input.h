@@ -4,7 +4,7 @@
 #include <ncurses.h>
 #include <panel.h>
 #include "game.h"
-#include "piece.h"
+#include "pawn.h"
 
 char* get_last_msg();
 void insert_msg(char *message);

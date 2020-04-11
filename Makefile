@@ -23,4 +23,4 @@ clean:
 	rm ./*gch ./*swp ./*swo ./bin/* ./log/*
 
 run_test:
-	gcc ./src/core.c ./src/file.c ./src/game.c ./src/global.c ./src/input.c ./src/log.c ./src/piece.c ./src/render.c ./src/resource.c ./src/utilities.c ./src/windowmanager.c ./src/test/*.c -lcmocka -lpanel -lncursesw -o ./bin/cc_tests && ./bin/cc_tests
+	gcc ./src/core.c ./src/file.c ./src/game.c ./src/global.c ./src/input.c ./src/log.c ./src/pawn.c ./src/render.c ./src/resource.c ./src/utilities.c ./src/windowmanager.c ./src/test/*.c -lcmocka -lpanel -lncursesw -o ./bin/cc_tests && ./bin/cc_tests

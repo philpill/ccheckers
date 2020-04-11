@@ -6,7 +6,7 @@
 #include "../core.h"
 #include "../resource.h"
 
-static void test_get_piece_moves_works(void** state) {
+static void test_get_pawn_moves_works(void** state) {
 
     Position pos = { 1, 1 };
 
@@ -16,7 +16,7 @@ static void test_get_piece_moves_works(void** state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_in_range(moves_cnt, 0, 8);
 }
@@ -33,7 +33,7 @@ static void test_move_within_bounds(void** state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 1);
 }
@@ -55,7 +55,7 @@ static void test_move_unoccupied_spaces(void** state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 1);
 }
@@ -77,7 +77,7 @@ static void test_move_forward_1_l(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 1);
 }
@@ -99,7 +99,7 @@ static void test_move_forward_1_r(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 1);
 }
@@ -121,7 +121,7 @@ static void test_move_forward_2(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 2);
 }
@@ -143,7 +143,7 @@ static void test_move_forward_0(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 0);
 }
@@ -165,7 +165,7 @@ static void test_move_forward_3(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 2);
 }
@@ -187,7 +187,7 @@ static void test_calibrate_position(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 1);
 }
@@ -209,7 +209,7 @@ static void test_jump_move(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 1);
 }
@@ -231,7 +231,7 @@ static void test_invalid_jump_move(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 0);
 }
@@ -246,7 +246,7 @@ static void test_file_load(void **state) {
 
     Position moves[8];
 
-    int moves_cnt = get_piece_moves(pos, map, moves);
+    int moves_cnt = get_pawn_moves(pos, map, moves);
 
     assert_int_equal(moves_cnt, 2);
 }
@@ -302,10 +302,10 @@ static void test_capture(void **state) {
 
     Report report = {};
 
-    // piece in expected position
+    // pawn in expected position
     assert_int_equal(state_data[0][0], 1); 
 
-    // target piece in expected position
+    // target pawn in expected position
     assert_int_equal(state_data[1][1], 2); 
 
     // destination position empty
@@ -316,13 +316,13 @@ static void test_capture(void **state) {
     // no errors
     assert_int_equal(result, true); 
 
-    // target piece removed from board
+    // target pawn removed from board
     assert_int_equal(result_data[1][1], 0); 
 
-    // piece moved from original position
+    // pawn moved from original position
     assert_int_equal(result_data[0][0], 0); 
 
-    // piece moved to new position
+    // pawn moved to new position
     assert_int_equal(result_data[2][2], 1); 
 }
 
@@ -381,7 +381,7 @@ static void test_promote_king(void **state) {
 
     bool result = get_result(origin, dest, state_data, result_data, &report);
 
-    // piece promoted
+    // pawn promoted
     assert_int_equal(result_data[7][1], 3); 
 }
 
@@ -404,7 +404,7 @@ static void test_get_jumps_works(void **state) {
 
     Position jumps[8];
 
-    int jumps_cnt = get_piece_jumps(pos, state_data, jumps);
+    int jumps_cnt = get_pawn_jumps(pos, state_data, jumps);
 
     assert_int_equal(jumps_cnt, 2);
 }

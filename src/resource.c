@@ -5,7 +5,7 @@
 #include "file.h"
 
 /**
- * Open file and read Piece data
+ * Open file and read Pawn data
  *
  * @param map array of 32 int to populate
  */

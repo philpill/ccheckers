@@ -10,7 +10,7 @@ int main(void)
 {
     const struct CMUnitTest tests[] =
     {
-        cmocka_unit_test(test_get_piece_moves_works),
+        cmocka_unit_test(test_get_pawn_moves_works),
         cmocka_unit_test(test_move_within_bounds),
         cmocka_unit_test(test_move_unoccupied_spaces),
         cmocka_unit_test(test_move_forward_0),

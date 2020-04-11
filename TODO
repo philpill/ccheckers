@@ -1,9 +1,14 @@
-... Separate engine/core code
+✓ Separate engine/core code
 
 ✓ Shift Position struct to core
 
-VS Code GDB
-    https://code.visualstudio.com/docs/cpp/cpp-debug
+... Finish/restart screen - use menu/panel
+    https://invisible-island.net/ncurses/ncurses-intro.html#menu
+    http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/panels.html
+
+... Intro screen/Settings panel
+
+... Terminology - Rename piece to pawn
 
 Check for memory leaks with valgrind
     https://valgrind.org/docs/manual/quick-start.html#quick-start.prepare
@@ -17,12 +22,6 @@ AI Player
 Network support
     https://www.codeproject.com/Articles/586000/Networking-and-Socket-programming-tutorial-in-C
     https://en.wikibooks.org/wiki/C_Programming/Networking_in_UNIX
-
-Intro screen/Settings panel
-
-Finish/restart screen - use menu/panel
-    https://invisible-island.net/ncurses/ncurses-intro.html#menu
-    http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/panels.html
 
 Doxygen to generate docs
     http://www.doxygen.nl/manual/faq.html
@@ -50,12 +49,10 @@ Mouse interface
 PD Curses for Windows?
     https://pdcurses.org/
 
-commnd line arguments for initial map load and settings
+command line arguments for initial map load and settings
     https://stackoverflow.com/questions/3898021/regarding-mainint-argc-char-argv
     https://www.thegeekstuff.com/2013/01/c-argc-argv/
     https://www.tutorialspoint.com/cprogramming/c_command_line_arguments.htm
-
-Terminology - Rename piece to pawn
 
 Tidy/reformat
     https://www.gnu.org/prep/standards/html_node/Writing-C.html
