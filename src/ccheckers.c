@@ -4,6 +4,7 @@
 #include <time.h>
 #include <locale.h>
 #include <panel.h>
+#include <stdlib.h>
 #include "pawn.h"
 #include "game.h"
 #include "render.h"
@@ -14,9 +15,7 @@
 #include "file.h"
 #include "utilities.h"
 
-Pawn pawns[NUM_PAWNS] = {0};
-
-int run_loop(Game *game) {
+int run_loop(Game *game, Pawn *pawns) {
 
     clock_t start_t, end_t, total_t;
 
@@ -49,27 +48,38 @@ int run_loop(Game *game) {
     return return_code;
 }
 
-int main() {
-
-    setlocale(LC_ALL, "");
+void start(Game *game, Pawn **pawns_ptr) {
 
     int game_id = get_id();
 
     init_log(game_id);
 
-    Game game = { 0, 0, 0, 0, 0 };
+    game->turn_counter = 0;
+    game->player_colour = 0;
+    game->player_win = 0;
+    game->player_positive_move = 0;
+    game->app_state = 0;
+
+    init_game(game);
+
+    init_pawn(game, *pawns_ptr, "1", 1);
+}
+
+int main() {
+
+    Game game;
+    
+    PANEL *panels[4];
+
+    Pawn *pawns_ptr;
+
+    setlocale(LC_ALL, "");
+
+    pawns_ptr = malloc(NUM_PAWNS * sizeof(Pawn));
+
+    start(&game, &pawns_ptr);
 
     int exit = 0;
-
-    init_game(&game);
-
-    char *filename = "1";
-
-    int direction = 1;
-
-    init_pawn(&game, pawns, filename, direction);
-
-    PANEL *panels[4];
 
     init_render(panels);
 
@@ -79,7 +89,7 @@ int main() {
 
     while (exit == 0) {
 
-        exit = run_loop(&game);
+        exit = run_loop(&game, pawns_ptr);
     }
 
     quit_render();

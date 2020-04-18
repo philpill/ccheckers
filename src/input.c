@@ -29,11 +29,11 @@ int get_selected_option() {
 }
 
 int select_previous_option() {
-    selected_option = selected_option > 0 ? selected_option - 1: 0;
+    selected_option = selected_option > 0 ? selected_option - 1: 2;
 }
 
 int select_next_option() {
-    selected_option = selected_option < 2 ? selected_option + 1: 2;
+    selected_option = selected_option < 2 ? selected_option + 1: 0;
 }
 
 void output_msg() {
