@@ -93,7 +93,7 @@ int main() {
 
             // reset all
             start(&game, &pawns_ptr);
-            hide_settings_panel(panels[3]);
+            hide_options_panel(panels[3]);
         }
 
         exit = run_loop(&game, pawns_ptr);

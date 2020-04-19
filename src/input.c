@@ -11,7 +11,7 @@
 static WINDOW *input_window;
 static WINDOW *output_window;
 
-static PANEL *settings_panel;
+static PANEL *options_panel;
 
 static Game *game_data = NULL;
 
@@ -76,7 +76,7 @@ char* get_last_msg() {
 
 void init_input(Game *new_game, PANEL **panels) {
     game_data = new_game;
-    settings_panel = panels[3];
+    options_panel = panels[3];
     input_window = panels[0]->win;
     output_window = panels[2]->win;
     log_msg("Checkers in C!\n");
@@ -191,9 +191,9 @@ int handle_input() {
 
     int exit = 0;
 
-    if (!is_settings_panel_hidden(settings_panel)) {
+    if (!is_options_panel_hidden(options_panel)) {
 
-        input_buffer = wgetch(settings_panel->win);
+        input_buffer = wgetch(options_panel->win);
 
         switch(input_buffer) {
             case -1:
@@ -202,7 +202,7 @@ int handle_input() {
                 //return 
                 if (get_selected_option() == 0) {
                     game_data->app_state = 2;
-                    hide_settings_panel(settings_panel);
+                    hide_options_panel(options_panel);
                 }
 
                 if (get_selected_option() == 1) {
@@ -278,7 +278,7 @@ int handle_input() {
                 // escape
                 if (wgetch(input_window) != '[') {
                     game_data->app_state = 3;
-                    show_settings_panel(settings_panel);
+                    show_options_panel(options_panel);
                     //exit = 1;
                 }
             break;

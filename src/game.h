@@ -5,7 +5,7 @@ typedef enum {
     unknown,
     lobby,
     game,
-    settings
+    options
 } APP_STATE;
 
 typedef struct {

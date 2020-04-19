@@ -127,7 +127,7 @@ void draw_grid(WINDOW *board_win, Pawn *pawns) {
 void render_menu() {
     WINDOW *window = panels[3]->win;
     werase(window);
-    if (!is_settings_panel_hidden(panels[3])) {
+    if (!is_options_panel_hidden(panels[3])) {
         box(window, 0, 0);
         int selected_option = get_selected_option();
 

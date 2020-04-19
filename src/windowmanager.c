@@ -43,21 +43,21 @@ PANEL *get_panels(PANEL **panels) {
     update_panels();
 }
 
-void show_settings_panel(PANEL *panel) {
+void show_options_panel(PANEL *panel) {
     panel_data[3].is_visible = true;
     show_panel(panel);
     update_panels();
     curs_set(0);
 }
 
-void hide_settings_panel(PANEL *panel) {
+void hide_options_panel(PANEL *panel) {
     panel_data[3].is_visible = false;
     hide_panel(panel);
     update_panels();
     curs_set(1);
 }
 
-bool is_settings_panel_hidden(PANEL *panel) {
+bool is_options_panel_hidden(PANEL *panel) {
     return panel_hidden(panel);
 }
 
