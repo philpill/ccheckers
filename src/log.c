@@ -69,3 +69,7 @@ char **get_logs(char *logs[], size_t size) {
         logs[i] = msg_log[i];
     }
 }
+
+void clear_log() {
+    msg_ctr = 0;
+}

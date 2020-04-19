@@ -10,6 +10,8 @@
 
 ✓ Terminology - Rename piece to pawn
 
+Convert input.c msg_log to proper array of pointers for strings, rather than 2d array
+
 Check for memory leaks with valgrind
     https://valgrind.org/docs/manual/quick-start.html#quick-start.prepare
 

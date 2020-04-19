@@ -165,6 +165,53 @@ Pawn *capture_pawn_at_position(Position *pos) {
     return pawn;
 }
 
+
+/*
+ * Generate pawns from map data
+ * 
+ * @param  map 2d array of map
+ * @return number of pawns
+ */
+int load_pawns_from_map_data(int map[8][8]) {
+
+    for (int k = 0; k < 24; k++) {
+
+        all_pawns[k].is_captured = true;
+        all_pawns[k].id = k;
+        all_pawns[k].x_pos = 0;
+        all_pawns[k].y_pos = 0;
+        all_pawns[k].position = (Position){ .x = 0, .y = 0 };
+
+        all_pawns[k].is_king = false;
+        all_pawns[k].colour = 0;
+        all_pawns[k].direction = 1;
+    }
+
+    int id = 0;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+
+            if (map[i][j] != 0) {
+
+                all_pawns[id].is_captured = false;
+                all_pawns[id].id = id + 1;
+                all_pawns[id].x_pos = j;
+                all_pawns[id].y_pos = i;
+                all_pawns[id].position = (Position){ .x = j, .y = i };
+
+                all_pawns[id].is_king = (map[i][j] == 3 || map[i][j] == 4);
+                all_pawns[id].colour = (map[i][j] == 1 || map[i][j] == 3) ? 1 : 0;
+                all_pawns[id].direction = all_pawns[id].colour == 1 ? 1 : -1;
+
+                id++;
+            }
+        }
+    }
+
+    return id;
+}
+
 /*
  * Load initial pawn positions from file
  *
@@ -186,40 +233,7 @@ int init_pawn(Game *game, Pawn *pawns, char *filename, int direction) {
 
     all_pawns = pawns;
 
-    for (int k = 0; k < 24; k++) {
+    int pawn_count = load_pawns_from_map_data(map);
 
-        pawns[k].is_captured = true;
-        pawns[k].id = k;
-        pawns[k].x_pos = 0;
-        pawns[k].y_pos = 0;
-        pawns[k].position = (Position){ .x = 0, .y = 0 };
-
-        pawns[k].is_king = false;
-        pawns[k].colour = 0;
-        pawns[k].direction = 1;
-    }
-
-    int id = 0;
-
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-
-            if (map[i][j] != 0) {
-
-                pawns[id].is_captured = false;
-                pawns[id].id = id + 1;
-                pawns[id].x_pos = j;
-                pawns[id].y_pos = i;
-                pawns[id].position = (Position){ .x = j, .y = i };
-
-                pawns[id].is_king = (map[i][j] == 3 || map[i][j] == 4);
-                pawns[id].colour = (map[i][j] == 1 || map[i][j] == 3) ? 1 : 0;
-                pawns[id].direction = pawns[id].colour == 1 ? 1 : -1;
-
-                id++;
-            }
-        }
-    }
-
-    return id;
+    return pawn_count;
 }

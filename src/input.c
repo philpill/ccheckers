@@ -179,6 +179,13 @@ void clear_buffer() {
     msg_log[msg_ctr][char_ctr] = '\0';
 }
 
+static void clear_msg_log() {
+    memset(msg_log, 0, 255*1000*sizeof msg_log[0][0]);
+    msg_ctr = 0;
+    char_ctr = 0;
+    clear_buffer();
+}
+
 // https://stackoverflow.com/a/11432632
 int handle_input() {
 
@@ -199,7 +206,9 @@ int handle_input() {
                 }
 
                 if (get_selected_option() == 1) {
-                    // new game
+                    clear_log();
+                    log_msg("New game!\n");
+                    game_data->app_state = 0;
                 }
 
                 if (get_selected_option() == 2) {

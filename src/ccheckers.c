@@ -15,6 +15,23 @@
 #include "file.h"
 #include "utilities.h"
 
+void start(Game *game, Pawn **pawns_ptr) {
+
+    int game_id = get_id();
+
+    init_log(game_id);
+
+    game->turn_counter = 0;
+    game->player_colour = 0;
+    game->player_win = 0;
+    game->player_positive_move = 0;
+    game->app_state = 0;
+
+    init_game(game);
+
+    init_pawn(game, *pawns_ptr, "1", 1);
+}
+
 int run_loop(Game *game, Pawn *pawns) {
 
     clock_t start_t, end_t, total_t;
@@ -48,23 +65,6 @@ int run_loop(Game *game, Pawn *pawns) {
     return return_code;
 }
 
-void start(Game *game, Pawn **pawns_ptr) {
-
-    int game_id = get_id();
-
-    init_log(game_id);
-
-    game->turn_counter = 0;
-    game->player_colour = 0;
-    game->player_win = 0;
-    game->player_positive_move = 0;
-    game->app_state = 0;
-
-    init_game(game);
-
-    init_pawn(game, *pawns_ptr, "1", 1);
-}
-
 int main() {
 
     Game game;
@@ -88,6 +88,13 @@ int main() {
     init_input(&game, panels);
 
     while (exit == 0) {
+
+        if (game.app_state == 0) {
+
+            // reset all
+            start(&game, &pawns_ptr);
+            hide_settings_panel(panels[3]);
+        }
 
         exit = run_loop(&game, pawns_ptr);
     }
