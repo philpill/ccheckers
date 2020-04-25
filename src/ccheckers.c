@@ -14,6 +14,7 @@
 #include "log.h"
 #include "file.h"
 #include "utilities.h"
+#include "options.h"
 
 void start(Game *game, Pawn **pawns_ptr) {
 
@@ -86,6 +87,8 @@ int main() {
     get_panels(panels);
 
     init_input(&game, panels);
+
+    init_options(&exit);
 
     while (exit == 0) {
 

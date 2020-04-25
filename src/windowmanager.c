@@ -5,6 +5,8 @@
 
 PANEL_DATA panel_data[3];
 
+PANEL *options_panel;
+
 PANEL *get_panels(PANEL **panels) {
 
     WINDOW *windows[4];
@@ -28,6 +30,8 @@ PANEL *get_panels(PANEL **panels) {
     panels[2] = new_panel(windows[2]);
     panels[3] = new_panel(windows[3]);
 
+    options_panel = panels[3];
+
     panel_data[0].is_visible = true;
     panel_data[1].is_visible = true;
     panel_data[2].is_visible = true;
@@ -43,16 +47,16 @@ PANEL *get_panels(PANEL **panels) {
     update_panels();
 }
 
-void show_options_panel(PANEL *panel) {
+void show_options_panel() {
     panel_data[3].is_visible = true;
-    show_panel(panel);
+    show_panel(options_panel);
     update_panels();
     curs_set(0);
 }
 
-void hide_options_panel(PANEL *panel) {
+void hide_options_panel() {
     panel_data[3].is_visible = false;
-    hide_panel(panel);
+    hide_panel(options_panel);
     update_panels();
     curs_set(1);
 }
