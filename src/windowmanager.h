@@ -3,20 +3,10 @@
 
 #include <stdbool.h>
 
-typedef struct {
-    bool is_visible;
-} PANEL_DATA;
+WINDOW *get_windows(WINDOW **windows);
 
-PANEL *get_panels(PANEL **panels);
-
-void delete_windows(PANEL **panels);
+void delete_windows(WINDOW **windows);
 
 void delete_window(WINDOW *windows);
-
-void show_options_panel();
-
-void hide_options_panel();
-
-bool is_options_panel_hidden(PANEL *panel);
 
 #endif

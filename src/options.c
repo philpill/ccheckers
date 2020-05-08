@@ -93,7 +93,7 @@ void select_highlighted_option() {
         switch(highlighted_option) {
             case 0:
                 // close options
-                hide_options_panel();
+                // hide_options_panel();
                 break;
             case 1:
             case 2:

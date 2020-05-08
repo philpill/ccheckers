@@ -1,6 +1,5 @@
 #include <string.h>
 #include <ncurses.h>
-#include <panel.h>
 #include <ctype.h>
 #include "game.h"
 #include "input.h"
@@ -8,10 +7,9 @@
 #include "log.h"
 #include "windowmanager.h"
 
+static WINDOW *options_window;
 static WINDOW *input_window;
 static WINDOW *output_window;
-
-static PANEL *options_panel;
 
 static Game *game_data = NULL;
 
@@ -74,11 +72,11 @@ char* get_last_msg() {
     return msg_log[msg_ctr-1];
 }
 
-void init_input(Game *new_game, PANEL **panels) {
+void init_input(Game *new_game, WINDOW **windows) {
     game_data = new_game;
-    options_panel = panels[3];
-    input_window = panels[0]->win;
-    output_window = panels[2]->win;
+    options_window = windows[3];
+    input_window = windows[0];
+    output_window = windows[2];
     log_msg("Checkers in C!\n");
 }
 
@@ -190,7 +188,7 @@ static void clear_msg_log() {
 int handle_input() {
 
     int exit = 0;
-
+/*
     if (!is_options_panel_hidden(options_panel)) {
 
         input_buffer = wgetch(options_panel->win);
@@ -225,7 +223,7 @@ int handle_input() {
             break;
         }
     } else {
-
+*/
         // printf("%d", input_buffer);
 
         input_buffer = wgetch(input_window);
@@ -278,15 +276,14 @@ int handle_input() {
                 // escape
                 if (wgetch(input_window) != '[') {
                     game_data->app_state = 3;
-                    show_options_panel(options_panel);
-                    //exit = 1;
+                    // show_options_panel(options_panel);
                 }
             break;
             default:
                 insert_char(input_buffer);
             break;
         }
-    }
+  //  }
     
 
     return exit;

@@ -8,10 +8,10 @@ run:
 	./bin/ccheckers
 
 build:
-	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -g -o ./bin/ccheckers
+	${CC} $(CFLAGS) src/*.c -lncursesw -lcmocka -g -o ./bin/ccheckers
 
 debug:
-	${CC} $(CFLAGS) src/*.c -lpanel -lncursesw -lcmocka -g -o ./bin/ccheckers && gdb ./bin/ccheckers -tui
+	${CC} $(CFLAGS) src/*.c -lncursesw -lcmocka -g -o ./bin/ccheckers && gdb ./bin/ccheckers -tui
 
 install:
 	sudo apt-get install libncursesw5-dev libncurses5-dev libcmocka-dev valgrind
@@ -23,4 +23,4 @@ clean:
 	rm ./*gch ./*swp ./*swo ./bin/* ./log/*
 
 run_test:
-	gcc ./src/core.c ./src/file.c ./src/game.c ./src/global.c ./src/input.c ./src/log.c ./src/options.c ./src/pawn.c ./src/render.c ./src/resource.c ./src/utilities.c ./src/windowmanager.c ./src/test/*.c -lcmocka -lpanel -lncursesw -o ./bin/cc_tests && ./bin/cc_tests
+	gcc ./src/core.c ./src/file.c ./src/game.c ./src/global.c ./src/input.c ./src/log.c ./src/options.c ./src/pawn.c ./src/render.c ./src/resource.c ./src/utilities.c ./src/windowmanager.c ./src/test/*.c -lcmocka -lncursesw -o ./bin/cc_tests && ./bin/cc_tests

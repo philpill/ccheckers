@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <locale.h>
-#include <panel.h>
 #include <stdlib.h>
 #include "pawn.h"
 #include "game.h"
@@ -70,7 +69,7 @@ int main() {
 
     Game game;
     
-    PANEL *panels[4];
+    WINDOW *windows[4];
 
     Pawn *pawns_ptr;
 
@@ -82,11 +81,11 @@ int main() {
 
     int exit = 0;
 
-    init_render(panels);
+    init_render(windows);
 
-    get_panels(panels);
+    get_windows(windows);
 
-    init_input(&game, panels);
+    init_input(&game, windows);
 
     init_options(&exit);
 
@@ -96,7 +95,7 @@ int main() {
 
             // reset all
             start(&game, &pawns_ptr);
-            hide_options_panel(panels[3]);
+            // hide_options_panel(windows[3]);
         }
 
         exit = run_loop(&game, pawns_ptr);
@@ -104,7 +103,7 @@ int main() {
 
     quit_render();
 
-    delete_windows(panels);
+    delete_windows(windows);
 
     destroy_file();
 

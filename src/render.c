@@ -1,7 +1,6 @@
 #include <ncurses.h>
 #include <string.h>
 #include <stdlib.h>
-#include <panel.h>
 
 #include "pawn.h"
 #include "game.h"
@@ -10,11 +9,11 @@
 #include "log.h"
 #include "input.h"
 
-PANEL **panels;
+WINDOW **windows;
 
-void init_render(PANEL **render_panels) {
+void init_render(WINDOW **render_windows) {
 
-    panels = render_panels;
+    windows = render_windows;
 
     initscr();
     cbreak();
@@ -125,7 +124,8 @@ void draw_grid(WINDOW *board_win, Pawn *pawns) {
 }
 
 void render_menu() {
-    WINDOW *window = panels[3]->win;
+    WINDOW *window = windows[3];
+    /*
     werase(window);
     if (!is_options_panel_hidden(panels[3])) {
         box(window, 0, 0);
@@ -151,10 +151,11 @@ void render_menu() {
 
         wnoutrefresh(window);
     }
+    */
 }
 
 void render_board(Pawn *pawns) {
-    WINDOW *window = panels[1]->win;
+    WINDOW *window = windows[1];
     werase(window);
     draw_grid(window, pawns);
     box(window, 0, 0);
@@ -162,7 +163,7 @@ void render_board(Pawn *pawns) {
 }
 
 void render_text() {
-    WINDOW *window = panels[2]->win;
+    WINDOW *window = windows[2];
     werase(window);
     output_msg();
     box(window, 0, 0);
