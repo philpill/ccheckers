@@ -14,6 +14,7 @@ typedef struct {
     Position position;
     int id;
     int direction;
+    bool is_selected;
 } Pawn;
 
 int init_pawn(Game *game, Pawn *pawns, char *filename, int direction);

@@ -9,10 +9,7 @@
 #include "core.h"
 
 Pawn *all_pawns = NULL;
-Pawn *selected_pawn = NULL;
 static Game *game_data = NULL;
-
-bool is_selected = false;
 
 void get_state_by_pawns(int state[WIDTH][HEIGHT]) {
     int pawn = 0;
@@ -30,12 +27,16 @@ void get_state_by_pawns(int state[WIDTH][HEIGHT]) {
 
 /*
  * Check if a pawn is currently selected.
- * Needs refactoring to use bool type
  *
  * @return true: pawn currently selected, false: nothing selected
  */
 bool is_pawn_selected() {
-    return is_selected;
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if (all_pawns[i].is_selected) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /*
@@ -48,12 +49,11 @@ bool is_pawn_selected() {
  */
 bool is_player_dead(int colour) {
     bool is_dead = true;
-    int all_pawns_len = 24;
-    for (int i = 0; i < all_pawns_len; i++) {
+    for (int i = 0; i < NUM_PAWNS; i++) {
         if ((all_pawns[i].colour == colour)
-            && (!all_pawns[i].is_captured)) {
-                is_dead = false;
-            }
+                && (!all_pawns[i].is_captured)) {
+            is_dead = false;
+        }
     }
     return is_dead;
 }
@@ -66,13 +66,12 @@ bool is_player_dead(int colour) {
  *
  */
 bool is_pawn_selected_by_id(int id) {
-    bool is_pawn_selected = false;
-    if (is_selected) {
-        if (id == selected_pawn->id) {
-            is_pawn_selected = true;
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if (all_pawns[i].id == id) {
+            return all_pawns[i].is_selected;
         }
     }
-    return is_pawn_selected;
+    return false;
 }
 
 /*
@@ -98,7 +97,7 @@ void move_pawn(Pawn *pawn, int x, int y) {
  * @return true if pawn found at given coordinates
  */
 bool select_pawn_by_position(Pawn *pawn, int x, int y) {
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < NUM_PAWNS; i++) {
         if ((all_pawns[i].x_pos == x) && (all_pawns[i].y_pos == y)) {
             pawn = &all_pawns[i];
             select_pawn(pawn);
@@ -108,16 +107,25 @@ bool select_pawn_by_position(Pawn *pawn, int x, int y) {
     return false;
 }
 
+/*
+ * Select pawn and deselect all others
+ *
+ * @param pointer to pawn to select
+ */
 void select_pawn(Pawn *pawn) {
-    selected_pawn = pawn;
     // log_fmsg("::pointers: %d, %d", 2, pawn->x_pos, selected_pawn->x_pos);
-    is_selected = true;
+    deselect_pawn();
+    pawn->is_selected = true;
 }
 
+/*
+ * Deselect all pawns
+ */
 void deselect_pawn() {
     // log_msg("deselect_pawn()");
-    selected_pawn = NULL;
-    is_selected = false;
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        all_pawns[i].is_selected = false;
+    }
 }
 
 /*
@@ -130,7 +138,7 @@ void deselect_pawn() {
  */
 bool get_pawn_by_position(Pawn **pawn, int x, int y) {
     // log_msg("get_pawn_by_position()");
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < NUM_PAWNS; i++) {
         if ((all_pawns[i].x_pos == x) && (all_pawns[i].y_pos == y)) {
             // log_fmsg("::all_pawns[i].id: %d", 1, all_pawns[i].id);
             *pawn = &all_pawns[i];
@@ -140,8 +148,18 @@ bool get_pawn_by_position(Pawn **pawn, int x, int y) {
     return false;
 }
 
+/*
+ * get pointer to last pawn in collection with selected flag set to true
+ * or if no pawns are selected, return null pointer
+ * @return Pawn
+ */
 Pawn *get_selected_pawn() {
-    return selected_pawn;
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if (all_pawns[i].is_selected) {
+            return &all_pawns[i];
+        }
+    }
+    return NULL;
 }
 
 /*
@@ -174,8 +192,9 @@ Pawn *capture_pawn_at_position(Position *pos) {
  */
 int load_pawns_from_map_data(int map[8][8]) {
 
-    for (int k = 0; k < 24; k++) {
+    for (int k = 0; k < NUM_PAWNS; k++) {
 
+        all_pawns[k].is_selected = false;
         all_pawns[k].is_captured = true;
         all_pawns[k].id = k;
         all_pawns[k].x_pos = 0;

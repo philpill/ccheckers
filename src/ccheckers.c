@@ -69,7 +69,7 @@ int run_loop(Game *game, Pawn *pawns) {
 int main() {
 
     Game game;
-    
+
     PANEL *panels[4];
 
     Pawn *pawns_ptr;
