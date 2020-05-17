@@ -13,14 +13,14 @@ static Game *game_data = NULL;
 
 void get_state_by_pawns(int state[WIDTH][HEIGHT]) {
     int pawn = 0;
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < NUM_PAWNS; i++) {
         if (!all_pawns[i].is_captured) {
             if (all_pawns[i].is_king) {
                 pawn = all_pawns[i].colour == 0 ? 3 : 4;
             } else {
                 pawn = all_pawns[i].colour == 0 ? 1 : 2;
             }
-            state[all_pawns[i].y_pos][all_pawns[i].x_pos] = pawn;
+            state[all_pawns[i].position.y][all_pawns[i].position.x] = pawn;
         }
     }
 }
@@ -85,6 +85,8 @@ void move_pawn(Pawn *pawn, int x, int y) {
     log_fmsg("::move pawn: %d, %d\n", 2, x+1, y+1);
     pawn->x_pos = x;
     pawn->y_pos = y;
+    pawn->position.x = x;
+    pawn->position.y = y;
 }
 
 /*
@@ -173,7 +175,7 @@ Pawn *get_selected_pawn() {
 Pawn *capture_pawn_at_position(Position *pos) {
     int x = pos->x;
     int y = pos->y;
-    Pawn *pawn = 0;
+    Pawn *pawn = NULL;
     if (get_pawn_by_position(&pawn, x, y)) {
         log_fmsg("::capture_pawn_at_position(): %d, [%d, %d]\n", 3, pawn->id, x, y);
         pawn->is_captured = true;

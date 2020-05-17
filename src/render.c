@@ -9,6 +9,7 @@
 #include "global.h"
 #include "log.h"
 #include "input.h"
+#include "options.h"
 
 PANEL **panels;
 
@@ -88,7 +89,7 @@ void render_pawns(Pawn *pawns, WINDOW *board_win) {
             int x = (x_pos*4)+6+1;
             int y = (y_pos*2)+2;
             char pawn = pawns[i].colour == 0 ? SYMBOL1 : SYMBOL2;
-            if (is_pawn_selected_by_id(pawns[i].id)) {
+            if (pawns[i].is_selected) {
                 if (pawns[i].is_king) {
                     wattron(board_win, COLOR_PAIR(3));
                 } else {
@@ -129,27 +130,23 @@ void render_menu() {
     werase(window);
     if (!is_options_panel_hidden(panels[3])) {
         box(window, 0, 0);
-        int selected_option = get_selected_option();
-
-        if (selected_option == 0) {
-            wattron(window, COLOR_PAIR(1));
+        int selected_option = get_highlighted_option();
+        // arbitrary array length
+        int max_options = 5;
+        char **options = malloc(sizeof(char*) * max_options);
+        for(int i = 0; i < max_options; i++) {
+            options[i] = malloc(sizeof(char) * 100);
         }
-        mvwprintw(window, 1, 2, "Resume");
-        wattroff(window, COLOR_PAIR(1));
-
-        if (selected_option == 1) {
-            wattron(window, COLOR_PAIR(1));
+        int num_options = get_options(options);
+        for (int i = 0; i < num_options; i++) {
+            if (selected_option == i) {
+                wattron(window, COLOR_PAIR(1));
+            }
+            mvwprintw(window, i + 1, 2, options[i]);
+            wattroff(window, COLOR_PAIR(1));
         }
-        mvwprintw(window, 2, 2, "New Game");
-        wattroff(window, COLOR_PAIR(1));
-
-        if (selected_option == 2) {
-            wattron(window, COLOR_PAIR(1));
-        }
-        mvwprintw(window, 3, 2, "Quit");
-        wattroff(window, COLOR_PAIR(1));
-
         wnoutrefresh(window);
+        free(options);
     }
 }
 

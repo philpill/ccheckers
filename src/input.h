@@ -12,6 +12,5 @@ void init_input(Game *new_game, PANEL **panels);
 int handle_input();
 int get_input();
 void output_msg();
-int get_selected_option();
 
 #endif

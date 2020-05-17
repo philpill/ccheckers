@@ -36,6 +36,8 @@ static void test_get_options_content(void **state) {
     assert_string_equal(options[1], "New Game");
 }
 
+// this test is a bit pointlss at the 
+// moment with just one option mode
 static void test_get_set_option_mode(void **state) {
 
     OPTION_MODE mode = {0};
@@ -44,9 +46,9 @@ static void test_get_set_option_mode(void **state) {
 
     assert_int_equal(mode, general);
 
-    set_option_mode(new_game);
+    set_option_mode(general);
 
     mode = get_option_mode();
 
-    assert_int_equal(mode, new_game);
+    assert_int_equal(mode, general);
 }

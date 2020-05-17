@@ -70,7 +70,7 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
 
         if (!pawn->is_captured) {
 
-            Position curr_pos = { pawn->x_pos, pawn->y_pos };
+            Position curr_pos = pawn->position;
             Position new_pos = { x, y };
 
             int state[WIDTH][HEIGHT] = {{0}};

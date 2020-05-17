@@ -14,21 +14,10 @@ static char *general_options[] = {
     "Quit"
 };
 
-static char *new_game_options[] = {
-    "[return to previous menu]",
-    "Local Hotseat",
-    "Local AI",
-    "Network",
-    "Internet"
-};
-
 static int get_num_options() {
     int num_options = 0;
     if (current_option_mode == general) {
         num_options = 3;
-    }
-    if (current_option_mode == new_game) {
-        num_options = 5;
     }
     return num_options;
 }
@@ -66,7 +55,7 @@ void highlight_option(int option_index) {
 }
 void highlight_next_option() {
     int num_options = get_num_options();
-    if (highlighted_option >= num_options) {
+    if (highlighted_option + 1 >= num_options) {
         highlight_first_option();
     } else {
         highlighted_option++;
@@ -102,21 +91,8 @@ void select_highlighted_option() {
                 break;
         }
     }
-    if (current_option_mode == new_game) {
-        switch(highlighted_option) {
-            case 0:
-                // return to previous
-                current_option_mode = general;
-                break;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                // new game
-                break;
-        }
-    }
 }
+
 void select_option(int index) {}
 
 OPTION_MODE get_option_mode() { return current_option_mode; }
@@ -137,12 +113,6 @@ int get_options(char *options[]) {
         }
         length = 3;
     }
-    if (current_option_mode == new_game) {
-        for (int i = 0; i < 5; i++) {
-            strcpy(options[i], new_game_options[i]);
-        }        
-        length = 5;
-    }    
 
     return length;
 }

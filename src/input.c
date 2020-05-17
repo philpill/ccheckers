@@ -7,6 +7,7 @@
 #include "pawn.h"
 #include "log.h"
 #include "windowmanager.h"
+#include "options.h"
 
 static WINDOW *input_window;
 static WINDOW *output_window;
@@ -21,20 +22,6 @@ static int msg_ctr = 0;
 static int char_ctr = 0;
 
 static int input_buffer;
-
-static int selected_option = 0;
-
-int get_selected_option() {
-    return selected_option;
-}
-
-int select_previous_option() {
-    selected_option = selected_option > 0 ? selected_option - 1: 2;
-}
-
-int select_next_option() {
-    selected_option = selected_option < 2 ? selected_option + 1: 0;
-}
 
 void output_msg() {
     int x = 0;
@@ -197,32 +184,32 @@ int handle_input() {
 
         switch(input_buffer) {
             case -1:
-            break;
+                break;
             case 10:
                 //return 
-                if (get_selected_option() == 0) {
+                if (get_highlighted_option() == 0) {
                     game_data->app_state = 2;
                     hide_options_panel(options_panel);
                 }
 
-                if (get_selected_option() == 1) {
+                if (get_highlighted_option() == 1) {
                     clear_log();
                     log_msg("New game!\n");
                     game_data->app_state = 0;
                 }
 
-                if (get_selected_option() == 2) {
+                if (get_highlighted_option() == 2) {
                     exit = 1;
                 }                
-            break;
+                break;
             case KEY_UP:
-                select_previous_option();
-            break;
+                highlight_previous_option();
+                break;
             case KEY_DOWN:
-                select_next_option();
-            break;
+                highlight_next_option();
+                break;
             default:
-            break;
+                break;
         }
     } else {
 
@@ -232,22 +219,22 @@ int handle_input() {
 
         switch(input_buffer) {
             case -1:
-            break;
+                break;
             case 127:
                 //backspace
                 delete_char();
-            break;
+                break;
             case 10:
                 //return 
                 if (is_end_turn(msg_log[msg_ctr])) {
                     end_turn();
                     clear_buffer();
                 }
-                
+
                 if (is_exit(msg_log[msg_ctr])) {
                     exit = 1;
                 }
-                
+
                 if (is_debug1(msg_log[msg_ctr])) {
                     if (is_pawn_selected()) {
                         Pawn *pawn = get_selected_pawn();
@@ -258,7 +245,7 @@ int handle_input() {
                     }
                     clear_buffer();
                 }
-                
+
                 if (char_ctr == 0) {
                     // nothing in buffer
                     // do nothing
@@ -268,12 +255,12 @@ int handle_input() {
                     insert_msg(msg_log[ctr]);
                     parse_command(msg_log[ctr]);
                 }
-            break;
+                break;
             case 65:
             case 66:
             case 67:
             case 68:
-            break;
+                break;
             case 27:
                 // escape
                 if (wgetch(input_window) != '[') {
@@ -281,13 +268,13 @@ int handle_input() {
                     show_options_panel(options_panel);
                     //exit = 1;
                 }
-            break;
+                break;
             default:
                 insert_char(input_buffer);
-            break;
+                break;
         }
     }
-    
+
 
     return exit;
 }

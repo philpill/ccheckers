@@ -3,8 +3,7 @@
 
 typedef enum {
     unknown_option,
-    general,
-    new_game
+    general
 } OPTION_MODE;
 
 void init_options();
