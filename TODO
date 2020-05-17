@@ -2,13 +2,17 @@
 
 ✓ Shift Position struct to core
 
-... Finish/restart screen - use menu/panel
+✓ Finish/restart screen - use menu/panel
     https://invisible-island.net/ncurses/ncurses-intro.html#menu
     http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/panels.html
 
 ... Intro screen/Settings panel
 
 ✓ Terminology - Rename piece to pawn
+
+Use ncurses window scrolling for message output, rather than manual string manipulation
+and move input to separate window
+    https://linux.die.net/man/3/scroll
 
 Convert input.c msg_log to proper array of pointers for strings, rather than 2d array
     See options.c for implementation details
