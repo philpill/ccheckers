@@ -146,6 +146,9 @@ void render_menu() {
             wattroff(window, COLOR_PAIR(1));
         }
         wnoutrefresh(window);
+        for(int i = 0; i < max_options; i++) {
+            free(options[i]);
+        }
         free(options);
     }
 }
