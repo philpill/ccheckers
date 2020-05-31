@@ -37,7 +37,9 @@ int main(void)
 
         cmocka_unit_test(test_get_first_character),
         cmocka_unit_test(test_get_top_row),
-        cmocka_unit_test(test_get_spacer_row)
+        cmocka_unit_test(test_get_spacer_row),
+        cmocka_unit_test(test_get_middle_row),
+        cmocka_unit_test(test_get_bottom_row)
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
