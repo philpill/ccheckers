@@ -79,10 +79,10 @@ void delete_windows(PANEL **panels) {
     delete_window(panels[2]->win);
     delete_window(panels[0]->win);
 
-    del_panel(panels[0]);
-    del_panel(panels[1]);
-    del_panel(panels[2]);
-    del_panel(panels[3]);
+    // del_panel(panels[0]);
+    // del_panel(panels[1]);
+    // del_panel(panels[2]);
+    // del_panel(panels[3]);
 
     endwin();
 }
