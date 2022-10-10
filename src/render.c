@@ -13,6 +13,9 @@
 
 PANEL **panels;
 
+static char **option_menu_items;
+static int num_options = 0;
+
 void init_render(PANEL **render_panels) {
 
     panels = render_panels;
@@ -35,6 +38,14 @@ void init_render(PANEL **render_panels) {
 
     init_pair(3, COLOR_RED, COLOR_WHITE);
     init_pair(4, COLOR_RED, COLOR_BLACK);
+
+    // arbitrary array length
+    int max_options = 5;
+    option_menu_items = malloc(sizeof(char*) * max_options);
+    for(int i = 0; i < max_options; i++) {
+        option_menu_items[i] = malloc(sizeof(char) * 100);
+    }
+    num_options = get_options(option_menu_items);
 }
 
 // http://www.fileformat.info/info/unicode/char/search.htm?q=box+drawings&preview=entity
@@ -131,25 +142,14 @@ void render_menu() {
     if (!is_options_panel_hidden(panels[3])) {
         box(window, 0, 0);
         int selected_option = get_highlighted_option();
-        // arbitrary array length
-        int max_options = 5;
-        char **options = malloc(sizeof(char*) * max_options);
-        for(int i = 0; i < max_options; i++) {
-            options[i] = malloc(sizeof(char) * 100);
-        }
-        int num_options = get_options(options);
         for (int i = 0; i < num_options; i++) {
             if (selected_option == i) {
                 wattron(window, COLOR_PAIR(1));
             }
-            mvwprintw(window, i + 1, 2, options[i]);
+            mvwprintw(window, i + 1, 2, option_menu_items[i]);
             wattroff(window, COLOR_PAIR(1));
         }
         wnoutrefresh(window);
-        for(int i = 0; i < max_options; i++) {
-            free(options[i]);
-        }
-        free(options);
     }
 }
 
@@ -170,4 +170,8 @@ void render_text() {
 }
 
 void quit_render() {
+    for(int i = 0; i < 5; i++) {
+        free(option_menu_items[i]);
+    }
+    free(option_menu_items);
 }

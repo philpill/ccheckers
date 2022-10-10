@@ -243,18 +243,11 @@ int load_pawns_from_map_data(int map[8][8]) {
  * @return pawns count
  */
 int init_pawn(Game *game, Pawn *pawns, char *filename, int direction) {
-
     int map[8][8];
-
     game_data = game;
-
     load_file(filename, map);
-
     //log_fmsg("init_pawns_by_file(): %d", 1, map[5][3]);
-
     all_pawns = pawns;
-
     int pawn_count = load_pawns_from_map_data(map);
-
     return pawn_count;
 }
