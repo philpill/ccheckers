@@ -15,6 +15,7 @@
 #include "file.h"
 #include "utilities.h"
 #include "options.h"
+// #include "player.h"
 
 void start(Game *game, Pawn **pawns_ptr) {
 
@@ -78,6 +79,8 @@ int main() {
 
     pawns_ptr = malloc(NUM_PAWNS * sizeof(Pawn));
 
+    // init_player();
+
     start(&game, &pawns_ptr);
 
     int exit = 0;
@@ -107,6 +110,8 @@ int main() {
     delete_windows(panels);
 
     destroy_file();
+
+    // destroy_player();
 
     return 0;
 }

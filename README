@@ -11,3 +11,6 @@ make debug
 
 cmocka
 make run_test
+
+crash fix
+stty sane
