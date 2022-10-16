@@ -41,9 +41,9 @@ void init_render(PANEL **render_panels) {
 
     // arbitrary array length
     int max_options = 5;
-    option_menu_items = malloc(sizeof(char*) * max_options);
+    option_menu_items = malloc(max_options);
     for(int i = 0; i < max_options; i++) {
-        option_menu_items[i] = malloc(sizeof(char) * 100);
+        option_menu_items[i] = malloc(sizeof(char) * 255);
     }
     num_options = get_options(option_menu_items);
 }

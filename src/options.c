@@ -108,7 +108,7 @@ void set_option_mode(OPTION_MODE mode) { current_option_mode = mode; }
 int get_options(char *options[]) {
     int length = 0;
     if (current_option_mode == general) {
-        length = sizeof(*general_options)/sizeof(char);
+        length = sizeof(*general_options)/sizeof(general_options[0]);
         for (int i = 0; i < length; i++) {
             strcpy(options[i], general_options[i]);
         }
