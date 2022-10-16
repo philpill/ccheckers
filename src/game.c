@@ -1,28 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "game.h"
 #include "utilities.h"
 #include "pawn.h"
 #include "input.h"
 #include "log.h"
 #include "core.h"
+#include "player.h"
 
 static Game *game_data;
+static int num_players;
+static Player *player;
+
+void log_next_player(int id) {
+    get_player_by_id(id, player);
+    char msg[255];
+    strcpy(msg, player->name);
+    strcat(msg, "'s turn");
+    log_msg(msg);
+}
 
 void init_game(Game *new_game) {
     game_data = new_game;
     // go straight to game state
     // there currently is no lobby
     game_data->app_state = 2;
+    num_players = get_num_players();
+    player = malloc(sizeof(Player));
+    log_next_player(game_data->player_colour+1);
+}
+
+void set_next_player() {
+    int current_player = game_data->player_colour;
+    int next_player = current_player + 1;
+    if (next_player >= num_players) {
+        next_player = 0;
+    }
+    game_data->player_colour = next_player;
+    log_next_player(next_player+1);
 }
 
 void end_turn() {
     log_msg("::end turn\n");
     deselect_pawn();
-    // switch player
-    // https://stackoverflow.com/a/4084058
-    game_data->player_colour = 1 - game_data->player_colour;
+    set_next_player();
     game_data->turn_counter = game_data->turn_counter+1;
 }
 
@@ -36,7 +59,7 @@ void end_turn() {
  */
 void act_on_selected_pawn(Pawn *pawn, int x, int y) {
 
-    Pawn *check_pawn = 0;
+    Pawn *check_pawn = NULL;
 
     pawn = get_selected_pawn();
 
@@ -111,7 +134,8 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
         }
     }
 
-    // free(check_pawn);
+    check_pawn = NULL;
+    free(check_pawn);
 }
 
 int select_square(int x, int y) {
@@ -164,6 +188,15 @@ int select_square(int x, int y) {
         act_on_selected_pawn(selected_pawn, x, y);
     }
 
-    // free(selected_pawn);
-    // free(check_pawn);
+    selected_pawn = NULL;
+    check_pawn = NULL;
+
+    free(selected_pawn);
+    free(check_pawn);
+}
+
+
+void destroy_game() {
+    player = NULL;
+    free(player);
 }

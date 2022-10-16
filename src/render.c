@@ -10,11 +10,15 @@
 #include "log.h"
 #include "input.h"
 #include "options.h"
+#include "player.h"
 
 PANEL **panels;
 
 static char **option_menu_items;
 static int num_options = 0;
+
+static Player* players = NULL;
+static int num_players = 0;
 
 void init_render(PANEL **render_panels) {
 
@@ -38,6 +42,17 @@ void init_render(PANEL **render_panels) {
 
     init_pair(3, COLOR_RED, COLOR_WHITE);
     init_pair(4, COLOR_RED, COLOR_BLACK);
+
+    // get players
+    num_players = get_num_players();
+    players = malloc(num_players*sizeof(Player));
+    for(int i=0;i<num_players;i++) {
+        players[i].name = malloc(255*sizeof(char));
+    }
+    Player *ref = get_players();
+    for (int i=0;i<num_players;i++) {
+        players[i] = ref[i];
+    }
 
     // arbitrary array length
     int max_options = 5;
@@ -99,7 +114,7 @@ void render_pawns(Pawn *pawns, WINDOW *board_win) {
             int y_pos = pawns[i].y_pos;
             int x = (x_pos*4)+6+1;
             int y = (y_pos*2)+2;
-            char pawn = pawns[i].colour == 0 ? SYMBOL1 : SYMBOL2;
+            char pawn = players[pawns[i].colour].marker;
             if (pawns[i].is_selected) {
                 if (pawns[i].is_king) {
                     wattron(board_win, COLOR_PAIR(3));
@@ -174,4 +189,11 @@ void quit_render() {
         free(option_menu_items[i]);
     }
     free(option_menu_items);
+
+    for(int i=0;i<num_players;i++) {
+        players[i].name = NULL;
+        free(players[i].name);
+    }
+    players = NULL;
+    free(players);
 }

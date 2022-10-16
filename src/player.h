@@ -6,15 +6,17 @@
 
 typedef struct {
     int id;
-    char *name;
-    char *marker;
+    char* name;
+    char marker;
 } Player;
 
-void init_player();
-void get_player_by_id(int id, Player player);
-void set_player_name_by_id(int id, char *name);
-void set_player_marker_by_id(int id, char *marker);
-void destroy_player();
-void each_player(void (*fn)(Player player));
+char    set_player_marker_by_id(int id);
+int     get_num_players();
+Player* get_players();
+void    destroy_player();
+void    each_player(void (*fn)(Player player));
+void    get_player_by_id(int id, Player *player);
+void    init_player();
+void    set_player_name_by_id(int id, char *name);
 
 #endif
