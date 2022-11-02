@@ -56,7 +56,6 @@ void init_render(PANEL **render_panels) {
 
     // arbitrary array length
     int max_options = 5;
-    option_menu_items = malloc(max_options);
     for(int i = 0; i < max_options; i++) {
         option_menu_items[i] = malloc(sizeof(char) * 255);
     }
@@ -105,6 +104,12 @@ void label_grid(char grid[GRID_H][GRID_W]) {
     for (int i = 0; c <= 'H'; i++, c++) {
         grid[18][(i * 4) + 6] = c;
     }
+}
+
+int get_x_by_pos(int x_pos) {
+    int x = 0;
+    x = (x_pos * 4) + 2;
+    return x;
 }
 
 void render_pawns(Pawn *pawns, WINDOW *board_win) {
