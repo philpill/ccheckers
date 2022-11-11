@@ -41,4 +41,6 @@ void move_pawn(Pawn *pawn, int x, int y);
 
 bool is_player_dead(int colour);
 
+int pawn_get_all_playable(Pawn *pawns);
+
 #endif

@@ -7,6 +7,7 @@
 #include "resource.h"
 #include "global.h"
 #include "core.h"
+#include "player.h"
 
 Pawn* all_pawns = NULL;
 static Game* game_data = NULL;
@@ -111,6 +112,42 @@ bool select_pawn_by_position(Pawn* pawn, int x, int y) {
 }
 
 /*
+ * Get pointer to pawn at specified position
+ *
+ * @deprecated
+ * @param  pawn pointer to pawn if found
+ * @param  pos position
+ * @return true if pawn is at position
+ */
+bool pawn_get_by_position(Pawn** pawn, Position pos) {
+    // log_msg("get_pawn_by_position()");
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if ((all_pawns[i].x_pos == pos.x) && (all_pawns[i].y_pos == pos.y)) {
+            // log_fmsg("::all_pawns[i].id: %d", 1, all_pawns[i].id);
+            *pawn = &all_pawns[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
+ * Get pointer to pawn at specified position
+ *
+ * @deprecated
+ * @param  pawn pointer to pawn if found
+ * @param  x x position
+ * @param  y y position
+ * @return true if pawn is at position
+ */
+bool get_pawn_by_position(Pawn** pawn, int x, int y) {
+    Position pos;
+    pos.x = x;
+    pos.y = y;
+    return pawn_get_by_position(pawn, pos);
+}
+
+/*
  * Select pawn and deselect all others
  *
  * @param pointer to pawn to select
@@ -129,26 +166,6 @@ void deselect_pawn() {
     for (int i = 0; i < NUM_PAWNS; i++) {
         all_pawns[i].is_selected = false;
     }
-}
-
-/*
- * Get pointer to pawn at specified position
- *
- * @param  pawn pointer to pawn if found
- * @param  x x position
- * @param  y y position
- * @return true if pawn is at position
- */
-bool get_pawn_by_position(Pawn** pawn, int x, int y) {
-    // log_msg("get_pawn_by_position()");
-    for (int i = 0; i < NUM_PAWNS; i++) {
-        if ((all_pawns[i].x_pos == x) && (all_pawns[i].y_pos == y)) {
-            // log_fmsg("::all_pawns[i].id: %d", 1, all_pawns[i].id);
-            *pawn = &all_pawns[i];
-            return true;
-        }
-    }
-    return false;
 }
 
 /*
@@ -252,3 +269,100 @@ int init_pawn(Game* game, Pawn* pawns, char* filename, int direction) {
     int pawn_count = load_pawns_from_map_data(map);
     return pawn_count;
 }
+
+bool pawn_is_playable(Pawn* pawn) {
+    return false;   
+}
+
+/*
+ * Get all pawns which currently have a move
+ *
+ * @param pawns memory-allocated array to fill with pawns data
+ * @return number of pawns which can be moved this turn
+ */
+int pawn_get_all_playable(Pawn* pawns) {
+    int count = 0;
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if (pawn_is_playable(&(all_pawns[i]))) {
+            pawns[count++] = all_pawns[i];
+        }
+    }
+    return count;
+}
+
+bool pawn_can_move(Pawn* pawn) {
+    return false;
+}
+
+bool pawn_is_owned_by_current_player(Pawn* pawn) {
+    int current = game_data->player_colour;
+    if (pawn->colour == current) {
+        return true;
+    }
+    return false;
+}
+
+bool pawn_is_position_within_boundary(Position pos) {
+    bool is_within = false;
+    if ((pos.x > -1) 
+        && (pos.x < 8)
+        && (pos.y > -1)
+        && (pos.y < 8)) {
+        is_within = true;
+    }
+    return is_within;
+}
+
+bool pawn_is_position_valid(Position pos) {
+    bool is_valid;
+    Pawn **tmp = malloc(sizeof(Pawn));
+    if (!pawn_is_position_within_boundary(pos)) {
+        is_valid = false;
+    }
+    if (pawn_get_by_position(tmp, pos)) {
+        is_valid = false;
+    }
+    free(tmp);
+    return is_valid;
+}
+
+bool pawn_can_move_forward_right(Pawn* pawn) {
+    bool can_move = true;
+    Position proposed_pos;
+    if (pawn->direction > 0) {
+        proposed_pos.x = pawn->position.x - 1;
+        proposed_pos.y = pawn->position.y + 1;
+    }
+    if (pawn->direction < 0) {
+        proposed_pos.x = pawn->position.x + 1;
+        proposed_pos.y = pawn->position.y - 1;
+    }
+    if (!pawn_is_position_valid(proposed_pos)) {
+        can_move = false;
+    }
+    return can_move;
+}
+
+bool pawn_can_move_forward_left(Pawn* pawn) {
+    bool can_move = true;
+    Position proposed_pos;
+    if (pawn->direction > 0) {
+        proposed_pos.x = pawn->position.x + 1;
+        proposed_pos.y = pawn->position.y + 1;
+    }
+    if (pawn->direction < 0) {
+        proposed_pos.x = pawn->position.x - 1;
+        proposed_pos.y = pawn->position.y - 1;
+    }
+    if (!pawn_is_position_valid(proposed_pos)) {
+        can_move = false;
+    }
+    return can_move;
+}
+
+
+
+
+
+
+
