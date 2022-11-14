@@ -8,13 +8,11 @@
 #include "utilities.h"
 
 static char msg_log[5000][255]; // const this value
-
 static int msg_ctr = 0;
-
 static char log_path[] = "log";
-FILE *log_file;
+static FILE *log_file;
 
-static void insert_msg(char *message) {
+static void input_insert_msg(char *message) {
     strcpy(msg_log[msg_ctr], message);
     fputs(msg_log[msg_ctr], log_file);
     fflush(log_file);
@@ -22,10 +20,10 @@ static void insert_msg(char *message) {
 }
 
 void log_msg(char *msg) {
-    insert_msg(msg);
+    input_insert_msg(msg);
 }
 
-void init_log(int game_id) {
+void log_init(int game_id) {
     char path_buf[30];
     char time_buf[30];
     snprintf(path_buf, 30, "log/%d", game_id);
@@ -43,7 +41,7 @@ void log_fmsg(char *msg, int num, ...) {
     } else {
         va_start(valist, num);
         vsprintf(buffer, msg, valist);
-        insert_msg(buffer);
+        input_insert_msg(buffer);
         va_end(valist);
     }
 }
@@ -56,20 +54,20 @@ static char *get_log_entry(int index) {
     return msg;
 }
 
-int get_log_count() {
+int log_get_count() {
     return msg_ctr + 1;
 }
 
-char *get_last_log_entry() {
+char *log_get_last_entry() {
     return get_log_entry(msg_ctr-1);
 }
 
-char **get_logs(char *logs[], size_t size) {
+char **log_get_all(char *logs[], size_t size) {
     for (int i = 0; i < size; i++) {
         logs[i] = msg_log[i];
     }
 }
 
-void clear_log() {
+void log_clear() {
     msg_ctr = 0;
 }

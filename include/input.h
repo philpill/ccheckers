@@ -6,11 +6,11 @@
 #include "game.h"
 #include "pawn.h"
 
-char* get_last_msg();
-void insert_msg(char *message);
-void init_input(Game *new_game, PANEL **panels);
-int handle_input();
-int get_input();
-void output_msg();
+char* input_get_last_msg();
+void  input_insert_msg(char *message);
+void  input_init(Game *new_game, PANEL **panels);
+int   input_handle();
+int   input_get_input();
+void  input_output_msg();
 
 #endif

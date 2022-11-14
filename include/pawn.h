@@ -17,29 +17,29 @@ typedef struct {
     bool is_selected;
 } Pawn;
 
-int init_pawn(Game *game, Pawn *pawns, char *filename, int direction);
+int pawn_init(Game *game, Pawn *pawns, char *filename, int direction);
 
-void get_state_by_pawns(int state[WIDTH][HEIGHT]);
+void pawn_get_state_by_pawns(int state[WIDTH][HEIGHT]);
 
-void select_pawn(Pawn *pawn);
+void pawn_select(Pawn *pawn);
 
-void deselect_pawn();
+void pawn_deselect_all();
 
-Pawn *get_selected_pawn();
+Pawn *pawn_get_selected();
 
-Pawn *capture_pawn_at_position(Position *pos);
+Pawn *pawn_capture_at_position(Position *pos);
 
-bool select_pawn_by_position(Pawn *pawn, int x, int y);
+bool pawn_select_by_position(Pawn *pawn, int x, int y);
 
-bool get_pawn_by_position(Pawn **pawn, int x, int y);
+bool pawn_get_by_position(Pawn **pawn, int x, int y);
 
-bool is_pawn_selected();
+bool pawn_is_selected();
 
-bool is_pawn_selected_by_id(int id);
+bool pawn_is_selected_by_id(int id);
 
-void move_pawn(Pawn *pawn, int x, int y);
+void pawn_move(Pawn *pawn, int x, int y);
 
-bool is_player_dead(int colour);
+bool pawn_is_player_dead(int colour);
 
 int pawn_get_all_playable(Pawn *pawns);
 

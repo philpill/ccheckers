@@ -21,7 +21,7 @@ void start(Game *game, Pawn **pawns_ptr) {
 
     int game_id = get_id();
 
-    init_log(game_id);
+    log_init(game_id);
 
     game->turn_counter = 0;
     game->player_colour = rand()%get_num_players();
@@ -29,9 +29,9 @@ void start(Game *game, Pawn **pawns_ptr) {
     game->player_positive_move = 0;
     game->app_state = 0;
 
-    init_game(game);
+    game_init(game);
 
-    init_pawn(game, *pawns_ptr, "1", 1);
+    pawn_init(game, *pawns_ptr, "1", 1);
 }
 
 int run_loop(Game *game, Pawn *pawns) {
@@ -43,7 +43,7 @@ int run_loop(Game *game, Pawn *pawns) {
     start_t = clock();
 
     // get input
-    return_code = handle_input();
+    return_code = input_handle();
 
     // resolve state
 
@@ -89,7 +89,7 @@ int main() {
 
     get_panels(panels);
 
-    init_input(&game, panels);
+    input_init(&game, panels);
 
     init_options(&exit);
 
@@ -110,7 +110,7 @@ int main() {
     delete_windows(panels);
 
     destroy_file();
-    destroy_game();
+    game_destroy();
     destroy_player();
 
     return 0;

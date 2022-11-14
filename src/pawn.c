@@ -12,7 +12,7 @@
 Pawn* all_pawns = NULL;
 static Game* game_data = NULL;
 
-void get_state_by_pawns(int state[WIDTH][HEIGHT]) {
+void pawn_get_state_by_pawns(int state[WIDTH][HEIGHT]) {
     int pawn = 0;
     for (int i = 0; i < NUM_PAWNS; i++) {
         if (!all_pawns[i].is_captured) {
@@ -32,7 +32,7 @@ void get_state_by_pawns(int state[WIDTH][HEIGHT]) {
  *
  * @return true: pawn currently selected, false: nothing selected
  */
-bool is_pawn_selected() {
+bool pawn_is_selected() {
     for (int i = 0; i < NUM_PAWNS; i++) {
         if (all_pawns[i].is_selected) {
             return true;
@@ -49,7 +49,7 @@ bool is_pawn_selected() {
  * @param  colour player to check pawns for
  * @return true: all pawns captured, else false
  */
-bool is_player_dead(int colour) {
+bool pawn_is_player_dead(int colour) {
     bool is_dead = true;
     for (int i = 0; i < NUM_PAWNS; i++) {
         if ((all_pawns[i].colour == colour)
@@ -67,7 +67,7 @@ bool is_player_dead(int colour) {
  * @return true if pawn with given id is currently selected
  *
  */
-bool is_pawn_selected_by_id(int id) {
+bool pawn_is_selected_by_id(int id) {
     for (int i = 0; i < NUM_PAWNS; i++) {
         if (all_pawns[i].id == id) {
             return all_pawns[i].is_selected;
@@ -83,7 +83,7 @@ bool is_pawn_selected_by_id(int id) {
  * @param x new x position to assign
  * @param y new y position to assign
  */
-void move_pawn(Pawn* pawn, int x, int y) {
+void pawn_move(Pawn* pawn, int x, int y) {
     log_fmsg("::move pawn: %d, %d\n", 2, x + 1, y + 1);
     pawn->x_pos = x;
     pawn->y_pos = y;
@@ -100,11 +100,11 @@ void move_pawn(Pawn* pawn, int x, int y) {
  * @param  y position to search
  * @return true if pawn found at given coordinates
  */
-bool select_pawn_by_position(Pawn* pawn, int x, int y) {
+bool pawn_select_by_position(Pawn* pawn, int x, int y) {
     for (int i = 0; i < NUM_PAWNS; i++) {
         if ((all_pawns[i].x_pos == x) && (all_pawns[i].y_pos == y)) {
             pawn = &all_pawns[i];
-            select_pawn(pawn);
+            pawn_select(pawn);
             return true;
         }
     }
@@ -119,8 +119,8 @@ bool select_pawn_by_position(Pawn* pawn, int x, int y) {
  * @param  pos position
  * @return true if pawn is at position
  */
-bool pawn_get_by_position(Pawn** pawn, Position pos) {
-    // log_msg("get_pawn_by_position()");
+bool pawn_get_by_pos(Pawn** pawn, Position pos) {
+    // log_msg("pawn_get_by_position()");
     for (int i = 0; i < NUM_PAWNS; i++) {
         if ((all_pawns[i].x_pos == pos.x) && (all_pawns[i].y_pos == pos.y)) {
             // log_fmsg("::all_pawns[i].id: %d", 1, all_pawns[i].id);
@@ -140,11 +140,11 @@ bool pawn_get_by_position(Pawn** pawn, Position pos) {
  * @param  y y position
  * @return true if pawn is at position
  */
-bool get_pawn_by_position(Pawn** pawn, int x, int y) {
+bool pawn_get_by_position(Pawn** pawn, int x, int y) {
     Position pos;
     pos.x = x;
     pos.y = y;
-    return pawn_get_by_position(pawn, pos);
+    return pawn_get_by_pos(pawn, pos);
 }
 
 /*
@@ -152,17 +152,17 @@ bool get_pawn_by_position(Pawn** pawn, int x, int y) {
  *
  * @param pointer to pawn to select
  */
-void select_pawn(Pawn* pawn) {
+void pawn_select(Pawn* pawn) {
     // log_fmsg("::pointers: %d, %d", 2, pawn->x_pos, selected_pawn->x_pos);
-    deselect_pawn();
+    pawn_deselect_all();
     pawn->is_selected = true;
 }
 
 /*
  * Deselect all pawns
  */
-void deselect_pawn() {
-    // log_msg("deselect_pawn()");
+void pawn_deselect_all() {
+    // log_msg("pawn_deselect_all()");
     for (int i = 0; i < NUM_PAWNS; i++) {
         all_pawns[i].is_selected = false;
     }
@@ -173,7 +173,7 @@ void deselect_pawn() {
  * or if no pawns are selected, return null pointer
  * @return Pawn
  */
-Pawn* get_selected_pawn() {
+Pawn* pawn_get_selected() {
     for (int i = 0; i < NUM_PAWNS; i++) {
         if (all_pawns[i].is_selected) {
             return &all_pawns[i];
@@ -190,19 +190,18 @@ Pawn* get_selected_pawn() {
  * @param  pos position of the pawn to capture
  * @return captured pawn
  */
-Pawn* capture_pawn_at_position(Position* pos) {
+Pawn* pawn_capture_at_position(Position* pos) {
     int x = pos->x;
     int y = pos->y;
     Pawn* pawn = NULL;
-    if (get_pawn_by_position(&pawn, x, y)) {
-        log_fmsg("::capture_pawn_at_position(): %d, [%d, %d]\n", 3, pawn->id, x, y);
+    if (pawn_get_by_position(&pawn, x, y)) {
+        log_fmsg("::pawn_capture_at_position(): %d, [%d, %d]\n", 3, pawn->id, x, y);
         pawn->is_captured = true;
         pawn->x_pos = 0;
         pawn->y_pos = 0;
     }
     return pawn;
 }
-
 
 /*
  * Generate pawns from map data
@@ -260,11 +259,11 @@ int load_pawns_from_map_data(int map[8][8]) {
  * @param direction 1: moving down the board, -1: moving up
  * @return pawns count
  */
-int init_pawn(Game* game, Pawn* pawns, char* filename, int direction) {
+int pawn_init(Game* game, Pawn* pawns, char* filename, int direction) {
     int map[8][8];
     game_data = game;
     load_file(filename, map);
-    //log_fmsg("init_pawns_by_file(): %d", 1, map[5][3]);
+    //log_fmsg("pawn_inits_by_file(): %d", 1, map[5][3]);
     all_pawns = pawns;
     int pawn_count = load_pawns_from_map_data(map);
     return pawn_count;
@@ -303,12 +302,12 @@ bool pawn_is_owned_by_current_player(Pawn* pawn) {
 }
 
 bool pawn_is_position_within_boundary(Position pos) {
-    bool is_within = false;
-    if ((pos.x > -1) 
-        && (pos.x < 8)
-        && (pos.y > -1)
-        && (pos.y < 8)) {
-        is_within = true;
+    bool is_within = true;
+    if ((pos.x < 0) 
+        || (pos.x > 7)
+        || (pos.y < 0)
+        || (pos.y > 7)) {
+        is_within = false;
     }
     return is_within;
 }
@@ -319,7 +318,7 @@ bool pawn_is_position_valid(Position pos) {
     if (!pawn_is_position_within_boundary(pos)) {
         is_valid = false;
     }
-    if (pawn_get_by_position(tmp, pos)) {
+    if (pawn_get_by_pos(tmp, pos)) {
         is_valid = false;
     }
     free(tmp);

@@ -23,14 +23,14 @@ static int char_ctr = 0;
 
 static int input_buffer;
 
-void output_msg() {
+void input_output_msg() {
     int x = 0;
     int y = 0;
     getmaxyx(output_window, y, x);
 
-    int log_count = get_log_count();
+    int log_count = log_get_count();
     char *logs[log_count];
-    get_logs(logs, log_count);
+    log_get_all(logs, log_count);
 
     int start_msg_ctr = log_count - 1 - y + 3;
     if (start_msg_ctr < 0) { start_msg_ctr = 0; }
@@ -40,7 +40,7 @@ void output_msg() {
     mvwprintw(output_window, y-2, 1, msg_log[msg_ctr]);
 }
 
-void insert_msg(char *message) {
+void input_insert_msg(char *message) {
     strcpy(msg_log[msg_ctr], message);
     msg_ctr++;
     char_ctr = 0;
@@ -57,11 +57,11 @@ static void insert_char(char ch) {
     char_ctr++;
 }
 
-char* get_last_msg() {
+char* input_get_last_msg() {
     return msg_log[msg_ctr-1];
 }
 
-void init_input(Game *new_game, PANEL **panels) {
+void input_init(Game *new_game, PANEL **panels) {
     game_data = new_game;
     options_panel = panels[3];
     input_window = panels[0]->win;
@@ -132,7 +132,7 @@ static void parse_command(char *command) {
         bool is_x_alpha = isalpha(x) != 0;
         if (is_y_digit && is_x_alpha) {
             int x_pos = get_int_x_pos(x);
-            select_square(x_pos - 1, (y - '0') - 1);
+            game_select_square(x_pos - 1, (y - '0') - 1);
         }
     }
 }
@@ -153,12 +153,12 @@ static bool is_debug1(char *command) {
     return is_debug1;
 }
 
-static bool is_end_turn(char *command) {
-    bool is_end_turn = false;
+static bool is_game_end_turn(char *command) {
+    bool is_game_end_turn = false;
     if (strcmp(msg_log[msg_ctr], "end") == 0) {
-        is_end_turn = true;
+        is_game_end_turn = true;
     }
-    return is_end_turn;
+    return is_game_end_turn;
 }
 
 void clear_buffer() {
@@ -174,7 +174,7 @@ static void clear_msg_log() {
 }
 
 // https://stackoverflow.com/a/11432632
-int handle_input() {
+int input_handle() {
 
     int exit = 0;
 
@@ -193,7 +193,7 @@ int handle_input() {
                 }
 
                 if (get_highlighted_option() == 1) {
-                    clear_log();
+                    log_clear();
                     log_msg("New game!\n");
                     game_data->app_state = 0;
                 }
@@ -226,8 +226,8 @@ int handle_input() {
                 break;
             case 10:
                 //return 
-                if (is_end_turn(msg_log[msg_ctr])) {
-                    end_turn();
+                if (is_game_end_turn(msg_log[msg_ctr])) {
+                    game_end_turn();
                     clear_buffer();
                 }
 
@@ -236,8 +236,8 @@ int handle_input() {
                 }
 
                 if (is_debug1(msg_log[msg_ctr])) {
-                    if (is_pawn_selected()) {
-                        Pawn *pawn = get_selected_pawn();
+                    if (pawn_is_selected()) {
+                        Pawn *pawn = pawn_get_selected();
                         log_fmsg("id: %d", 1, pawn->id);
                         log_fmsg("colour: %d", 1, pawn->colour);
                     } else {
@@ -252,7 +252,7 @@ int handle_input() {
                 } else {
                     int ctr = msg_ctr;
                     log_msg(msg_log[ctr]);
-                    insert_msg(msg_log[ctr]);
+                    input_insert_msg(msg_log[ctr]);
                     parse_command(msg_log[ctr]);
                 }
                 break;
@@ -279,7 +279,7 @@ int handle_input() {
     return exit;
 }
 
-int get_input() {
+int input_get_input() {
     return input_buffer;
 }
 

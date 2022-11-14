@@ -22,7 +22,7 @@ void log_next_player(int id) {
     log_msg(msg);
 }
 
-void init_game(Game *new_game) {
+void game_init(Game *new_game) {
     game_data = new_game;
     // go straight to game state
     // there currently is no lobby
@@ -42,9 +42,9 @@ void set_next_player() {
     log_next_player(next_player+1);
 }
 
-void end_turn() {
+void game_end_turn() {
     log_msg("::end turn\n");
-    deselect_pawn();
+    pawn_deselect_all();
     set_next_player();
     game_data->turn_counter = game_data->turn_counter+1;
 }
@@ -61,18 +61,18 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
 
     Pawn *check_pawn = NULL;
 
-    pawn = get_selected_pawn();
+    pawn = pawn_get_selected();
 
     //deselect
     if (pawn->x_pos == x && pawn->y_pos == y) {
 
         log_msg("pawn at position - deselect pawn\n");
 
-        deselect_pawn();
+        pawn_deselect_all();
 
-    } else if (get_pawn_by_position(&check_pawn, x, y)) {
+    } else if (pawn_get_by_position(&check_pawn, x, y)) {
 
-        log_fmsg("::get_pawn_by_position: %d, %d\n", 2, check_pawn->colour, game_data->player_colour);
+        log_fmsg("::pawn_get_by_position: %d, %d\n", 2, check_pawn->colour, game_data->player_colour);
 
         if (check_pawn->colour == game_data->player_colour) {
 
@@ -80,8 +80,8 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
             log_msg("select different pawn\n");
 
             //pawn = check_pawn;
-            deselect_pawn();
-            select_pawn_by_position(pawn, x, y);
+            pawn_deselect_all();
+            pawn_select_by_position(pawn, x, y);
 
         } else {
 
@@ -100,11 +100,11 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
             int result[WIDTH][HEIGHT] = {{0}};
             Report report = { };
 
-            get_state_by_pawns(state);
+            pawn_get_state_by_pawns(state);
 
             if (get_result(curr_pos, new_pos, state, result, &report)) {
                 
-                move_pawn(pawn, x, y);
+                pawn_move(pawn, x, y);
                 
                 if (report.is_pawn_promoted) {
                     log_msg("pawn promoted to king\n");
@@ -112,13 +112,13 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
                 }
 
                 if (report.is_jump && report.is_capture) {
-                    capture_pawn_at_position(&report.pawn_captured_pos);
+                    pawn_capture_at_position(&report.pawn_captured_pos);
                 }
 
                 // end move
-                end_turn();
+                game_end_turn();
 
-                if (is_player_dead(1 - game_data->player_colour)) {
+                if (pawn_is_player_dead(1 - game_data->player_colour)) {
                     // player win!
                     log_msg("win!\n");
                 }
@@ -138,7 +138,7 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
     free(check_pawn);
 }
 
-int select_square(int x, int y) {
+int game_select_square(int x, int y) {
 
     char msg[50];
 
@@ -149,12 +149,12 @@ int select_square(int x, int y) {
     Pawn *selected_pawn = 0;
     Pawn *check_pawn = 0;
 
-    if (!is_pawn_selected()) {
+    if (!pawn_is_selected()) {
 
         // log_msg("no pawn currently selected");
 
         //select pawn if owned
-        if (get_pawn_by_position(&check_pawn, x, y)) {
+        if (pawn_get_by_position(&check_pawn, x, y)) {
 
             // log_msg("pawn detected");
 
@@ -166,7 +166,7 @@ int select_square(int x, int y) {
 
                 // log_msg("pawn owned - selecting");
 
-                select_pawn_by_position(selected_pawn, x, y);
+                pawn_select_by_position(selected_pawn, x, y);
 
             } else {
 
@@ -183,7 +183,7 @@ int select_square(int x, int y) {
 
         // log_msg("pawn currently selected");
 
-        selected_pawn = get_selected_pawn();
+        selected_pawn = pawn_get_selected();
 
         act_on_selected_pawn(selected_pawn, x, y);
     }
@@ -196,7 +196,7 @@ int select_square(int x, int y) {
 }
 
 
-void destroy_game() {
+void game_destroy() {
     player = NULL;
     free(player);
 }

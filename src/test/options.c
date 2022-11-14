@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "../options.h"
+#include "options.h"
 
 static void init_test_options(char **options) {
 

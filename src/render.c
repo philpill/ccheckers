@@ -185,7 +185,7 @@ void render_board(Pawn *pawns) {
 void render_text() {
     WINDOW *window = panels[2]->win;
     werase(window);
-    output_msg();
+    input_output_msg();
     box(window, 0, 0);
     wnoutrefresh(window);
 }

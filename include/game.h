@@ -16,9 +16,9 @@ typedef struct {
     APP_STATE app_state;
 } Game;
 
-void init_game(Game *game);
-void end_turn();
-int select_square(int x, int y);
-void destroy_game();
+void game_init(Game *game);
+void game_end_turn();
+int  game_select_square(int x, int y);
+void game_destroy();
 
 #endif

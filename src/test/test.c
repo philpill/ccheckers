@@ -2,8 +2,8 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "./core.c"
-#include "./options.c"
+#include "core.c"
+#include "options.c"
 
 // https://jagssoftware.wordpress.com/2018/02/20/cmocka-testing-framework-example/
 

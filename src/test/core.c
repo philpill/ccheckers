@@ -3,8 +3,8 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "../core.h"
-#include "../resource.h"
+#include "core.h"
+#include "resource.h"
 
 static void test_get_pawn_moves_works(void** state) {
 
