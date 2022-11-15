@@ -4,6 +4,7 @@
 #include <cmocka.h>
 #include "core.c"
 #include "options.c"
+#include "pawn.c"
 
 // https://jagssoftware.wordpress.com/2018/02/20/cmocka-testing-framework-example/
 
@@ -29,11 +30,12 @@ int main(void)
         cmocka_unit_test(test_promote_king),
         cmocka_unit_test(test_initial_population_0),
         cmocka_unit_test(test_get_jumps_works),
-
         cmocka_unit_test(test_get_options_length),
-        cmocka_unit_test(test_get_options_content),    
-        cmocka_unit_test(test_get_set_option_mode)
+        cmocka_unit_test(test_get_options_content),
+        cmocka_unit_test(test_get_set_option_mode),
 
+        cmocka_unit_test(test_pawn_is_position_occupied),
+        cmocka_unit_test(test_pawn_is_position_within_boundary)
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

@@ -112,6 +112,21 @@ bool pawn_select_by_position(Pawn* pawn, int x, int y) {
 }
 
 /*
+ * Check if any pawns at given position
+ * 
+ * @param  pos position to check
+ * @return true if pawn found at given position
+ */
+bool pawn_is_position_occupied(Position pos) {
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if ((all_pawns[i].x_pos == pos.x) && (all_pawns[i].y_pos == pos.y)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
  * Get pointer to pawn at specified position
  *
  * @deprecated
@@ -315,10 +330,10 @@ bool pawn_is_position_within_boundary(Position pos) {
 bool pawn_is_position_valid(Position pos) {
     bool is_valid;
     Pawn **tmp = malloc(sizeof(Pawn));
-    if (!pawn_is_position_within_boundary(pos)) {
+    if (pawn_is_position_occupied(pos)) {
         is_valid = false;
     }
-    if (pawn_get_by_pos(tmp, pos)) {
+    if (!pawn_is_position_within_boundary(pos)) {
         is_valid = false;
     }
     free(tmp);
