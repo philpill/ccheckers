@@ -329,28 +329,91 @@ bool pawn_is_position_within_boundary(Position pos) {
 
 bool pawn_is_position_valid(Position pos) {
     bool is_valid;
-    Pawn **tmp = malloc(sizeof(Pawn));
     if (pawn_is_position_occupied(pos)) {
         is_valid = false;
     }
     if (!pawn_is_position_within_boundary(pos)) {
         is_valid = false;
     }
-    free(tmp);
     return is_valid;
+}
+
+/*
+ * Get forward right position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos current position to calculate new position
+ * @param pos_fr new position to return calculated position
+ */
+void pawn_get_forward_right_pos(int direction, Position* pos, Position* pos_fr) {
+    if (direction > 0) {
+        pos_fr->x = pos->x - 1;
+        pos_fr->y = pos->y + 1;
+    }
+    if (direction < 0) {
+        pos_fr->x = pos->x + 1;
+        pos_fr->y = pos->y - 1;
+    }
+}
+
+/*
+ * Get backward right position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos current position to calculate new position
+ * @param pos_br new position to return calculated position
+ */
+void pawn_get_backward_right_pos(int direction, Position* pos, Position* pos_br) {
+    if (direction > 0) {
+        pos_br->x = pos->x - 1;
+        pos_br->y = pos->y - 1;
+    }
+    if (direction < 0) {
+        pos_br->x = pos->x + 1;
+        pos_br->y = pos->y + 1;
+    }
+}
+
+/*
+ * Get forward left position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos current position to calculate new position
+ * @param pos_fr new position to return calculated position
+ */
+void pawn_get_forward_left_pos(int direction, Position* pos, Position* pos_fl) {
+    if (direction > 0) {
+        pos_fl->x = pos->x + 1;
+        pos_fl->y = pos->y + 1;
+    }
+    if (direction < 0) {
+        pos_fl->x = pos->x - 1;
+        pos_fl->y = pos->y - 1;
+    }
+}
+
+/*
+ * Get backward left position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos current position to calculate new position
+ * @param pos_bl new position to return calculated position
+ */
+void pawn_get_backward_left_pos(int direction, Position* pos, Position* pos_bl) {
+    if (direction > 0) {
+        pos_bl->x = pos->x + 1;
+        pos_bl->y = pos->y - 1;
+    }
+    if (direction < 0) {
+        pos_bl->x = pos->x - 1;
+        pos_bl->y = pos->y + 1;
+    }
 }
 
 bool pawn_can_move_forward_right(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
-    if (pawn->direction > 0) {
-        proposed_pos.x = pawn->position.x - 1;
-        proposed_pos.y = pawn->position.y + 1;
-    }
-    if (pawn->direction < 0) {
-        proposed_pos.x = pawn->position.x + 1;
-        proposed_pos.y = pawn->position.y - 1;
-    }
+    pawn_get_forward_right_pos(pawn->direction, &(pawn->position), &proposed_pos);
     if (!pawn_is_position_valid(proposed_pos)) {
         can_move = false;
     }
@@ -360,21 +423,38 @@ bool pawn_can_move_forward_right(Pawn* pawn) {
 bool pawn_can_move_forward_left(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
-    if (pawn->direction > 0) {
-        proposed_pos.x = pawn->position.x + 1;
-        proposed_pos.y = pawn->position.y + 1;
-    }
-    if (pawn->direction < 0) {
-        proposed_pos.x = pawn->position.x - 1;
-        proposed_pos.y = pawn->position.y - 1;
-    }
+    pawn_get_forward_left_pos(pawn->direction, &(pawn->position), &proposed_pos);
     if (!pawn_is_position_valid(proposed_pos)) {
         can_move = false;
     }
     return can_move;
 }
 
+bool pawn_can_move_backward_right(Pawn* pawn) {
+    bool can_move = true;
+    Position proposed_pos;
+    pawn_get_backward_right_pos(pawn->direction, &(pawn->position), &proposed_pos);
+    if (!pawn_is_position_valid(proposed_pos)) {
+        can_move = false;
+    }
+    if (!pawn->is_king) {
+        can_move = false;
+    }
+    return can_move;
+}
 
+bool pawn_can_move_backward_left(Pawn* pawn) {
+    bool can_move = true;
+    Position proposed_pos;
+    pawn_get_backward_left_pos(pawn->direction, &(pawn->position), &proposed_pos);
+    if (!pawn_is_position_valid(proposed_pos)) {
+        can_move = false;
+    }
+    if (!pawn->is_king) {
+        can_move = false;
+    }
+    return can_move;
+}
 
 
 

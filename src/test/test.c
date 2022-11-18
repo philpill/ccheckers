@@ -34,6 +34,10 @@ int main(void)
         cmocka_unit_test(test_get_options_content),
         cmocka_unit_test(test_get_set_option_mode),
 
+        cmocka_unit_test(test_pawn_get_backward_right_pos),
+        cmocka_unit_test(test_pawn_get_backward_left_pos),
+        cmocka_unit_test(test_pawn_get_forward_right_pos),
+        cmocka_unit_test(test_pawn_get_forward_left_pos),
         cmocka_unit_test(test_pawn_is_position_occupied),
         cmocka_unit_test(test_pawn_is_position_within_boundary)
     };
