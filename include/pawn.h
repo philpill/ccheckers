@@ -22,6 +22,8 @@ bool  pawn_can_move_forward_left(Pawn* pawn);
 bool  pawn_can_move_backward_right(Pawn* pawn);
 bool  pawn_can_move_backward_left(Pawn* pawn);
 bool  pawn_get_by_position(Pawn **pawn, int x, int y);
+bool  pawn_is_at_position(Pawn* pawn, Position pos);
+bool  pawn_is_owned_by_current_player(Pawn* pawn);
 bool  pawn_is_player_dead(int colour);
 bool  pawn_is_position_occupied(Position pos);
 bool  pawn_is_position_within_boundary(Position pos);
@@ -38,7 +40,8 @@ void  pawn_get_forward_left_pos(int direction, Position* pos, Position* pos_fl);
 void  pawn_get_backward_right_pos(int direction, Position* pos, Position* pos_br);
 void  pawn_get_backward_left_pos(int direction, Position* pos, Position* pos_bl);
 void  pawn_get_state_by_pawns(int state[WIDTH][HEIGHT]);
-void  pawn_move(Pawn *pawn, int x, int y);
+void  pawn_move(Pawn *pawn, Position pos);
+void  pawn_move_by_xy(Pawn *pawn, int x, int y);
 void  pawn_select(Pawn *pawn);
 
 #endif

@@ -28,6 +28,22 @@ void pawn_get_state_by_pawns(int state[WIDTH][HEIGHT]) {
 }
 
 /*
+ * Check if pawn is at given position
+ *
+ * @param pawn pawn with position to compare
+ * @param pos position to check against pawn
+ *
+ * @return true if pawn position matches given given position
+ */
+bool pawn_is_at_position(Pawn* pawn, Position pos) {
+    bool is_at_pos = false;
+    if (pawn->x_pos == pos.x && pawn->y_pos == pos.y) {
+        is_at_pos = true;
+    }
+    return is_at_pos;
+}
+
+/*
  * Check if a pawn is currently selected.
  *
  * @return true: pawn currently selected, false: nothing selected
@@ -65,7 +81,6 @@ bool pawn_is_player_dead(int colour) {
  *
  * @param  id pawn id
  * @return true if pawn with given id is currently selected
- *
  */
 bool pawn_is_selected_by_id(int id) {
     for (int i = 0; i < NUM_PAWNS; i++) {
@@ -79,16 +94,29 @@ bool pawn_is_selected_by_id(int id) {
 /*
  * Update pawn position with given values
  *
+ * @deprecated
  * @param pawn pointer to pawn
  * @param x new x position to assign
  * @param y new y position to assign
  */
-void pawn_move(Pawn* pawn, int x, int y) {
-    log_fmsg("::move pawn: %d, %d\n", 2, x + 1, y + 1);
-    pawn->x_pos = x;
-    pawn->y_pos = y;
-    pawn->position.x = x;
-    pawn->position.y = y;
+void pawn_move_by_xy(Pawn* pawn, int x, int y) {
+    Position pos = { x, y };
+    pawn_move(pawn, pos);
+}
+
+/*
+ * Update pawn position with given values
+ *
+ * @param pawn pointer to pawn
+ * @param x new x position to assign
+ * @param y new y position to assign
+ */
+void pawn_move(Pawn* pawn, Position pos) {
+    log_fmsg("::move pawn: %d, %d\n", 2, pos.x + 1, pos.y + 1);
+    pawn->x_pos = pos.x;
+    pawn->y_pos = pos.y;
+    pawn->position.x = pos.x;
+    pawn->position.y = pos.y;
 }
 
 /*
@@ -113,7 +141,7 @@ bool pawn_select_by_position(Pawn* pawn, int x, int y) {
 
 /*
  * Check if any pawns at given position
- * 
+ *
  * @param  pos position to check
  * @return true if pawn found at given position
  */
@@ -285,7 +313,7 @@ int pawn_init(Game* game, Pawn* pawns, char* filename, int direction) {
 }
 
 bool pawn_is_playable(Pawn* pawn) {
-    return false;   
+    return false;
 }
 
 /*
@@ -304,10 +332,41 @@ int pawn_get_all_playable(Pawn* pawns) {
     return count;
 }
 
-bool pawn_can_move(Pawn* pawn) {
-    return false;
+bool pawn_can_take(Pawn* pawn) {
+    bool can_take = false;
+
+    return can_take;
 }
 
+/*
+ * Can pawn move forwards or backwards
+ *
+ * @param pawn pawn to check for movement options
+ * @return true if pawn has options for movement
+ */
+bool pawn_can_move(Pawn* pawn) {
+    bool can_move = false;
+    if (pawn_can_move_forward_right(pawn)) {
+        can_move = true;
+    }
+    if (pawn_can_move_forward_left(pawn)) {
+        can_move = true;
+    }
+    if (pawn_can_move_backward_right(pawn)) {
+        can_move = true;
+    }
+    if (pawn_can_move_backward_left(pawn)) {
+        can_move = true;
+    }
+    return can_move;
+}
+
+/*
+ * Is pawn owned by the current active player
+ *
+ * @param pawn pawn to check for ownership
+ * @return true pawn is owned by current player
+ */
 bool pawn_is_owned_by_current_player(Pawn* pawn) {
     int current = game_data->player_colour;
     if (pawn->colour == current) {
@@ -316,9 +375,15 @@ bool pawn_is_owned_by_current_player(Pawn* pawn) {
     return false;
 }
 
+/*
+ * Is given position within game boundary
+ *
+ * @param pos Position to check for boundary violation
+ * @return true if position is not outside of game boundaries
+ */
 bool pawn_is_position_within_boundary(Position pos) {
     bool is_within = true;
-    if ((pos.x < 0) 
+    if ((pos.x < 0)
         || (pos.x > 7)
         || (pos.y < 0)
         || (pos.y > 7)) {
@@ -327,6 +392,12 @@ bool pawn_is_position_within_boundary(Position pos) {
     return is_within;
 }
 
+/*
+ * Is given position a valid space for pawn to move/jump into
+ *
+ * @param pos position to check
+ * @return position is within boundary and is not occupied
+ */
 bool pawn_is_position_valid(Position pos) {
     bool is_valid;
     if (pawn_is_position_occupied(pos)) {
@@ -410,6 +481,13 @@ void pawn_get_backward_left_pos(int direction, Position* pos, Position* pos_bl) 
     }
 }
 
+/*
+ * Can pawn move forward right a single square based on position and direction.
+ * Does not take into account spaces occupied by other pawns.
+ *
+ * @param pawn can pawn move forward right
+ * @return true if pawn can move forward right
+ */
 bool pawn_can_move_forward_right(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
@@ -420,6 +498,13 @@ bool pawn_can_move_forward_right(Pawn* pawn) {
     return can_move;
 }
 
+/*
+ * Can pawn move forward left a single square based on position and direction.
+ * Does not take into account spaces occupied by other pawns.
+ *
+ * @param  pawn can pawn move forward left
+ * @return true if pawn can move forward left
+ */
 bool pawn_can_move_forward_left(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
@@ -430,6 +515,14 @@ bool pawn_can_move_forward_left(Pawn* pawn) {
     return can_move;
 }
 
+/*
+ * Can pawn move backward right a single square based on position and direction.
+ * Does not take into account spaces occupied by other pawns.
+ * Pawn must be a king.
+ *
+ * @param  pawn can pawn move backward right
+ * @return true if pawn can move backward right
+ */
 bool pawn_can_move_backward_right(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
@@ -443,6 +536,14 @@ bool pawn_can_move_backward_right(Pawn* pawn) {
     return can_move;
 }
 
+/*
+ * Can pawn move backward left a single square based on position and direction.
+ * Does not take into account spaces occupied by other pawns.
+ * Pawn must be a king.
+ *
+ * @param  pawn can pawn move backward left
+ * @return true if pawn can move backward left
+ */
 bool pawn_can_move_backward_left(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;

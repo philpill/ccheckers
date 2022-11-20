@@ -63,8 +63,10 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
 
     pawn = pawn_get_selected();
 
+    Position new_pos = { x, y };
+
     //deselect
-    if (pawn->x_pos == x && pawn->y_pos == y) {
+    if (pawn_is_at_position(pawn, new_pos)) {
 
         log_msg("pawn at position - deselect pawn\n");
 
@@ -74,7 +76,7 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
 
         log_fmsg("::pawn_get_by_position: %d, %d\n", 2, check_pawn->colour, game_data->player_colour);
 
-        if (check_pawn->colour == game_data->player_colour) {
+        if (pawn_is_owned_by_current_player(check_pawn)) {
 
             // select alternative pawn
             log_msg("select different pawn\n");
@@ -94,7 +96,6 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
         if (!pawn->is_captured) {
 
             Position curr_pos = pawn->position;
-            Position new_pos = { x, y };
 
             int state[WIDTH][HEIGHT] = {{0}};
             int result[WIDTH][HEIGHT] = {{0}};
@@ -104,7 +105,7 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
 
             if (get_result(curr_pos, new_pos, state, result, &report)) {
                 
-                pawn_move(pawn, x, y);
+                pawn_move(pawn, new_pos);
                 
                 if (report.is_pawn_promoted) {
                     log_msg("pawn promoted to king\n");
@@ -162,7 +163,7 @@ int game_select_square(int x, int y) {
 
             // log_fmsg("::colour: %d, %d", 2, check_pawn->colour, game->player_colour);
 
-            if (check_pawn->colour == game_data->player_colour) {
+            if (pawn_is_owned_by_current_player(check_pawn)) {
 
                 // log_msg("pawn owned - selecting");
 
