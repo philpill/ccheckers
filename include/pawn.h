@@ -39,7 +39,7 @@ void  pawn_get_forward_right_pos(int direction, Position* pos, Position* pos_fr)
 void  pawn_get_forward_left_pos(int direction, Position* pos, Position* pos_fl);
 void  pawn_get_backward_right_pos(int direction, Position* pos, Position* pos_br);
 void  pawn_get_backward_left_pos(int direction, Position* pos, Position* pos_bl);
-void  pawn_get_state_by_pawns(int state[WIDTH][HEIGHT]);
+void  pawn_get_state(int state[WIDTH][HEIGHT]);
 void  pawn_move(Pawn *pawn, Position pos);
 void  pawn_move_by_xy(Pawn *pawn, int x, int y);
 void  pawn_select(Pawn *pawn);

@@ -101,7 +101,7 @@ void act_on_selected_pawn(Pawn *pawn, int x, int y) {
             int result[WIDTH][HEIGHT] = {{0}};
             Report report = { };
 
-            pawn_get_state_by_pawns(state);
+            pawn_get_state(state);
 
             if (get_result(curr_pos, new_pos, state, result, &report)) {
                 

@@ -12,7 +12,13 @@
 Pawn* all_pawns = NULL;
 static Game* game_data = NULL;
 
-void pawn_get_state_by_pawns(int state[WIDTH][HEIGHT]) {
+/*
+ * Get 2d array of grid with pawn and king positions
+ *
+ * @param state empty 2d array of integers of 
+ * WIDTH and HEIGHT size to populate with data
+ */
+void pawn_get_state(int state[WIDTH][HEIGHT]) {
     int pawn = 0;
     for (int i = 0; i < NUM_PAWNS; i++) {
         if (!all_pawns[i].is_captured) {
@@ -30,9 +36,8 @@ void pawn_get_state_by_pawns(int state[WIDTH][HEIGHT]) {
 /*
  * Check if pawn is at given position
  *
- * @param pawn pawn with position to compare
- * @param pos position to check against pawn
- *
+ * @param  pawn pawn with position to compare
+ * @param  pos  position to check against pawn
  * @return true if pawn position matches given given position
  */
 bool pawn_is_at_position(Pawn* pawn, Position pos) {
@@ -63,7 +68,7 @@ bool pawn_is_selected() {
  * have been captured
  *
  * @param  colour player to check pawns for
- * @return true: all pawns captured, else false
+ * @return true if all pawns captured, else false
  */
 bool pawn_is_player_dead(int colour) {
     bool is_dead = true;
@@ -96,8 +101,8 @@ bool pawn_is_selected_by_id(int id) {
  *
  * @deprecated
  * @param pawn pointer to pawn
- * @param x new x position to assign
- * @param y new y position to assign
+ * @param x    new x position to assign
+ * @param y    new y position to assign
  */
 void pawn_move_by_xy(Pawn* pawn, int x, int y) {
     Position pos = { x, y };
@@ -108,8 +113,8 @@ void pawn_move_by_xy(Pawn* pawn, int x, int y) {
  * Update pawn position with given values
  *
  * @param pawn pointer to pawn
- * @param x new x position to assign
- * @param y new y position to assign
+ * @param x    new x position to assign
+ * @param y    new y position to assign
  */
 void pawn_move(Pawn* pawn, Position pos) {
     log_fmsg("::move pawn: %d, %d\n", 2, pos.x + 1, pos.y + 1);
@@ -124,8 +129,8 @@ void pawn_move(Pawn* pawn, Position pos) {
  * at coordinates
  *
  * @param  pawn memory allocated variable to populate with match
- * @param  x position to search
- * @param  y position to search
+ * @param  x    position to search
+ * @param  y    position to search
  * @return true if pawn found at given coordinates
  */
 bool pawn_select_by_position(Pawn* pawn, int x, int y) {
@@ -157,9 +162,8 @@ bool pawn_is_position_occupied(Position pos) {
 /*
  * Get pointer to pawn at specified position
  *
- * @deprecated
  * @param  pawn pointer to pawn if found
- * @param  pos position
+ * @param  pos  position
  * @return true if pawn is at position
  */
 bool pawn_get_by_pos(Pawn** pawn, Position pos) {
@@ -179,8 +183,8 @@ bool pawn_get_by_pos(Pawn** pawn, Position pos) {
  *
  * @deprecated
  * @param  pawn pointer to pawn if found
- * @param  x x position
- * @param  y y position
+ * @param  x    x position
+ * @param  y    y position
  * @return true if pawn is at position
  */
 bool pawn_get_by_position(Pawn** pawn, int x, int y) {
@@ -214,6 +218,7 @@ void pawn_deselect_all() {
 /*
  * get pointer to last pawn in collection with selected flag set to true
  * or if no pawns are selected, return null pointer
+ * 
  * @return Pawn
  */
 Pawn* pawn_get_selected() {
@@ -296,10 +301,10 @@ int load_pawns_from_map_data(int map[8][8]) {
 /*
  * Load initial pawn positions from file
  *
- * @param game struct containing game data including current turn
- * @param pawns memory-allocated array to fill with pawns data
- * @param filename file (without extension) to load pawn data
- * @param direction 1: moving down the board, -1: moving up
+ * @param  game      struct containing game data including current turn
+ * @param  pawns     memory-allocated array to fill with pawns data
+ * @param  filename  file (without extension) to load pawn data
+ * @param  direction 1: moving down the board, -1: moving up
  * @return pawns count
  */
 int pawn_init(Game* game, Pawn* pawns, char* filename, int direction) {
@@ -319,7 +324,7 @@ bool pawn_is_playable(Pawn* pawn) {
 /*
  * Get all pawns which currently have a move
  *
- * @param pawns memory-allocated array to fill with pawns data
+ * @param  pawns memory-allocated array to fill with pawns data
  * @return number of pawns which can be moved this turn
  */
 int pawn_get_all_playable(Pawn* pawns) {
@@ -341,7 +346,7 @@ bool pawn_can_take(Pawn* pawn) {
 /*
  * Can pawn move forwards or backwards
  *
- * @param pawn pawn to check for movement options
+ * @param  pawn pawn to check for movement options
  * @return true if pawn has options for movement
  */
 bool pawn_can_move(Pawn* pawn) {
@@ -364,7 +369,7 @@ bool pawn_can_move(Pawn* pawn) {
 /*
  * Is pawn owned by the current active player
  *
- * @param pawn pawn to check for ownership
+ * @param  pawn pawn to check for ownership
  * @return true pawn is owned by current player
  */
 bool pawn_is_owned_by_current_player(Pawn* pawn) {
@@ -378,7 +383,7 @@ bool pawn_is_owned_by_current_player(Pawn* pawn) {
 /*
  * Is given position within game boundary
  *
- * @param pos Position to check for boundary violation
+ * @param  pos Position to check for boundary violation
  * @return true if position is not outside of game boundaries
  */
 bool pawn_is_position_within_boundary(Position pos) {
@@ -395,8 +400,8 @@ bool pawn_is_position_within_boundary(Position pos) {
 /*
  * Is given position a valid space for pawn to move/jump into
  *
- * @param pos position to check
- * @return position is within boundary and is not occupied
+ * @param  pos position to check
+ * @return true if position is within boundary and is not occupied
  */
 bool pawn_is_position_valid(Position pos) {
     bool is_valid;
@@ -413,8 +418,8 @@ bool pawn_is_position_valid(Position pos) {
  * Get forward right position for pawn
  *
  * @param direction 1: moving down the board, -1: moving up
- * @param pos current position to calculate new position
- * @param pos_fr new position to return calculated position
+ * @param pos       current position to calculate new position
+ * @param pos_fr    new position to return calculated position
  */
 void pawn_get_forward_right_pos(int direction, Position* pos, Position* pos_fr) {
     if (direction > 0) {
@@ -431,8 +436,8 @@ void pawn_get_forward_right_pos(int direction, Position* pos, Position* pos_fr) 
  * Get backward right position for pawn
  *
  * @param direction 1: moving down the board, -1: moving up
- * @param pos current position to calculate new position
- * @param pos_br new position to return calculated position
+ * @param pos       current position to calculate new position
+ * @param pos_br    new position to return calculated position
  */
 void pawn_get_backward_right_pos(int direction, Position* pos, Position* pos_br) {
     if (direction > 0) {
@@ -449,8 +454,8 @@ void pawn_get_backward_right_pos(int direction, Position* pos, Position* pos_br)
  * Get forward left position for pawn
  *
  * @param direction 1: moving down the board, -1: moving up
- * @param pos current position to calculate new position
- * @param pos_fr new position to return calculated position
+ * @param pos       current position to calculate new position
+ * @param pos_fr    new position to return calculated position
  */
 void pawn_get_forward_left_pos(int direction, Position* pos, Position* pos_fl) {
     if (direction > 0) {
@@ -467,8 +472,8 @@ void pawn_get_forward_left_pos(int direction, Position* pos, Position* pos_fl) {
  * Get backward left position for pawn
  *
  * @param direction 1: moving down the board, -1: moving up
- * @param pos current position to calculate new position
- * @param pos_bl new position to return calculated position
+ * @param pos       current position to calculate new position
+ * @param pos_bl    new position to return calculated position
  */
 void pawn_get_backward_left_pos(int direction, Position* pos, Position* pos_bl) {
     if (direction > 0) {
@@ -482,10 +487,11 @@ void pawn_get_backward_left_pos(int direction, Position* pos, Position* pos_bl) 
 }
 
 /*
- * Can pawn move forward right a single square based on position and direction.
+ * Can pawn move forward right a single square 
+ * based on position and direction.
  * Does not take into account spaces occupied by other pawns.
  *
- * @param pawn can pawn move forward right
+ * @param  pawn can pawn move forward right
  * @return true if pawn can move forward right
  */
 bool pawn_can_move_forward_right(Pawn* pawn) {
