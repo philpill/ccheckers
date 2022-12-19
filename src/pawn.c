@@ -160,6 +160,23 @@ bool pawn_is_position_occupied(Position pos) {
 }
 
 /*
+ * Check if any opposing pawns at given position
+ *
+ * @param  pos position to check
+ * @return true if opposing pawn found at given position
+ */
+bool pawn_is_position_occupied_by_opposing_pawn(Position pos) {
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if ((all_pawns[i].x_pos == pos.x) 
+                && (all_pawns[i].y_pos == pos.y)
+                && (all_pawns[i].colour != game_data->player_colour)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
  * Get pointer to pawn at specified position
  *
  * @param  pawn pointer to pawn if found
@@ -317,30 +334,21 @@ int pawn_init(Game* game, Pawn* pawns, char* filename, int direction) {
     return pawn_count;
 }
 
-bool pawn_is_playable(Pawn* pawn) {
-    return false;
-}
-
-/*
- * Get all pawns which currently have a move
- *
- * @param  pawns memory-allocated array to fill with pawns data
- * @return number of pawns which can be moved this turn
- */
-int pawn_get_all_playable(Pawn* pawns) {
-    int count = 0;
-    for (int i = 0; i < NUM_PAWNS; i++) {
-        if (pawn_is_playable(&(all_pawns[i]))) {
-            pawns[count++] = all_pawns[i];
-        }
+bool pawn_can_capture(Pawn* pawn) {
+    bool can_capture = false;
+    if (pawn_can_capture_forward_right(pawn)) {
+        can_capture = true;
     }
-    return count;
-}
-
-bool pawn_can_take(Pawn* pawn) {
-    bool can_take = false;
-
-    return can_take;
+    if (pawn_can_capture_forward_left(pawn)) {
+        can_capture = true;
+    }
+    if (pawn_can_capture_backward_right(pawn)) {
+        can_capture = true;
+    }
+    if (pawn_can_capture_backward_left(pawn)) {
+        can_capture = true;
+    }
+    return can_capture;
 }
 
 /*
@@ -364,6 +372,33 @@ bool pawn_can_move(Pawn* pawn) {
         can_move = true;
     }
     return can_move;
+}
+
+bool pawn_is_playable(Pawn* pawn) {
+    bool is_playable = false;
+    if (pawn_can_move(pawn)) {
+        is_playable = true;
+    }
+    if (pawn_can_capture(pawn)) {
+        is_playable = true;
+    }
+    return is_playable;
+}
+
+/*
+ * Get all pawns which currently have a move
+ *
+ * @param  pawns memory-allocated array to fill with pawns data
+ * @return number of pawns which can be moved this turn
+ */
+int pawn_get_all_playable(Pawn* pawns) {
+    int count = 0;
+    for (int i = 0; i < NUM_PAWNS; i++) {
+        if (pawn_is_playable(&(all_pawns[i]))) {
+            pawns[count++] = all_pawns[i];
+        }
+    }
+    return count;
 }
 
 /*
@@ -398,17 +433,40 @@ bool pawn_is_position_within_boundary(Position pos) {
 }
 
 /*
+ * Is proposed position diagonal from current position
+ *
+ * @param  current_pos current position
+ * @param  proposed_pos desired position
+ * @return true if desired position is diagonal from current position 
+ */ 
+bool pawn_is_proposed_position_diagonal(Position current_pos, Position proposed_pos) {
+    bool is_diagonal = true;
+    if (current_pos.x == proposed_pos.x) {
+        is_diagonal = false;
+    }
+    if (current_pos.y == proposed_pos.y) {
+        is_diagonal = false;
+    }
+    return is_diagonal;
+}
+
+/*
  * Is given position a valid space for pawn to move/jump into
  *
- * @param  pos position to check
- * @return true if position is within boundary and is not occupied
+ * @param  current_pos current position
+ * @param  proposed_pos position to check
+ * @return true if position is within boundary and is 
+ * not occupied and is a diagonal move
  */
-bool pawn_is_position_valid(Position pos) {
-    bool is_valid;
-    if (pawn_is_position_occupied(pos)) {
+bool pawn_is_position_valid(Position current_pos, Position proposed_pos) {
+    bool is_valid = true;
+    if (pawn_is_position_occupied(proposed_pos)) {
         is_valid = false;
     }
-    if (!pawn_is_position_within_boundary(pos)) {
+    if (!pawn_is_position_within_boundary(proposed_pos)) {
+        is_valid = false;
+    }
+    if (!pawn_is_proposed_position_diagonal(current_pos, proposed_pos)) {
         is_valid = false;
     }
     return is_valid;
@@ -487,6 +545,171 @@ void pawn_get_backward_left_pos(int direction, Position* pos, Position* pos_bl) 
 }
 
 /*
+ * Get forward right jump position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos       current position to calculate new position
+ * @param pos_fr    new position to return calculated position
+ */
+void pawn_get_forward_right_jump_pos(int direction, Position* pos, Position* pos_fr) {
+    if (direction > 0) {
+        pos_fr->x = pos->x - 2;
+        pos_fr->y = pos->y + 2;
+    }
+    if (direction < 0) {
+        pos_fr->x = pos->x + 2;
+        pos_fr->y = pos->y - 2;
+    }
+}
+/*
+ * Get backward right jump position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos       current position to calculate new position
+ * @param pos_br    new position to return calculated position
+ */
+void pawn_get_backward_right_jump_pos(int direction, Position* pos, Position* pos_br) {
+    if (direction > 0) {
+        pos_br->x = pos->x - 2;
+        pos_br->y = pos->y - 2;
+    }
+    if (direction < 0) {
+        pos_br->x = pos->x + 2;
+        pos_br->y = pos->y + 2;
+    }
+}
+
+/*
+ * Get forward left jump position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos       current position to calculate new position
+ * @param pos_fr    new position to return calculated position
+ */
+void pawn_get_forward_left_jump_pos(int direction, Position* pos, Position* pos_fl) {
+    if (direction > 0) {
+        pos_fl->x = pos->x + 2;
+        pos_fl->y = pos->y + 2;
+    }
+    if (direction < 0) {
+        pos_fl->x = pos->x - 2;
+        pos_fl->y = pos->y - 2;
+    }
+}
+
+/*
+ * Get backward left jump position for pawn
+ *
+ * @param direction 1: moving down the board, -1: moving up
+ * @param pos       current position to calculate new position
+ * @param pos_bl    new position to return calculated position
+ */
+void pawn_get_backward_left_jump_pos(int direction, Position* pos, Position* pos_bl) {
+    if (direction > 0) {
+        pos_bl->x = pos->x + 2;
+        pos_bl->y = pos->y - 2;
+    }
+    if (direction < 0) {
+        pos_bl->x = pos->x - 2;
+        pos_bl->y = pos->y + 2;
+    }
+}
+
+/*
+ * Can pawn capture forward right 
+ * based on position and direction.
+ *
+ * @param  pawn can pawn capture forward right
+ * @return true if pawn can capture forward right
+ */
+bool pawn_can_capture_forward_right(Pawn* pawn) {
+    bool can_capture = true;
+    Position proposed_pos;
+    Position capture_pos;
+    pawn_get_forward_right_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+        can_capture = false;
+    }
+    pawn_get_forward_right_pos(pawn->direction, &(pawn->position), &capture_pos);
+    if (!pawn_is_position_occupied_by_opposing_pawn(capture_pos)) {
+        can_capture = false;
+    }
+    return can_capture;
+}
+
+/*
+ * Can pawn capture forward left 
+ * based on position and direction.
+ *
+ * @param  pawn can pawn capture forward left
+ * @return true if pawn can capture forward left
+ */
+bool pawn_can_capture_forward_left(Pawn* pawn) {
+    bool can_capture = true;
+    Position proposed_pos;
+    Position capture_pos;
+    pawn_get_forward_left_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+        can_capture = false;
+    }
+    pawn_get_forward_left_pos(pawn->direction, &(pawn->position), &capture_pos);
+    if (!pawn_is_position_occupied_by_opposing_pawn(capture_pos)) {
+        can_capture = false;
+    }
+    return can_capture;
+}
+
+/*
+ * Can pawn capture backward right 
+ * based on position and direction.
+ *
+ * @param  pawn can pawn capture backward right
+ * @return true if pawn can capture backward right
+ */
+bool pawn_can_capture_backward_right(Pawn* pawn) {
+    bool can_capture = true;
+    Position proposed_pos;
+    Position capture_pos;
+    pawn_get_backward_right_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+        can_capture = false;
+    }
+    pawn_get_backward_right_pos(pawn->direction, &(pawn->position), &capture_pos);
+    if (!pawn_is_position_occupied_by_opposing_pawn(capture_pos)) {
+        can_capture = false;
+    }
+    if (!pawn->is_king) {
+        can_capture = false;
+    }
+    return can_capture;
+}
+
+/*
+ * Can pawn capture backward left 
+ * based on position and direction.
+ *
+ * @param  pawn can pawn capture backward left
+ * @return true if pawn can capture backward left
+ */
+bool pawn_can_capture_backward_left(Pawn* pawn) {
+    bool can_capture = true;
+    Position proposed_pos;
+    Position capture_pos;
+    pawn_get_backward_left_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+        can_capture = false;
+    }
+    pawn_get_backward_left_pos(pawn->direction, &(pawn->position), &capture_pos);
+    if (!pawn_is_position_occupied_by_opposing_pawn(capture_pos)) {
+        can_capture = false;
+    }
+    if (!pawn->is_king) {
+        can_capture = false;
+    }
+    return can_capture;
+}
+
+/*
  * Can pawn move forward right a single square 
  * based on position and direction.
  * Does not take into account spaces occupied by other pawns.
@@ -498,7 +721,7 @@ bool pawn_can_move_forward_right(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_forward_right_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos)) {
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
         can_move = false;
     }
     return can_move;
@@ -515,7 +738,7 @@ bool pawn_can_move_forward_left(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_forward_left_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos)) {
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
         can_move = false;
     }
     return can_move;
@@ -533,7 +756,7 @@ bool pawn_can_move_backward_right(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_backward_right_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos)) {
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
         can_move = false;
     }
     if (!pawn->is_king) {
@@ -554,7 +777,7 @@ bool pawn_can_move_backward_left(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_backward_left_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos)) {
+    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
         can_move = false;
     }
     if (!pawn->is_king) {
