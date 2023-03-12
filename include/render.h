@@ -7,7 +7,7 @@
 
 void init_render(PANEL **render_panels);
 
-void render_board(Pawn *pawns);
+void render_board(Pawn *pawns, Game *game);
 void render_text();
 void render_menu();
 void quit_render();

@@ -48,7 +48,7 @@ int run_loop(Game *game, Pawn *pawns) {
     // resolve state
 
     // render
-    render_board(pawns);
+    render_board(pawns, game);
     render_text();
     render_menu();
 

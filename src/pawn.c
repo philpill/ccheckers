@@ -153,6 +153,7 @@ bool pawn_select_by_position(Pawn* pawn, int x, int y) {
 bool pawn_is_position_occupied(Position pos) {
     for (int i = 0; i < NUM_PAWNS; i++) {
         if ((all_pawns[i].x_pos == pos.x) && (all_pawns[i].y_pos == pos.y)) {
+            // log_fmsg("::pawn_is_position_occupied(): %d, [%d, %d]\n", 2, all_pawns[i].id, pos.x, pos.y);
             return true;
         }
     }
@@ -278,6 +279,7 @@ int load_pawns_from_map_data(int map[8][8]) {
 
     for (int k = 0; k < NUM_PAWNS; k++) {
 
+        all_pawns[k].is_active = false;
         all_pawns[k].is_selected = false;
         all_pawns[k].is_captured = true;
         all_pawns[k].id = k;
@@ -297,6 +299,7 @@ int load_pawns_from_map_data(int map[8][8]) {
 
             if (map[i][j] != 0) {
 
+                all_pawns[id].is_active = true;
                 all_pawns[id].is_captured = false;
                 all_pawns[id].id = id + 1;
                 all_pawns[id].x_pos = j;
@@ -305,7 +308,7 @@ int load_pawns_from_map_data(int map[8][8]) {
 
                 all_pawns[id].is_king = (map[i][j] == 3 || map[i][j] == 4);
                 all_pawns[id].colour = (map[i][j] == 1 || map[i][j] == 3) ? 1 : 0;
-                all_pawns[id].direction = all_pawns[id].colour == 1 ? 1 : -1;
+                all_pawns[id].direction = all_pawns[id].colour == 1 ? -1 : 1;
 
                 id++;
             }
@@ -371,17 +374,22 @@ bool pawn_can_move(Pawn* pawn) {
     if (pawn_can_move_backward_left(pawn)) {
         can_move = true;
     }
+    //log_fmsg("::pawn_can_move(): %d\n", 1, can_move);
     return can_move;
 }
 
 bool pawn_is_playable(Pawn* pawn) {
+    // printf("pawn_is_playable\n");
     bool is_playable = false;
     if (pawn_can_move(pawn)) {
         is_playable = true;
     }
-    if (pawn_can_capture(pawn)) {
-        is_playable = true;
-    }
+    // if (pawn_can_capture(pawn)) {
+    //     is_playable = true;
+    // }
+
+    // log_fmsg("::pawn_is_playable(): %d\n", 1, is_playable);
+
     return is_playable;
 }
 
@@ -394,7 +402,9 @@ bool pawn_is_playable(Pawn* pawn) {
 int pawn_get_all_playable(Pawn* pawns) {
     int count = 0;
     for (int i = 0; i < NUM_PAWNS; i++) {
-        if (pawn_is_playable(&(all_pawns[i]))) {
+        // printf("%d\n", i);
+        if (all_pawns[i].is_active && pawn_is_playable(&(all_pawns[i]))) {
+            // printf("playable\n");
             pawns[count++] = all_pawns[i];
         }
     }
@@ -469,6 +479,7 @@ bool pawn_is_position_valid(Position current_pos, Position proposed_pos) {
     if (!pawn_is_proposed_position_diagonal(current_pos, proposed_pos)) {
         is_valid = false;
     }
+    // log_fmsg("::pawn_is_position_valid(): %d\n", 1, is_valid);
     return is_valid;
 }
 
@@ -627,7 +638,7 @@ bool pawn_can_capture_forward_right(Pawn* pawn) {
     Position proposed_pos;
     Position capture_pos;
     pawn_get_forward_right_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_capture = false;
     }
     pawn_get_forward_right_pos(pawn->direction, &(pawn->position), &capture_pos);
@@ -649,7 +660,7 @@ bool pawn_can_capture_forward_left(Pawn* pawn) {
     Position proposed_pos;
     Position capture_pos;
     pawn_get_forward_left_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_capture = false;
     }
     pawn_get_forward_left_pos(pawn->direction, &(pawn->position), &capture_pos);
@@ -671,7 +682,7 @@ bool pawn_can_capture_backward_right(Pawn* pawn) {
     Position proposed_pos;
     Position capture_pos;
     pawn_get_backward_right_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_capture = false;
     }
     pawn_get_backward_right_pos(pawn->direction, &(pawn->position), &capture_pos);
@@ -696,7 +707,7 @@ bool pawn_can_capture_backward_left(Pawn* pawn) {
     Position proposed_pos;
     Position capture_pos;
     pawn_get_backward_left_jump_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_capture = false;
     }
     pawn_get_backward_left_pos(pawn->direction, &(pawn->position), &capture_pos);
@@ -721,7 +732,7 @@ bool pawn_can_move_forward_right(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_forward_right_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_move = false;
     }
     return can_move;
@@ -738,7 +749,7 @@ bool pawn_can_move_forward_left(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_forward_left_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_move = false;
     }
     return can_move;
@@ -756,7 +767,7 @@ bool pawn_can_move_backward_right(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_backward_right_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_move = false;
     }
     if (!pawn->is_king) {
@@ -777,7 +788,7 @@ bool pawn_can_move_backward_left(Pawn* pawn) {
     bool can_move = true;
     Position proposed_pos;
     pawn_get_backward_left_pos(pawn->direction, &(pawn->position), &proposed_pos);
-    if (!pawn_is_position_valid(proposed_pos, pawn->position)) {
+    if (!pawn_is_position_valid(pawn->position, proposed_pos)) {
         can_move = false;
     }
     if (!pawn->is_king) {

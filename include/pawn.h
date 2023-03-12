@@ -15,6 +15,7 @@ typedef struct {
     int id;
     int direction;
     bool is_selected;
+    bool is_active;
 } Pawn;
 
 bool  pawn_can_move_forward_right(Pawn* pawn);
@@ -25,9 +26,13 @@ bool  pawn_can_capture_forward_right(Pawn* pawn);
 bool  pawn_can_capture_forward_left(Pawn* pawn);
 bool  pawn_can_capture_backward_right(Pawn* pawn);
 bool  pawn_can_capture_backward_left(Pawn* pawn);
+bool  pawn_can_move(Pawn* pawn);
+bool  pawn_can_capture(Pawn* pawn);
+int   pawn_get_all_playable(Pawn* pawns);
 bool  pawn_get_by_position(Pawn **pawn, int x, int y);
 bool  pawn_is_at_position(Pawn* pawn, Position pos);
 bool  pawn_is_owned_by_current_player(Pawn* pawn);
+bool  pawn_is_playable(Pawn* pawn);
 bool  pawn_is_player_dead(int colour);
 bool  pawn_is_position_occupied(Position pos);
 bool  pawn_is_position_within_boundary(Position pos);

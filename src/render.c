@@ -113,15 +113,16 @@ int get_x_by_pos(int x_pos) {
     return x;
 }
 
-void render_pawns(Pawn *pawns, WINDOW *board_win) {
+void render_pawns(Pawn *pawns, WINDOW *board_win, Game *game) {
     for (int i = 0; i < NUM_PAWNS; i++) {
-        if (!pawns[i].is_captured && pawns[i].id != 0) {
+        if (!pawns[i].is_captured && pawns[i].id != 0 && pawns[i].is_active) {
             int x_pos = pawns[i].x_pos;
             int y_pos = pawns[i].y_pos;
             int x = (x_pos*4)+6+1;
             int y = (y_pos*2)+2;
             char pawn = players[pawns[i].colour].marker;
-            if (pawns[i].is_selected) {
+            if (pawns[i].is_selected 
+                || (pawn_is_playable(&(pawns[i])) && pawns[i].colour == game->player_colour)) {
                 if (pawns[i].is_king) {
                     wattron(board_win, COLOR_PAIR(3));
                 } else {
@@ -146,7 +147,7 @@ void render_pawns(Pawn *pawns, WINDOW *board_win) {
     }
 }
 
-void draw_grid(WINDOW *board_win, Pawn *pawns) {
+void draw_grid(WINDOW *board_win, Pawn *pawns, Game *game) {
     char board[GRID_H][GRID_W];
     get_blank_grid(board);
     label_grid(board);
@@ -154,7 +155,7 @@ void draw_grid(WINDOW *board_win, Pawn *pawns) {
         mvwprintw(board_win, i, 1, board[i]);
     }
 
-    render_pawns(pawns, board_win);
+    render_pawns(pawns, board_win, game);
 }
 
 void render_menu() {
@@ -174,10 +175,10 @@ void render_menu() {
     }
 }
 
-void render_board(Pawn *pawns) {
+void render_board(Pawn *pawns, Game *game) {
     WINDOW *window = panels[1]->win;
     werase(window);
-    draw_grid(window, pawns);
+    draw_grid(window, pawns, game);
     box(window, 0, 0);
     wnoutrefresh(window);
 }

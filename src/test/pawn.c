@@ -83,6 +83,17 @@ static void test_pawn_get_backward_right_pos(void** state) {
     assert_int_equal(calculated_pos.y, 4);
 }
 
+static void test_pawn_get_all_playable(void** state) {
+    Pawn pawns[24];
+    Game game = { 0, 0, 0, 0 };
+    char* filename = "5";
+    pawn_init(&game, pawns, filename, 0);
+
+    int num_pawns = 0;
+    num_pawns = pawn_get_all_playable(pawns);
+    assert_int_equal(num_pawns, 1);
+}
+
 static void test_pawn_is_position_within_boundary(void** state) {
 
     bool is_within = false;
